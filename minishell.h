@@ -10,12 +10,10 @@
 
 typedef struct	s_comm
 {
-	char *cmd;
-    int nb_of_cmd;
+	char **cmd;
     int nb_pipe;
     int redir_output;
     int redir_input;
-    struct s_comm *next;
 }				t_comm;
 
 void	ft_lstadd_front(t_comm **alst, t_comm *new);
@@ -26,6 +24,7 @@ int	ft_strlen(char *s);
 int if_builtin(char **str);
 char	*ft_strcat(char *dest, char *src);
 int	ft_strchr(char *s, int c);
-t_comm	*fill_comm(t_comm *comm, char *cmd, int nb);
+t_comm	fill_comm(t_comm comm, char *cmd);
+char			*ft_strjoin(char const *s1, char const *s2);
 
 #endif

@@ -29,13 +29,15 @@ char	*ft_strcat(char *dest, char *src)
 	if (!tmp)
 		return (0);
 	i = 0;
-	while (dest[i] != '\0')
+	while (dest && dest[i] != '\0')
 	{
 		tmp[i] = dest[i];
 		i++;
 	}
+	tmp[i] = ' ';
+	i++;
 	j = 0;
-	while (src[j] != '\0')
+	while (src && src[j] != '\0')
 	{
 		tmp[i] = src[j];
 		i++;

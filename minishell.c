@@ -3,46 +3,47 @@
 void	print_comm(t_comm *comm)
 {
   int		i;
+  int a = 0;
 
-  i = 0;
-  while (comm)
-  {
   	printf("-----------------------------------\n");
-  	printf("| comm->nb_of_com    : %d                            \n", comm->nb_of_cmd);
-  	printf("| comm->cmd_sep      : %s            \n", comm->cmd);
+  	while (comm->cmd[a])
+    {
+      printf("| comm->cmd_sep      : %s            \n", comm->cmd[a]);
+      a++;
+    }
     printf("| comm->nb_pipe      : %d            \n", comm->nb_pipe);
     printf("| comm->redir_input  : %d            \n", comm->redir_input);
     printf("| comm->redir_output : %d            \n", comm->redir_output);
   	printf("-----------------------------------\n");
-  	comm = comm->next;
-  	i++;
-  }
+
 }
 
-void    parcing(char *str, t_comm *comm)
+void    parcing(char **str, t_comm comm)
 {
-    char **cmd;
-    int i = 3;
-
-    cmd = ft_split(str, ';');
-    i = 0;
-    while (cmd[i])
+    char  *all_cmd;
+    char **bg;
+    int i = 1;
+    
+    all_cmd = NULL;
+    while (str[i])
     {
-        comm = fill_comm(comm, cmd[i], i);
+        all_cmd = ft_strcat(all_cmd, str[i]);
         i++;
     }
-    print_comm(comm);
+    if (ft_strchr(all_cmd, '|') != 0)
+      comm.cmd = ft_split(all_cmd, '|');
+    else
+      comm.cmd = ft_split(all_cmd, ' ');
+    comm = fill_comm(comm, all_cmd);
+    print_comm(&comm);
 }
 
 int main(int argc, char **argv)
 {
-    int i = 0;
-    t_comm  *comm;
+    t_comm  comm;
     char *variable;
-    char **cmd;
 
-    comm = NULL;
-    parcing(argv[1], comm);
+    parcing(argv, comm);
     // variable = getenv(argv[1]);
     // variable = ft_strcat(variable, "/salut");
     return 0;
