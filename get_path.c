@@ -64,6 +64,7 @@ t_data	path1(char *command)
 		exit(EXIT_FAILURE);
 	}
 	data.path1 = ft_strcat_cmd(good_path[i], data.cmd1[0]);
+	//printf("datapath1 = %s, datapath2 = %s", data.path1, data.path2);
 	free_str(good_path);
 	return (data);
 }

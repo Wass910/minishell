@@ -19,7 +19,7 @@ void	print_comm(t_comm *comm)
   	printf("-----------------------------------\n");
 }
 
-void	uniq_cmd(t_comm comm)
+void	good_one_cmd(t_comm comm)
 {
 	t_data	data;
 
@@ -29,6 +29,15 @@ void	uniq_cmd(t_comm comm)
 	// dup2(data.write_file, STDOUT);
 	create_process(data, comm);
 	free(data.path1);
+}
+
+void uniq_cmd(t_comm comm)
+{
+    //print_comm(&comm);
+    if (if_builtin(comm.cmd) == 0)
+      printf("builtin to do.\n");
+    else
+      printf("continue the parse\n");
 }
 
 void  redir_comm(t_comm comm)
@@ -42,7 +51,7 @@ void  redir_comm(t_comm comm)
 void    parcing(char **str, t_comm comm)
 {
     char  *all_cmd;
-    char **bg;
+    //char **bg;
     int i = 1;
     
     all_cmd = NULL;
@@ -60,12 +69,24 @@ void    parcing(char **str, t_comm comm)
     redir_comm(comm);
 }
 
+void  prompt(void)
+{
+    write(1, "$>", ft_strlen("$>"));
+}
+
 int main(int argc, char **argv)
 {
     t_comm  comm;
-    char *variable;
-
+    char *line;
+    /*while (1)
+    {
+      prompt();
+      get_next_line(0, &line);
+      parcing(line, comm);
+      free(line);
+    }*/
     parcing(argv, comm);
+    //variable = readline(NULL);
     // variable = getenv(argv[1]);
     // variable = ft_strcat(variable, "/salut");
     return 0;

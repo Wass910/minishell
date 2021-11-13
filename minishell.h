@@ -9,10 +9,13 @@
 #include <string.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+#include <readline/readline.h> 
+#include <readline/history.h>
 
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+# define BUFFER_SIZE 1024
 
 typedef struct s_data{
 	char	**cmd1;
@@ -39,7 +42,7 @@ typedef struct	s_comm
 void	ft_lstadd_front(t_comm **alst, t_comm *new);
 t_comm	*ft_add_back(t_comm **alst, t_comm *new);
 char	**ft_split(char *s, char c);
-int	ft_strncmp(const char *s1, const char *s2, size_t n);
+int	ft_strncmp( char *s1,  char *s2, int n);
 int	ft_strlen(char *s);
 int if_builtin(char **str);
 char	*ft_strcat(char *dest, char *src);
@@ -53,4 +56,12 @@ void	free_str(char **str);
 int	pipex(t_comm comm);
 void	create_process(t_data data, t_comm comm);
 t_data	uniq_path(t_data data, t_comm comm);
+int	get_next_line(int fd, char **line);
+void	*ft_calloc(int count, int size);
+char	*ft_strdup(char *s);
+char	*ft_strjoin_free(char *s1, char *s2, int f);
+char	*ft_substr(char *s, int start, int len);
+char	*ft_strchr_gnl(char *s, int c);
+void	print_comm(t_comm *comm);
+
 #endif

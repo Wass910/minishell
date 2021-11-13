@@ -104,7 +104,11 @@ void	create_process(t_data data, t_comm comm)
 int	pipex(t_comm comm)
 {
 	t_data	data;
+
+	//print_comm(&comm);
+	//printf("oui\n");
 	data = path1(comm.cmd[0]);
+	//printf("datapath1 = %s", data.path1);
 	data = path2(data, comm.cmd[1]);
 	//ft_cant_open(data);
 	// dup2(data.read_file, STDIN);
