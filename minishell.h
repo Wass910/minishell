@@ -107,5 +107,6 @@ int	ft_redir_strchr(char *s, int c);
 char	*ft_strcat_ns(char *dest, char *src);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		check_fulln(char *str);
+int check_inenv(char *str);
 
 #endif

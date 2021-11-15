@@ -1,3 +1,5 @@
+#include "minishell.h"
+
 int check_fulln(char *str)
 {
     int i;
@@ -12,4 +14,10 @@ int check_fulln(char *str)
     return (0);
 }
 
-int check_inenv(char *str);
+int check_inenv(char *str)
+{
+    if (getenv(&str[1]))
+        return (1);
+    else
+        return (0);
+}

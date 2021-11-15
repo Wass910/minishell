@@ -33,7 +33,6 @@ int build_cd(t_comm comm)
             i++;
         }
         s[i - 1] = '\0';
-        printf("%s\n", s);
         str = ft_strjoin(str, s);
         i = chdir(str);
         if (i == -1)
@@ -57,13 +56,20 @@ int build_cd(t_comm comm)
 int build_echo(t_comm comm)
 {
     int i;
+    char *str;
 
     if (strncmp(comm.cmd[1], "-n", 2) == 0 && !check_fulln(comm.cmd[1]))
     {
         i = 2;
         while (comm.cmd[i])
         {
-            write(1, comm.cmd[i], ft_strlen(comm.cmd[i]));
+            if (check_inenv(comm.cmd[i]))
+            {
+                str = getenv(&comm.cmd[i][1]);
+                write(1, str, ft_strlen(str));
+            }
+            else
+                write(1, comm.cmd[i], ft_strlen(comm.cmd[i]));
             if (comm.cmd[i + 1])
                 write(1, " ", 1);
             i++;
@@ -74,10 +80,18 @@ int build_echo(t_comm comm)
         i = 1;
         while (comm.cmd[i])
         {
-            write(1, comm.cmd[1], ft_strlen(comm.cmd[1]));
-            write(1, " ", 1);
+            if (check_inenv(comm.cmd[i]))
+            {
+                str = getenv(&comm.cmd[i][1]);
+                write(1, str, ft_strlen(str));
+            }
+            else
+                write(1, comm.cmd[1], ft_strlen(comm.cmd[1]));
+            if (comm.cmd[i + 1])
+                write(1, " ", 1);
             i++;
         }
+        write(1, "\n", 1);
     }
 }
 

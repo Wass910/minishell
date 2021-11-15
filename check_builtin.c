@@ -13,12 +13,6 @@ int verif_the_builtin(char **str)
     else if ((ft_strncmp(str[0], "echo", 4) == 0) && ft_strlen(str[0]) == 4)
     {    
         printf("The command is echo.\n");
-        if (str[1] && ((ft_strncmp(str[1], "-n", 2) != 0) || 
-            ft_strlen(str[1]) != 2))
-        {
-                printf("Bad argument for echo.\n");
-                return 1;
-        }
         return 0;
     }
     else if ((ft_strncmp(str[0], "pwd", 3) == 0) && ft_strlen(str[0]) == 3)
