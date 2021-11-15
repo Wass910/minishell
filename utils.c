@@ -11,3 +11,5 @@ int check_fulln(char *str)
     }
     return (0);
 }
+
+int check_inenv(char *str);
