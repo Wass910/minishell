@@ -1,3 +1,5 @@
+
+  
 #ifndef MINISHELL_H
 # define MINISHELL_H
 #include <stdlib.h>
@@ -7,8 +9,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <string.h>
-# include <sys/stat.h>
-# include <fcntl.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <readline/readline.h> 
 #include <readline/history.h>
 
@@ -16,6 +18,14 @@
 # define STDOUT 1
 # define STDERR 2
 # define BUFFER_SIZE 1024
+# define CD_TYPE 0
+# define ECHO_TYPE 1
+# define PWD_TYPE 2
+# define EXPORT_TYPE 3
+# define UNSET_TYPE 4
+# define ENV_TYPE 5
+# define EXIT_TYPE 6
+
 
 typedef struct s_data{
 	char	**cmd1;
@@ -45,10 +55,11 @@ typedef struct s_pip{
 	int		pid2;
 	int		pipefd[2];
 	struct s_pip *next;
-}				t_pip;
+}		t_pip;
 
 typedef struct	s_comm
 {
+	char **env;
 	char **cmd;
     int nb_pipe;
     int redir_output;
@@ -81,8 +92,20 @@ char	*ft_strjoin_free(char *s1, char *s2, int f);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strchr_gnl(char *s, int c);
 void	print_comm(t_comm comm);
+void	exec_cmd(char *s, t_comm comm);
+int		builtin(t_comm comm);
+int		build_cd(t_comm comm);
+int		build_echo(t_comm comm);
+int		build_pwd(t_comm comm);
+int		build_export(t_comm comm);
+int		build_unset(t_comm comm);
+int		build_env(t_comm comm);
+int		build_exit(t_comm comm);
 void    parsing_pipes(t_comm comm);
 int	ft_double_strchr(char *s, int c);
 int	ft_redir_strchr(char *s, int c);
+char	*ft_strcat_ns(char *dest, char *src);
+char	*ft_strjoin(char const *s1, char const *s2);
+int		check_fulln(char *str);
 
 #endif

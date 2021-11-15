@@ -31,21 +31,49 @@ void	print_comm(t_comm comm)
 // 	free(data.path1);
 // }
 
-void uniq_cmd(t_comm comm)
+int uniq_cmd(t_comm comm)
 {
+    char **path;
+    int k;
+    char *str;
+
+    k = 0;
+    path = ft_split(getenv("PATH"), ':');
     //print_comm(&comm);
     if (if_builtin(comm.cmd) == 0)
+    {
       printf("builtin to do.\n");
+      return (builtin(comm));
+    }
     else
       printf("continue the parse\n");
+    if(access(comm.cmd[0], F_OK) == 0)
+      printf("command found whithout path\n");
+    while (path[k])
+    {
+      str = ft_strcat_cmd(path[k], comm.cmd[0]);
+      if (access(str, F_OK) == 0)
+        k = 0;
+      if (access(str, F_OK) == 0)
+        break;
+      free(str);
+      k++;
+    }
+    printf("found with path command = %s\n", str);
+    free_str(path);
+    k = fork();
+    if (k == 0)
+      exec_cmd(str, comm);
+    return (0);
 }
 
-void  redir_comm(t_comm comm)
+int  redir_comm(t_comm comm)
 {
     if (comm.nb_pipe > 0)
       parsing_pipes(comm);
     else
-      uniq_cmd(comm);
+      return(uniq_cmd(comm));
+    return (0);
 }
 
 void    parcing(char *all_cmd, t_comm comm)
@@ -74,13 +102,14 @@ void  prompt(void)
     write(1, "$>", ft_strlen("$>"));
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
     t_comm  comm;
     char *line;
+
+    comm.env = envp;
     while (1)
     {
-      prompt();
       line = readline(argv[1]);
       parcing(line, comm);
       free(line);
