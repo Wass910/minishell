@@ -30,7 +30,7 @@ typedef struct s_data{
 }				t_data;
 
 typedef struct s_pip{
-	char	*cmd;
+	char	**cmd;
 	int		nb_cmd;
 	char	*path;
 	int		read_file;
@@ -69,7 +69,7 @@ t_comm	fill_comm(t_comm comm, char *cmd);
 char			*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strcat_cmd(char *dest, char *src);
 t_data	path2(t_data data, char *command);
-t_data	path1(char *command);
+char	*path(char *command);
 void	free_str(char **str);
 int	pipex(t_pip *parse_pip);
 void	create_process(t_data data, t_comm comm);
@@ -84,5 +84,6 @@ void	print_comm(t_comm comm);
 void    parsing_pipes(t_comm comm);
 int	ft_double_strchr(char *s, int c);
 int	ft_redir_strchr(char *s, int c);
+int	what_path(char **path, char *cmd);
 
 #endif
