@@ -29,6 +29,24 @@ typedef struct s_data{
 	int		pipefd[2];
 }				t_data;
 
+typedef struct s_pip{
+	char	*cmd;
+	int		nb_cmd;
+	char	*path;
+	int		read_file;
+	int		write_file;
+	int 	redir_output;
+    int 	redir_input;
+	int 	redir_output_A;
+    int 	redir_double_input;
+	int 	single_quote;
+    int 	double_quote;
+	int		pid1;
+	int		pid2;
+	int		pipefd[2];
+	struct s_pip *next;
+}				t_pip;
+
 typedef struct	s_comm
 {
 	char **cmd;
@@ -53,7 +71,7 @@ char	*ft_strcat_cmd(char *dest, char *src);
 t_data	path2(t_data data, char *command);
 t_data	path1(char *command);
 void	free_str(char **str);
-int	pipex(t_comm comm);
+int	pipex(t_pip *parse_pip);
 void	create_process(t_data data, t_comm comm);
 t_data	uniq_path(t_data data, t_comm comm);
 int	get_next_line(int fd, char **line);
@@ -62,6 +80,9 @@ char	*ft_strdup(char *s);
 char	*ft_strjoin_free(char *s1, char *s2, int f);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strchr_gnl(char *s, int c);
-void	print_comm(t_comm *comm);
+void	print_comm(t_comm comm);
+void    parsing_pipes(t_comm comm);
+int	ft_double_strchr(char *s, int c);
+int	ft_redir_strchr(char *s, int c);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
-/*   Updated: 2021/11/12 12:30:20 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/11/15 14:16:28 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,22 +72,6 @@ void	create_multi_process(t_data data)
 	}
 }
 
-void	create_process(t_data data, t_comm comm)
-{
-	if (pipe(data.pipefd) == -1)
-		exit(EXIT_FAILURE);
-	data.pid1 = fork();
-	if (data.pid1 == -1)
-		exit(EXIT_FAILURE);
-	if (data.pid1 == 0)
-	{
-		// dup2(data.pipefd[1], STDOUT);
-		// close(data.pipefd[0]);
-		// close(data.pipefd[1]);
-		execve(data.path1, comm.cmd, NULL);
-	}
-}
-
 // void	ft_cant_open(t_data data)
 // {
 // 	if (data.read_file == -1 || data.write_file == -1)
@@ -101,15 +85,15 @@ void	create_process(t_data data, t_comm comm)
 // 	}
 // }
 
-int	pipex(t_comm comm)
+int	pipex(t_pip *parse_pip)
 {
 	t_data	data;
 
 	//print_comm(&comm);
 	//printf("oui\n");
-	data = path1(comm.cmd[0]);
+	//parse_pip = path1(comm.cmd[0]);
 	//printf("datapath1 = %s", data.path1);
-	data = path2(data, comm.cmd[1]);
+	//data = path2(data, comm.cmd[1]);
 	//ft_cant_open(data);
 	// dup2(data.read_file, STDIN);
 	// dup2(data.write_file, STDOUT);
