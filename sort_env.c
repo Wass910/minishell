@@ -49,21 +49,50 @@ void print_env(t_list **b_list)
     printf("%s\n", temp->content);
 }
 
+char *to_print(char *s)
+{
+    int i;
+    char *sret;
+    char *temp;
+
+    i = 0;
+    while (s[i] != '=' && s[i])
+        i++;
+    if (s[i] == '\0')
+    {
+        temp = malloc(sizeof(char) * 100);
+        temp[0] = '=';
+        temp[1] = '"';
+        temp[2] = '"';
+        temp[3] = '\0';
+        sret = ft_strcat_ns(s, temp);
+        free(temp);
+        return (sret);
+    }
+    if (s[i] == '=' && s[i + 1] == '\0')
+    {
+        temp = malloc(sizeof(char) * 100);
+        temp[0] = '"';
+        temp[1] = '"';
+        temp[2] = '\0';
+        sret = ft_strcat_ns(s, temp);
+        free(temp);
+        return (sret);
+    }
+    else
+    {
+        
+    }
+}
+
 void add_line(t_list **b_list, t_comm comm)
 {
     int i;
+    char *str;
 
     i = 0;
-    printf("wow\n");
-    while (comm.env[i])
-        i++;
-    i++;
-    comm.env[i] = comm.cmd[1];
-    comm.env[i + 1] = NULL;
-    i = 0;
-    while(comm.expenv[i])
-        i++;
-    i++;
-    comm.expenv[i] = comm.cmd[1];
-    comm.expenv[i + 1] = NULL;
+    str = to_print(comm.cmd[1]);
+    flstadd_back(b_list, flstnew(ft_strcat("declare -x", str)));
+    free(str);
+    sort_env(b_list);
 }
