@@ -130,6 +130,8 @@ t_list	*flstlast(t_list *lst);
 t_list	*flstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 t_list	*flstnew(void *content);
 int	flstsize(t_list *lst);
+char	*ft_strcat_cote(char *dest, char *src);
+void add_line2(t_list **b_list, t_comm comm);
 
 
 #endif

@@ -56,22 +56,18 @@ char *to_print(char *s)
     char *temp;
 
     i = 0;
+    temp = malloc(sizeof(char) * 100);
+    if (!temp)
+        return (NULL);
     while (s[i] != '=' && s[i])
         i++;
     if (s[i] == '\0')
     {
-        temp = malloc(sizeof(char) * 100);
-        temp[0] = '=';
-        temp[1] = '"';
-        temp[2] = '"';
-        temp[3] = '\0';
-        sret = ft_strcat_ns(s, temp);
         free(temp);
-        return (sret);
+        return (s);
     }
     if (s[i] == '=' && s[i + 1] == '\0')
     {
-        temp = malloc(sizeof(char) * 100);
         temp[0] = '"';
         temp[1] = '"';
         temp[2] = '\0';
@@ -81,7 +77,9 @@ char *to_print(char *s)
     }
     else
     {
-        
+        sret = ft_strcat_cote(s, "\0");
+        free(temp);
+        return (sret);
     }
 }
 
@@ -93,6 +91,5 @@ void add_line(t_list **b_list, t_comm comm)
     i = 0;
     str = to_print(comm.cmd[1]);
     flstadd_back(b_list, flstnew(ft_strcat("declare -x", str)));
-    free(str);
     sort_env(b_list);
 }

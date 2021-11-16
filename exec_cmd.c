@@ -124,6 +124,8 @@ int build_export(t_comm comm, t_list **a_list, t_list **b_list)
     if (comm.cmd[1])
     {
         add_line(b_list, comm);
+        add_line2(a_list, comm);
     }
-    print_env(b_list);
+    else
+        print_env(b_list);
 }
