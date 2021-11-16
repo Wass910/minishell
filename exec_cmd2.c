@@ -25,16 +25,17 @@ int build_unset(t_comm comm)
     }
 }
 
-int build_env(t_comm comm)
+int build_env(t_comm comm, t_list **a_list)
 {
-    int i;
+    t_list *temp;
 
-    i = 0;
-    while (comm.env[i])
+    temp = (*a_list);
+    while (temp->next)
     {
-        printf("%s\n", comm.env[i]);
-        i++;
+        printf("%s\n", temp->content);
+        temp = temp->next;
     }
+    printf("%s\n", temp->content);
     return (0);
 }
 

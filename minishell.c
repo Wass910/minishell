@@ -31,7 +31,7 @@ void	print_comm(t_comm comm)
 // 	free(data.path1);
 // }
 
-int uniq_cmd(t_comm comm)
+int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 {
     char **path;
     int k;
@@ -43,7 +43,7 @@ int uniq_cmd(t_comm comm)
     if (if_builtin(comm.cmd) == 0)
     {
       printf("builtin to do.\n");
-      return (builtin(comm));
+      return (builtin(comm, a_list, b_list));
     }
     else
       printf("continue the parse\n");
@@ -67,16 +67,16 @@ int uniq_cmd(t_comm comm)
     return (0);
 }
 
-int  redir_comm(t_comm comm)
+int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 {
     if (comm.nb_pipe > 0)
       parsing_pipes(comm);
     else
-      return(uniq_cmd(comm));
+      return(uniq_cmd(comm, a_list, b_list));
     return (0);
 }
 
-void    parcing(char *all_cmd, t_comm comm)
+void    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 {
     //char  *all_cmd;
     //char **bg;
@@ -94,7 +94,7 @@ void    parcing(char *all_cmd, t_comm comm)
       comm.cmd = ft_split(all_cmd, ' ');
     comm = fill_comm(comm, all_cmd);
     //print_comm(comm);
-    redir_comm(comm);
+    redir_comm(comm, a_list, b_list);
 }
 
 void  prompt(void)
@@ -105,13 +105,16 @@ void  prompt(void)
 int main(int argc, char **argv, char **envp)
 {
     t_comm  comm;
+    t_list *a_list;
+    t_list *b_list;
     char *line;
 
-    comm.env = envp;
+    make_list(&a_list, envp);
+    make_list(&b_list, envp);
     while (1)
     {
       line = readline(argv[1]);
-      parcing(line, comm);
+      parcing(line, comm, &a_list, &b_list);
       free(line);
     }
     //parcing(argv, comm);

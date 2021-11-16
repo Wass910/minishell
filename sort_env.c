@@ -1,54 +1,55 @@
 #include "minishell.h"
 
-int sort_env(char **env)
+void sort_env(t_list **b_list)
 {
-    int i;
-    char *temp;
+    t_list *temp;
+    char *swap;
 
-    i = 0;
-    while (check_sorted(env))
+    temp = (*b_list);
+    while (check_sorted(b_list))
     {
-        if (env[i][11] > env[i + 1][11])
+        while (temp->next)
         {
-            temp = env[i];
-            env[i] = env[i + 1];
-            env[i + 1] = temp;
+            if (temp->content[11] > temp->next->content[11])
+            {
+                swap = temp->content;
+                temp->content = temp->next->content;
+                temp->next->content = swap;
+            }
+            temp = temp->next;
         }
-        i++;
-        if (!env[i + 1])
-            i = 0;
+        temp = (*b_list);
     }
-    return (1);
 }
 
-int check_sorted(char **env)
+int check_sorted(t_list **b_list)
 {
-    int i;
+    t_list *temp;
 
-    i = 0;
-    while (env[i + 1])
+    temp = (*b_list);
+    while (temp->next)
     {
-        if (env[i][11] > env[i + 1][11])
+        if (temp->content[11] > temp->next->content[11])
             return (1);
-        i++;
+        temp = temp->next;
     }
     return (0);
 }
 
-void print_env(char **env)
+void print_env(t_list **b_list)
 {
-    int i;
+    t_list *temp;
 
-    i = 0;
-    while (env[i])
+    temp = (*b_list);
+    while (temp->next)
     {
-        write(1, env[i], ft_strlen(env[i]));
-        write(1, "\n", 1);
-        i++;
+        printf("%s\n", temp->content);
+        temp = temp->next;
     }
+    printf("%s\n", temp->content);
 }
 
-void add_line(t_comm comm)
+void add_line(t_list **b_list, t_comm comm)
 {
     int i;
 

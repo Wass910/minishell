@@ -42,7 +42,7 @@ int find_builtin(char **str)
     return (-1);
 }
 
-int    builtin(t_comm comm)
+int    builtin(t_comm comm, t_list **a_list, t_list **b_list)
 {
     int type;
 
@@ -54,11 +54,11 @@ int    builtin(t_comm comm)
     else if (type == PWD_TYPE)
         return(build_pwd(comm));
     else if (type == EXPORT_TYPE)
-        return(build_export(comm));
+        return(build_export(comm, a_list, b_list));
     else if (type == UNSET_TYPE)
         return(build_unset(comm));
     else if (type == ENV_TYPE)
-        return(build_env(comm));
+        return(build_env(comm, a_list));
     else if (type == EXIT_TYPE)
         return(build_exit(comm));
 }

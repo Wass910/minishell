@@ -21,3 +21,31 @@ int check_inenv(char *str)
     else
         return (0);
 }
+
+void make_list(t_list **a_list, char **envp)
+{
+    int i;
+
+    i = 0;
+    (*a_list) = flstnew(envp[i]);
+    i++;
+    (*a_list)->next = NULL;
+    while (envp[i])
+    {
+        flstadd_back(a_list, flstnew(envp[i]));
+        i++;
+    }
+}
+
+void add_declare(t_list **b_list)
+{
+    t_list *temp;
+
+    temp = (*b_list);
+    while (temp->next)
+    {
+        temp->content = ft_strcat("declare -x", temp->content);
+        temp = temp->next;
+    }
+    temp->content = ft_strcat("declare -x", temp->content);
+}

@@ -108,22 +108,22 @@ int build_pwd(t_comm comm)
     return (0);
 }
 
-int build_export(t_comm comm)
+int build_export(t_comm comm, t_list **a_list, t_list **b_list)
 {
     static int done = 0;
 
     if (!done)
     {
-        comm.expenv = make_expenv(comm);
+        add_declare(b_list);
         done = 1;
     }
-    if (check_sorted(comm.expenv))
+    if (check_sorted(b_list))
     {
-        sort_env(comm.expenv);
+        sort_env(b_list);
     }
     if (comm.cmd[1])
     {
-        add_line(comm);
+        add_line(b_list, comm);
     }
-    print_env(comm.expenv);
+    print_env(b_list);
 }

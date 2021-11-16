@@ -26,6 +26,11 @@
 # define ENV_TYPE 5
 # define EXIT_TYPE 6
 
+typedef struct s_list
+{
+	char			*content;
+	struct s_list	*next;
+}					t_list;
 
 typedef struct s_data{
 	char	**cmd1;
@@ -93,13 +98,13 @@ char	*ft_substr(char *s, int start, int len);
 char	*ft_strchr_gnl(char *s, int c);
 void	print_comm(t_comm comm);
 void	exec_cmd(char *s, t_comm comm);
-int		builtin(t_comm comm);
+int		builtin(t_comm comm, t_list **a_list, t_list **b_list);
 int		build_cd(t_comm comm);
 int		build_echo(t_comm comm);
 int		build_pwd(t_comm comm);
-int		build_export(t_comm comm);
+int		build_export(t_comm comm, t_list **a_list, t_list **b_list);
 int		build_unset(t_comm comm);
-int		build_env(t_comm comm);
+int		build_env(t_comm comm, t_list **a_list);
 int		build_exit(t_comm comm);
 void    parsing_pipes(t_comm comm);
 int	ft_double_strchr(char *s, int c);
@@ -108,12 +113,23 @@ char	*ft_strcat_ns(char *dest, char *src);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		check_fulln(char *str);
 int check_inenv(char *str);
-int sort_env(char **env);
-int check_sorted(char **env);
-void print_env(char **env);
-char *add_declare(void);
-void add_line(t_comm comm);
+void sort_env(t_list **b_list);
+int check_sorted(t_list **b_list);
+void print_env(t_list **b_list);
+void add_declare(t_list **b_list);
+void add_line(t_list **b_list, t_comm comm);
 char	*ft_strdup(char *s1);
 char **make_expenv(t_comm comm);
+void make_list(t_list **a_list, char **envp);
+void	flstadd_back(t_list **alst, t_list *new);
+void	flstclear(t_list **lst, void (*del)(void*));
+void	flstadd_front(t_list **alst, t_list *new);
+void	flstdelone(t_list *lst, void (*del)(void *));
+void	flstiter(t_list *lst, void (*f)(void *));
+t_list	*flstlast(t_list *lst);
+t_list	*flstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+t_list	*flstnew(void *content);
+int	flstsize(t_list *lst);
+
 
 #endif
