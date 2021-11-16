@@ -48,23 +48,6 @@ void print_env(char **env)
     }
 }
 
-void add_declare(char **env)
-{
-    char *str;
-    int i;
-
-    i = 0;
-    str = malloc(sizeof(char) * 11);
-    if (!str)
-        return ;
-    str = "declare -x";
-    while (env[i])
-    {
-        env[i] = ft_strcat(str, env[i]);
-        i++;
-    }
-}
-
 void add_line(t_comm comm)
 {
     int i;

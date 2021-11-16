@@ -115,7 +115,6 @@ int build_export(t_comm comm)
     if (!done)
     {
         comm.expenv = make_expenv(comm);
-        add_declare(comm.expenv);
         done = 1;
     }
     if (check_sorted(comm.expenv))

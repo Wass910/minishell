@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:57:17 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/01/08 13:23:26 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/11/16 15:04:29 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,23 +33,21 @@ char	*ft_strdup(char *s1)
 char **make_expenv(t_comm comm)
 {
 	int i;
-	char **envv;
+	char **temp;
 
 	i = 0;
 	while (comm.env[i])
 		i++;
-	envv = malloc(sizeof(char *) * i + 1);
-	envv[i] = NULL;
-	if (!envv)
+	temp = malloc(sizeof(char *) * (i + 1));
+	if (!temp)
 		return (NULL);
 	i = 0;
 	while (comm.env[i])
 	{
-		envv[i] = malloc(sizeof(char) * ft_strlen(comm.env[i]) + 11);
-		if (!envv[i])
-			return (NULL);
-		envv[i] = ft_strdup(comm.env[i]);
+		temp[i] = ft_strcat("declare -x", comm.env[i]);
 		i++;
 	}
-	return (envv);
+	temp[i] = NULL;
+	return (temp);
+	
 }

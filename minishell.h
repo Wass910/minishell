@@ -111,7 +111,7 @@ int check_inenv(char *str);
 int sort_env(char **env);
 int check_sorted(char **env);
 void print_env(char **env);
-void add_declare(char **env);
+char *add_declare(void);
 void add_line(t_comm comm);
 char	*ft_strdup(char *s1);
 char **make_expenv(t_comm comm);
