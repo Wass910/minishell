@@ -60,6 +60,7 @@ typedef struct s_pip{
 typedef struct	s_comm
 {
 	char **env;
+	char **expenv;
 	char **cmd;
     int nb_pipe;
     int redir_output;
@@ -87,7 +88,6 @@ void	create_process(t_data data, t_comm comm);
 t_data	uniq_path(t_data data, t_comm comm);
 int	get_next_line(int fd, char **line);
 void	*ft_calloc(int count, int size);
-char	*ft_strdup(char *s);
 char	*ft_strjoin_free(char *s1, char *s2, int f);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strchr_gnl(char *s, int c);
@@ -108,5 +108,12 @@ char	*ft_strcat_ns(char *dest, char *src);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		check_fulln(char *str);
 int check_inenv(char *str);
+int sort_env(char **env);
+int check_sorted(char **env);
+void print_env(char **env);
+void add_declare(char **env);
+void add_line(t_comm comm);
+char	*ft_strdup(char *s1);
+char **make_expenv(t_comm comm);
 
 #endif

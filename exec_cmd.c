@@ -110,5 +110,21 @@ int build_pwd(t_comm comm)
 
 int build_export(t_comm comm)
 {
+    static int done = 0;
 
+    if (!done)
+    {
+        comm.expenv = make_expenv(comm);
+        add_declare(comm.expenv);
+        done = 1;
+    }
+    if (check_sorted(comm.expenv))
+    {
+        sort_env(comm.expenv);
+    }
+    if (comm.cmd[1])
+    {
+        add_line(comm);
+    }
+    print_env(comm.expenv);
 }

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-char	*ft_strdup(char *s)
+char	*ft_strdup2(char *s)
 {
 	int		i;
 	char	*str;
@@ -54,7 +54,7 @@ char	*ft_no_leaks(char *dest, int i)
 	if (dest[i] == '\n')
 	{
 		tmp = dest;
-		dest = ft_strdup(tmp + i + 1);
+		dest = ft_strdup2(tmp + i + 1);
 		free(tmp);
 	}
 	else
