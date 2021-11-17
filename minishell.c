@@ -38,7 +38,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
     char *str;
 
     k = 0;
-    path = ft_split(getenv("PATH"), ':');
+    path = ft_split(getenv2("PATH", a_list), ':');
     //print_comm(&comm);
     if (if_builtin(comm.cmd) == 0)
     {
@@ -49,18 +49,25 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
       printf("continue the parse\n");
     if(access(comm.cmd[0], F_OK) == 0)
       printf("command found whithout path\n");
-    while (path[k])
+    if (path)
     {
-      str = ft_strcat_cmd(path[k], comm.cmd[0]);
-      if (access(str, F_OK) == 0)
-        k = 0;
-      if (access(str, F_OK) == 0)
-        break;
-      free(str);
-      k++;
+      while (path[k])
+      {
+        str = ft_strcat_cmd(path[k], comm.cmd[0]);
+        if (access(str, F_OK) == 0)
+          k = 0;
+        if (access(str, F_OK) == 0)
+          break;
+        free(str);
+        k++;
+      }
+    }
+    else
+    {
+      printf("%s: No such file or directory\n", comm.cmd[0]);
+      return (127);
     }
     printf("found with path command = %s\n", str);
-    free_str(path);
     k = fork();
     if (k == 0)
       exec_cmd(str, comm);

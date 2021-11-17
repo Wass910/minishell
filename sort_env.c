@@ -56,7 +56,7 @@ char *to_print(char *s)
     char *temp;
 
     i = 0;
-    temp = malloc(sizeof(char) * 100);
+    temp = malloc(sizeof(char) * 1000);
     if (!temp)
         return (NULL);
     while (s[i] != '=' && s[i])
@@ -83,13 +83,13 @@ char *to_print(char *s)
     }
 }
 
-void add_line(t_list **b_list, t_comm comm)
+void add_line(t_list **b_list, t_comm comm, int j)
 {
     int i;
     char *str;
 
     i = 0;
-    str = to_print(comm.cmd[1]);
+    str = to_print(comm.cmd[j]);
     flstadd_back(b_list, flstnew(ft_strcat("declare -x", str)));
     sort_env(b_list);
 }

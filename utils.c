@@ -14,12 +14,20 @@ int check_fulln(char *str)
     return (0);
 }
 
-int check_inenv(char *str)
+int check_inenv(char *str, t_list **a_list)
 {
-    if (getenv(&str[1]))
+    t_list *temp;
+
+    temp = (*a_list);
+    while (temp->next)
+    {
+        if (!is_same(temp->content, str))
+            return (1);
+        temp = temp->next;
+    }
+    if (!is_same(temp->content, str))
         return (1);
-    else
-        return (0);
+    return (0);
 }
 
 void make_list(t_list **a_list, char **envp)

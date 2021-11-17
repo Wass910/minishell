@@ -50,15 +50,16 @@ int    builtin(t_comm comm, t_list **a_list, t_list **b_list)
     if (type == CD_TYPE)
         return (build_cd(comm));
     else if (type == ECHO_TYPE)
-        return(build_echo(comm));
+        return(build_echo(comm, a_list));
     else if (type == PWD_TYPE)
         return(build_pwd(comm));
     else if (type == EXPORT_TYPE)
         return(build_export(comm, a_list, b_list));
     else if (type == UNSET_TYPE)
-        return(build_unset(comm));
+        return(build_unset(comm, a_list, b_list, 0));
     else if (type == ENV_TYPE)
         return(build_env(comm, a_list));
     else if (type == EXIT_TYPE)
         return(build_exit(comm));
+    return (0);
 }
