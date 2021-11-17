@@ -57,3 +57,17 @@ void add_declare(t_list **b_list)
     }
     temp->content = ft_strcat("declare -x", temp->content);
 }
+
+int is_alphanum(char *s)
+{
+    int i;
+
+    i = 0;
+    while (s[i] != '=' && s[i])
+    {
+        if ((s[i] < '0' || s[i] > '9') && (s[i] < 'a' || s[i] > 'z') && (s[i] < 'A' || s[i] > 'Z'))
+            return (0);
+        i++;
+    }
+    return (1);
+}

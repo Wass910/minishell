@@ -136,5 +136,6 @@ int	ft_atoi(const char *str);
 int is_same(char *s1, char *s2);
 char *getenv2(char *s, t_list **a_list);
 void    already_in(t_list **a_list, char *str, int j);
+int is_alphanum(char *s);
 
 #endif

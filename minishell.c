@@ -121,7 +121,8 @@ int main(int argc, char **argv, char **envp)
     while (1)
     {
       line = readline(argv[1]);
-      parcing(line, comm, &a_list, &b_list);
+      if (line)
+        parcing(line, comm, &a_list, &b_list);
       free(line);
     }
     //parcing(argv, comm);

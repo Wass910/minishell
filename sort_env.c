@@ -90,6 +90,11 @@ void add_line(t_list **b_list, t_comm comm, int j)
 
     i = 0;
     str = to_print(comm.cmd[j]);
+    if(!is_alphanum(str))
+    {
+        printf("export: '%s': not a valid identifier\n", str);
+        return ;
+    }
     flstadd_back(b_list, flstnew(ft_strcat("declare -x", str)));
     sort_env(b_list);
 }

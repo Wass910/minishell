@@ -30,6 +30,14 @@ void add_line2(t_list **b_list, t_comm comm, int j)
 
     i = 0;
     str = to_print2(comm.cmd[j]);
+    if (str)
+    {
+        if(!is_alphanum(str))
+        {
+            printf("export: '%s': not a valid identifier\n", str);
+            return ;
+        }
+    }
 	if (str)
     	flstadd_back(b_list, flstnew(str));
 }
@@ -82,6 +90,11 @@ char    *make_test(char *s)
         str[i] = s[i];
         i++;
     }
+    if (s[i] == '=')
+    {
+        str[i] = '=';
+        i++;
+    }
     str[i] = '\0';
     return (str);
 }
@@ -120,22 +133,21 @@ void    already_in(t_list **a_list, char *str, int j)
         else
             s = temp->next->content;
         s = make_test(s);
-        printf("S ====== %s\n", s);
-        printf("S2 ====== %s\n", str);
-        if(!is_same(s, str))
+        if(!is_same(s, str) || !is_same(str, s))
+        {
             break;
+        }
         temp = temp->next;
     }
-    if (!is_same(s, str) && j == 1)
+    if ((!is_same(s, str) || !is_same(str, s))&& j == 1)
     {
-        
         del = temp->next;
         temp->next = temp->next->next;
         free(del);
         free(s);
         return ;
     }
-    if (!is_same(s, str) && is_valid(str))
+    if ((!is_same(s, str) || !is_same(str, s)) && is_valid(str))
     {
         del = temp->next;
         temp->next = temp->next->next;
