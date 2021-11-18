@@ -131,7 +131,7 @@ int build_cd(t_comm comm)
         if (i == -1)
         {
             str = strerror(errno);
-            write(1, str, ft_strlen(str));
+            printf("cd: %s: %s\n", comm.cmd[1], str);
         }
         free(s);
         return (i);
@@ -141,9 +141,19 @@ int build_cd(t_comm comm)
     if (i == -1)
     {
         str = strerror(errno);
-        write(1, str, ft_strlen(str));
+        printf("cd: %s: %s\n", comm.cmd[1], str);
     }
     return (i);
+}
+
+int is_returnvalue(char *s)
+{
+    int i;
+
+    i = 0;
+    if (s[0] == '$' && s[1] == '?' && s[2] == '\0')
+        return (1);
+    return (0);
 }
 
 int build_echo(t_comm comm, t_list **a_list)
@@ -156,7 +166,12 @@ int build_echo(t_comm comm, t_list **a_list)
         i = 2;
         while (comm.cmd[i])
         {
-            if (check_inenv(&comm.cmd[i][1], a_list))
+            if (is_returnvalue(comm.cmd[i]))
+            {
+                str = ft_itoa(comm.retclone);
+                write(1, str, ft_strlen(str));
+            }
+            else if (check_inenv(&comm.cmd[i][1], a_list))
             {
                 str = getenv(&comm.cmd[i][1]);
                 write(1, str, ft_strlen(str));
@@ -173,7 +188,12 @@ int build_echo(t_comm comm, t_list **a_list)
         i = 1;
         while (comm.cmd[i])
         {
-            if (check_inenv(&comm.cmd[i][1], a_list))
+            if (is_returnvalue(comm.cmd[i]))
+            {
+                str = ft_itoa(comm.retclone);
+                write(1, str, ft_strlen(str));
+            }
+            else if (check_inenv(&comm.cmd[i][1], a_list))
             {
                 str = getenv(&comm.cmd[i][1]);
                 write(1, str, ft_strlen(str));
