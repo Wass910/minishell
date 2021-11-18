@@ -10,7 +10,7 @@ WHITE = \033[0;97m
 
 UNAME = $(shell uname -s)
 
-CFLAGS = -g3 -fsanitize=address
+CFLAGS = -fsanitize=address -g3
 RM = rm -f
 CC1 = clang -lreadline
 CC2 = clang

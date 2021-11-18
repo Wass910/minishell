@@ -91,6 +91,8 @@ int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 
 void    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 {
+    if (!all_cmd)
+      return ;
     if (all_cmd && ft_strchr(all_cmd, '|') != 0)
       comm.cmd = ft_split(all_cmd, '|');
     else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
@@ -114,7 +116,11 @@ int main(int argc, char **argv, char **envp)
     make_list(&b_list, envp);
     while (1)
     {
+      // write(1, "test 1\n", 7);
+      // write(0, "test 0\n", 7);
       line = readline("$> ");
+      // write(1, "test 1\n", 7);
+      // write(0, "test 0\n", 7);
       //printf("line = \n");
       //write(1, "bob\n", 4);
       //write(1, "lol", 3);

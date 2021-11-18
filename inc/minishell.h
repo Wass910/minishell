@@ -106,7 +106,7 @@ char	*ft_strcat_cmd(char *dest, char *src);
 t_data	path2(t_data data, char *command, char **env);
 t_data	path1(char *command, char **env);
 void	free_str(char **str);
-void	pipex(t_pip *data);
+void	pipex(t_pip *data, int i);
 void	create_process(t_data data, t_comm comm);
 t_data	uniq_path(t_data data, t_comm comm);
 int	get_next_line(int fd, char **line);
