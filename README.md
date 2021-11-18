@@ -1,3 +1,1 @@
 # minishell
-
-clang -lreadline *.c
