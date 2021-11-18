@@ -238,13 +238,44 @@ void    parsing_pipes(t_comm comm)
     //free_pip(parse_pip);
     while (nb_cmds > 1)
     {
-      pipex(parse_pip, 0);
+      int pipefd[2];
+      pid_t pid1;
+
+      if (pipe(pipefd) == -1)
+        exit(EXIT_FAILURE);
+      pid1 = fork();
+      if (pid1 == -1)
+        exit(EXIT_FAILURE);
+      if (pid1)
+      {
+        close(pipefd[1]);
+          dup2(pipefd[0], STDIN);
+        waitpid(pid1, NULL, 0);	
+        //execve(data->next->path, data->next->cmd, NULL);
+      }
+      else
+      {
+        close(pipefd[0]);
+        dup2(pipefd[1], STDOUT);
+        execve(parse_pip->path, parse_pip->cmd, NULL);
+        return ;
+      }
       parse_pip = parse_pip->next;
       nb_cmds--;
     }
-      write(0, "lol\n", 4);
-      write(1, "lol2\n", 5);
-      execve(parse_pip->path, parse_pip->cmd, NULL);
+    i = fork();
+    if (i)
+    {
+      dup2(STDIN, pipefd[0]);
+      dup2(STDOUT,pipefd[1]);
+        waitpid(i, NULL, 0);
+    }
+    else{
+        execve(parse_pip->path, parse_pip->cmd, NULL);
+    }  
+    // dup2(STDIN, pipefd[0]);
+    // dup2(STDOUT,pipefd[1]);
+    // execve(parse_pip->path, parse_pip->cmd, NULL);
     return ;
 
       
