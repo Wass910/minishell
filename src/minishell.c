@@ -120,7 +120,7 @@ int main(int argc, char **argv, char **envp)
     make_list(&b_list, envp);
     while (1)
     {
-      line = readline(argv[1]);
+      line = readline();
       if (line)
         parcing(line, comm, &a_list, &b_list);
       free(line);
