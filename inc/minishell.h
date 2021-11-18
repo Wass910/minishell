@@ -24,6 +24,9 @@
 # define ENV_TYPE 5
 # define EXIT_TYPE 6
 
+# define INFILE 0
+# define OUTFILE 1
+
 typedef struct s_list
 {
 	char			*content;
@@ -42,8 +45,26 @@ typedef struct s_data{
 	int		pipefd[2];
 }				t_data;
 
+// typedef struct s_pip{
+// 	char	*cmd;
+// 	int		nb_cmd;
+// 	char	*path;
+// 	int		read_file;
+// 	int		write_file;
+// 	int 	redir_output;
+//     int 	redir_input;
+// 	int 	redir_output_A;
+//     int 	redir_double_input;
+// 	int 	single_quote;
+//     int 	double_quote;
+// 	int		pid1;
+// 	int		pid2;
+// 	int		pipefd[2];
+// 	struct s_pip *next;
+// }		t_pip;
+
 typedef struct s_pip{
-	char	*cmd;
+	char	**cmd;
 	int		nb_cmd;
 	char	*path;
 	int		read_file;
@@ -54,11 +75,10 @@ typedef struct s_pip{
     int 	redir_double_input;
 	int 	single_quote;
     int 	double_quote;
-	int		pid1;
-	int		pid2;
-	int		pipefd[2];
+	char	**file_out;
+	char	**file_in;
 	struct s_pip *next;
-}		t_pip;
+}				t_pip;
 
 typedef struct	s_comm
 {
@@ -83,10 +103,10 @@ int	ft_strchr(char *s, int c);
 t_comm	fill_comm(t_comm comm, char *cmd);
 char			*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strcat_cmd(char *dest, char *src);
-t_data	path2(t_data data, char *command);
-t_data	path1(char *command);
+t_data	path2(t_data data, char *command, char **env);
+t_data	path1(char *command, char **env);
 void	free_str(char **str);
-int	pipex(t_pip *parse_pip);
+void	pipex(t_pip *data);
 void	create_process(t_data data, t_comm comm);
 t_data	uniq_path(t_data data, t_comm comm);
 int	get_next_line(int fd, char **line);
@@ -135,5 +155,18 @@ int is_same(char *s1, char *s2);
 char *getenv2(char *s, t_list **a_list);
 void    already_in(t_list **a_list, char *str, int j);
 int is_alphanum(char *s);
+void	free_str(char **str);
+int	what_path(char **path, char *cmd);
+char	*ft_strcat_red(char *dest, char *src);
+char	*ft_strcat_redf(char *dest, char *src);
+char	*ft_strcat_red_glu(char *dest, char *src);
+char	*ft_strcat_w(char *dest, char *src);
+char	*path(char *command);
+t_pip	*initializing_redout(t_pip *parse_pip, char **tmp_all);
+t_pip	*initializing_redin(t_pip *parse_pip, char **tmp_all);
+t_pip	*ft_lstnew_pip(char *str, int i);
+int	where_redir(char **str);
+t_pip	*fill_parse_pipe(t_pip *parse_pip, char *str, int i);
+int	ft_count_str(char *s1, char *s2);
 
 #endif

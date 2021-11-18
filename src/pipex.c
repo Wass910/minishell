@@ -1,94 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
+/*   Updated: 2021/11/18 11:10:52 by idhiba           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
-// int	open_file2(char *filename)
-// {
-// 	if (access(filename, F_OK) == 0)
-// 		return (open(filename, O_RDWR));
-// 	else
-// 		return (open(filename, O_CREAT | S_IWOTH));
-// 	return (-1);
-// }
-
-// int	open_file(char *filename, t_data data)
-// {
-// 	if (open(filename, __O_DIRECTORY) != -1)
-// 	{
-// 		write(1, "the file is a directory.\n", 25);
-// 		free(data.path1);
-// 		free(data.path2);
-// 		free_str(data.cmd1);
-// 		free_str(data.cmd2);
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	if (access(filename, F_OK) == 0)
-// 		return (open(filename, O_RDONLY));
-// 	else
-// 	{
-// 		write(1, "The file doesn't exist.\n", 24);
-// 		free(data.path1);
-// 		free(data.path2);
-// 		free_str(data.cmd1);
-// 		free_str(data.cmd2);
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	return (-1);
-// }
-
-void	create_multi_process(t_data data)
+void	pipex(t_pip *data)
 {
-	if (pipe(data.pipefd) == -1)
+	int pipefd[2];
+	pid_t pid1;
+
+	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);
-	data.pid1 = fork();
-	if (data.pid1 == -1)
+	pid1 = fork();
+	if (pid1 == -1)
 		exit(EXIT_FAILURE);
-	if (data.pid1 == 0)
+	if (pid1)
 	{
-		dup2(data.pipefd[1], STDOUT);
-		close(data.pipefd[0]);
-		close(data.pipefd[1]);
-		execve(data.path1, data.cmd1, NULL);
+		close(pipefd[1]);
+		dup2(pipefd[0], STDIN);
+		waitpid(pid1, NULL, 0);	
+		//execve(data->next->path, data->next->cmd, NULL);
 	}
-	data.pid2 = fork();
-	if (data.pid2 == -1)
-		exit(EXIT_FAILURE);
-	if (data.pid2 == 0)
+	else
 	{
-		dup2(data.pipefd[0], STDIN);
-		close(data.pipefd[0]);
-		close(data.pipefd[1]);
-		execve(data.path2, data.cmd2, NULL);
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT);
+		execve(data->path, data->cmd, NULL);
 	}
 }
 
-// void	ft_cant_open(t_data data)
+// void	parsing_pipes()
 // {
-// 	if (data.read_file == -1 || data.write_file == -1)
-// 	{
-// 		free(data.path1);
-// 		free(data.path2);
-// 		free_str(data.cmd1);
-// 		free_str(data.cmd2);
-// 		write(1, "Can't open this file, sorry.\n", 29);
-// 		exit(EXIT_FAILURE);
-// 	}
+	
 // }
+// int	main(int argc, char **argv, char **env)
+// {
+// 	t_pip	*data;
+// 	int i = 4;
+// 	char *cmd1 = "ls >outfile1 -l";
+// 	char *cmd2 = "wc <outfile2 >outfoul -l ";
+// 	int fdout = 1;
+// 	int output;
 
-int	pipex(t_pip *parse_pip)
-{
-	t_data	data;
-
-	//print_comm(&comm);
-	//printf("oui\n");
-	//parse_pip = path1(comm.cmd[0]);
-	//printf("datapath1 = %s", data.path1);
-	//data = path2(data, comm.cmd[1]);
-	//ft_cant_open(data);
-	// dup2(data.read_file, STDIN);
-	// dup2(data.write_file, STDOUT);
-	create_multi_process(data);
-	free(data.path1);
-	free(data.path2);
-	free_str(data.cmd1);
-	free_str(data.cmd2);
-	return (0);
-}
+	
+// 	data = ft_lstnew_pip(cmd2, i );
+// 	data = fill_parse_pipe(data, "grep ><outfile3 x >outfile4 ", i );
+// 	data = fill_parse_pipe(data, "cat <outfile5 pipex.c ", i );
+// 	data = fill_parse_pipe(data, cmd1, i );
+// 	print_pipe(data);
+// 	return (0);
+// }

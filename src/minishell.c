@@ -1,5 +1,10 @@
 #include "../inc/minishell.h"
 
+void  prompt(void)
+{
+    write(1, "$>", ft_strlen("$>"));
+}
+
 void	print_comm(t_comm comm)
 {
   int a = 0;
@@ -57,7 +62,6 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
           k = 0;
         if (access(str, F_OK) == 0)
           break;
-        free(str);
         k++;
       }
     }
@@ -70,11 +74,14 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
     k = fork();
     if (k == 0)
       exec_cmd(str, comm);
+    else
+      waitpid(k, NULL, 0);
     return (0);
 }
 
 int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 {
+    print_comm(comm);
     if (comm.nb_pipe > 0)
       parsing_pipes(comm);
     else
@@ -84,27 +91,15 @@ int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 
 void    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 {
-    //char  *all_cmd;
-    //char **bg;
-    
-    // all_cmd = NULL;
-    // while (str[i])
-    // {
-    //     all_cmd = ft_strcat(all_cmd, str[i]);
-    //     i++;
-    // }
-    if (ft_strchr(all_cmd, '|') != 0)
+  if (!all_cmd)
+    return ;
+    if (all_cmd && ft_strchr(all_cmd, '|') != 0)
       comm.cmd = ft_split(all_cmd, '|');
-    else
+    else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
       comm.cmd = ft_split(all_cmd, ' ');
     comm = fill_comm(comm, all_cmd);
     //print_comm(comm);
     redir_comm(comm, a_list, b_list);
-}
-
-void  prompt(void)
-{
-    write(1, "$>", ft_strlen("$>"));
 }
 
 int main(int argc, char **argv, char **envp)
@@ -113,6 +108,7 @@ int main(int argc, char **argv, char **envp)
     t_list *a_list;
     t_list *b_list;
     char *line;
+    char *test;
 
     (void)argc;
     comm.env = NULL;
@@ -120,9 +116,15 @@ int main(int argc, char **argv, char **envp)
     make_list(&b_list, envp);
     while (1)
     {
-      line = readline(argv[1]);
-      if (line)
+      line = readline("$>");
+      //printf("line = \n");
+      //write(1, "bob\n", 4);
+      //write(1, "lol", 3);
+      if (line[0])
+      {
+        add_history(line);
         parcing(line, comm, &a_list, &b_list);
+      }
       free(line);
     }
     //parcing(argv, comm);
