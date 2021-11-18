@@ -97,7 +97,14 @@ int build_cd(t_comm comm)
     char *str;
     char *s;
 
-    if (comm.cmd[1][0] == '~' && comm.cmd[1][1] == '\0')
+    if (!comm.cmd[1])
+    {
+        str = getenv("HOME");
+        if (!str)
+            return (-1);
+        i = chdir(str);
+    }
+    else if (comm.cmd[1][0] == '~' && comm.cmd[1][1] == '\0')
     {
         str = getenv("HOME");
         if (!str)
