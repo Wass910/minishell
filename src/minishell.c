@@ -40,6 +40,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
     char **path;
     int k;
     char *str;
+<<<<<<< HEAD
     int status;
     char *tmp;
 
@@ -56,6 +57,21 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
       //printf("continue the parse\n");
     //if(access(comm.cmd[0], F_OK) == 0)
       //printf("command found whithout path\n");
+=======
+
+    k = 0;
+    path = ft_split(getenv2("PATH", a_list), ':');
+    //print_comm(&comm);
+    if (if_builtin(comm.cmd) == 0)
+    {
+      printf("builtin to do.\n");
+      return (builtin(comm, a_list, b_list));
+    }
+    else
+      printf("continue the parse\n");
+    if(access(comm.cmd[0], F_OK) == 0)
+      printf("command found whithout path\n");
+>>>>>>> main
     if (path)
     {
       while (path[k])
@@ -70,6 +86,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
     }
     else
     {
+<<<<<<< HEAD
       free(path);
       //printf("%s: No such file or directory\n", comm.cmd[0]);
       return (127);
@@ -93,11 +110,27 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
     }
     free(path);
     return (k);
+=======
+      printf("%s: No such file or directory\n", comm.cmd[0]);
+      return (127);
+    }
+    printf("found with path command = %s\n", str);
+    k = fork();
+    if (k == 0)
+      exec_cmd(str, comm);
+    else
+      waitpid(k, NULL, 0);
+    return (0);
+>>>>>>> main
 }
 
 int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 {
+<<<<<<< HEAD
   print_comm(comm);
+=======
+    print_comm(comm);
+>>>>>>> main
     if (comm.nb_pipe > 0)
       parsing_pipes(comm);
     else
@@ -105,6 +138,7 @@ int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
     return (0);
 }
 
+<<<<<<< HEAD
 int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 {
   int i;
@@ -112,17 +146,28 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
   i = 0;
   if (!all_cmd)
     return 1;
+=======
+void    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
+{
+  if (!all_cmd)
+    return ;
+>>>>>>> main
     if (all_cmd && ft_strchr(all_cmd, '|') != 0)
       comm.cmd = ft_split(all_cmd, '|');
     else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
       comm.cmd = ft_split(all_cmd, ' ');
     comm = fill_comm(comm, all_cmd);
+<<<<<<< HEAD
     while (comm.cmd[i])
     {
       comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
       i++;
     }
     return (redir_comm(comm, a_list, b_list));
+=======
+    //print_comm(comm);
+    redir_comm(comm, a_list, b_list);
+>>>>>>> main
 }
 
 int main(int argc, char **argv, char **envp)
@@ -139,6 +184,7 @@ int main(int argc, char **argv, char **envp)
     make_list(&b_list, envp);
     while (1)
     {
+<<<<<<< HEAD
       line = readline("$> ");
       if (line[0])
       {
@@ -147,5 +193,22 @@ int main(int argc, char **argv, char **envp)
       }
       free(line);
     }
+=======
+      line = readline("$>");
+      //printf("line = \n");
+      //write(1, "bob\n", 4);
+      //write(1, "lol", 3);
+      if (line[0])
+      {
+        add_history(line);
+        parcing(line, comm, &a_list, &b_list);
+      }
+      free(line);
+    }
+    //parcing(argv, comm);
+    //variable = readline(NULL);
+    // variable = getenv(argv[1]);
+    // variable = ft_strcat(variable, "/salut");
+>>>>>>> main
     return 0;
 }
