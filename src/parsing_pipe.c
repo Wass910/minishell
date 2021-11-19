@@ -11,6 +11,7 @@ t_pip	*initializing_redout(t_pip *parse_pip, char **tmp_all)
 	{
 		if (ft_strchr(tmp_all[dest], '>') > 0 && ft_strchr(tmp_all[dest], '<') <= 0)
 		{
+			parse_pip->file_out = malloc(sizeof(char *) * (parse_pip->redir_output + 1));
 			if (tmp_all[dest][1])
 				parse_pip->file_out[count] = ft_strcat_red_glu("", tmp_all[dest]);
 			else if (tmp_all[dest + 1])
@@ -47,6 +48,7 @@ t_pip	*initializing_redin(t_pip *parse_pip, char **tmp_all)
 	{
 		if (ft_strchr(tmp_all[dest], '<') > 0 && ft_strchr(tmp_all[dest], '>') <= 0)
 		{
+			parse_pip->file_in = malloc(sizeof(char *) * (parse_pip->redir_input + 1));
 			if (tmp_all[dest][1])
 				parse_pip->file_in[count] = ft_strcat_red_glu("", tmp_all[dest]);
 			else if (tmp_all[dest + 1])
@@ -77,20 +79,16 @@ t_pip   *redirection(t_pip *new, char **tmp_all, char *str)
 {
   if (new->redir_input > 0 && new->redir_output <= 0)
 	{
-		new->file_in = malloc(sizeof(char *) * (new->redir_input + 1));
 		new = initializing_redin(new, tmp_all);
 		new->file_out = NULL;
 	}
 	else if (new->redir_output > 0 && new->redir_input <= 0)
 	{
-		new->file_out = malloc(sizeof(char *) * (new->redir_output + 1));
 		new->file_in = NULL;
 		new = initializing_redout(new, tmp_all);
 	}
 	else if (new->redir_output > 0 && new->redir_input > 0)
 	{
-		new->file_out = malloc(sizeof(char *) * (new->redir_output + 1));
-		new->file_in = malloc(sizeof(char *) * (new->redir_input + 1));
 		new = initializing_redin(new, tmp_all);
 		new = initializing_redout(new, tmp_all);
 	}
@@ -168,7 +166,7 @@ void	print_pipe(t_pip *parse_pip)
 	{
 		while (parse_pip->cmd[i])
     	{
-        printf("| parse_pip->cmd                  : %s            \n", parse_pip->cmd[i]);
+			printf("| parse_pip->cmd                  : %s            \n", parse_pip->cmd[i]);
       	i++;
     	}
 	}
@@ -177,7 +175,8 @@ void	print_pipe(t_pip *parse_pip)
 	{
 		while (parse_pip->file_out[i])
     	{
-        	printf("| parse_pip->file_out             : %s            \n", parse_pip->file_out[i]);
+			if(parse_pip->file_out[i])
+        		printf("| parse_pip->file_out             : %s            \n", parse_pip->file_out[i]);
       		i++;
     	}
 	}
@@ -186,13 +185,18 @@ void	print_pipe(t_pip *parse_pip)
 	{
 		while (parse_pip->file_in[i])
     	{
-        	printf("| parse_pip->file_in              : %s            \n", parse_pip->file_in[i]);
+			if(parse_pip->file_in[i])
+        		printf("| parse_pip->file_in              : %s            \n", parse_pip->file_in[i]);
       		i++;
     	}
 	}
     printf("| parse_pip->path                 : %s            \n", parse_pip->path);
 	printf("| parse_pip->redir_output         : %d            \n", parse_pip->redir_output);
   	printf("| parse_pip->redir_input          : %d            \n", parse_pip->redir_input);
+	printf("| parse_pip->redir_output_A       : %d            \n", parse_pip->redir_output_A);
+  	printf("| parse_pip->redir_double_input   : %d            \n", parse_pip->redir_double_input);
+	printf("| parse_pip->single_quote         : %d            \n", parse_pip->single_quote);
+  	printf("| parse_pip->double_quote         : %d            \n", parse_pip->double_quote);
 	printf("-----------------------------------\n");
     parse_pip = parse_pip->next;
     i++;
@@ -217,15 +221,15 @@ void    parsing_pipes(t_comm comm)
     t_pip *parse_pip;
     int i;
     int nb_cmds;
-    pid_t pid1;
-    int pipefd[2];
-    int file;
+	t_pip *tmp;
+	int cmd_begin = 0;
+	int err = 0;
+	char **str_err;
 
-    file = open("outfile", O_CREAT | S_IWOTH);
     i = 0;
     while (comm.cmd[i])
     { 
-      printf("cmd = %s\n", comm.cmd[i]);
+     // printf("cmd = %s\n", comm.cmd[i]);
          i++;
 
     }
@@ -234,49 +238,65 @@ void    parsing_pipes(t_comm comm)
     parse_pip = ft_lstnew_pip(comm.cmd[i], i + 1);
     while(i-- > 0)
         parse_pip = fill_parse_pipe(parse_pip, comm.cmd[i], i + 1);
-    print_pipe(parse_pip);
-    //free_pip(parse_pip);
-    while (nb_cmds > 1)
-    {
-      int pipefd[2];
-      pid_t pid1;
-
-      if (pipe(pipefd) == -1)
-        exit(EXIT_FAILURE);
-      pid1 = fork();
-      if (pid1 == -1)
-        exit(EXIT_FAILURE);
-      if (pid1)
-      {
-        close(pipefd[1]);
-          dup2(pipefd[0], STDIN);
-        waitpid(pid1, NULL, 0);	
-        //execve(data->next->path, data->next->cmd, NULL);
-      }
-      else
-      {
-        close(pipefd[0]);
-        dup2(pipefd[1], STDOUT);
-        execve(parse_pip->path, parse_pip->cmd, NULL);
-        return ;
-      }
-      parse_pip = parse_pip->next;
-      nb_cmds--;
-    }
-    i = fork();
-    if (i)
-    {
-      dup2(STDIN, pipefd[0]);
-      dup2(STDOUT,pipefd[1]);
-        waitpid(i, NULL, 0);
-    }
-    else{
-        execve(parse_pip->path, parse_pip->cmd, NULL);
-    }  
-    // dup2(STDIN, pipefd[0]);
-    // dup2(STDOUT,pipefd[1]);
-    // execve(parse_pip->path, parse_pip->cmd, NULL);
-    return ;
+	tmp = parse_pip;
+	i = 0;
+	while(tmp)
+	{
+		if(tmp->path == NULL)
+		{
+			printf("%s :commande not found\n", tmp->cmd[0]);
+			cmd_begin = i + 1;
+		}
+		i++;
+		tmp = tmp->next;
+	}
+	printf("cmd = %d\n", cmd_begin);
+	while (cmd_begin > 0)
+	{
+		parse_pip = parse_pip->next;
+		cmd_begin--;
+		nb_cmds--;
+	}
+	//print_pipe(parse_pip);
+	if(nb_cmds == 1)
+	{
+		if (ft_strncmp(parse_pip->cmd[0], "cat", 3) == 0 || 
+				ft_strncmp(parse_pip->cmd[0], "grep", 4) == 0)
+			return ;
+		else if (ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0 && parse_pip->cmd[1])
+		{
+			printf("0\n");
+			return ;
+		}
+		else if (ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0 && !parse_pip->cmd[1])
+		{
+			printf("      0       0       0\n");
+			return ;
+		}
+		else
+			pipex_for_one(parse_pip);
+	}
+	else
+	{
+		if (ft_strncmp(parse_pip->cmd[0], "cat", 3) == 0 || 
+				ft_strncmp(parse_pip->cmd[0], "grep", 4) == 0 || 
+				ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0)
+		{
+			while (ft_strncmp(parse_pip->cmd[0], "cat", 3) == 0 || 
+				ft_strncmp(parse_pip->cmd[0], "grep", 4) == 0 || 
+				ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0)
+			{
+				parse_pip = parse_pip->next;
+				nb_cmds--;
+			}
+		}
+		if(nb_cmds == 1)
+			pipex_for_one(parse_pip);
+		else
+			pipex(parse_pip, nb_cmds);
+	
+	}
+	return ;
 
       
     //pipex(parse_pip);

@@ -2,25 +2,25 @@
 
 void  prompt(void)
 {
-    write(1, "$>", ft_strlen("$>"));
+		write(1, "$>", ft_strlen("$>"));
 }
 
 void	print_comm(t_comm comm)
 {
-  int a = 0;
+	int a = 0;
 
-  	printf("-----------------------------------\n");
-  	while (comm.cmd[a] != NULL)
-    {
-      printf("| comm.cmd_sep       : %s            \n", comm.cmd[a]);
-      a++;
-    }
-    printf("| comm.nb_pipe       : %d            \n", comm.nb_pipe);
-    printf("| comm.redir_input   : %d            \n", comm.redir_input);
-    printf("| comm.redir_output  : %d            \n", comm.redir_output);
-    printf("| comm.single_quote  : %d            \n", comm.single_quote);
-    printf("| comm.double_quote  : %d            \n", comm.double_quote);
-  	printf("-----------------------------------\n");
+		printf("-----------------------------------\n");
+		while (comm.cmd[a] != NULL)
+		{
+			printf("| comm.cmd_sep       : %s            \n", comm.cmd[a]);
+			a++;
+		}
+		printf("| comm.nb_pipe       : %d            \n", comm.nb_pipe);
+		printf("| comm.redir_input   : %d            \n", comm.redir_input);
+		printf("| comm.redir_output  : %d            \n", comm.redir_output);
+		printf("| comm.single_quote  : %d            \n", comm.single_quote);
+		printf("| comm.double_quote  : %d            \n", comm.double_quote);
+		printf("-----------------------------------\n");
 }
 
 // void	good_one_cmd(t_comm comm)
@@ -37,111 +37,109 @@ void	print_comm(t_comm comm)
 
 int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 {
-    char **path;
-    int k;
-    char *str;
+		char **path;
+		int k;
+		char *str;
 
-    k = 0;
-    path = ft_split(getenv2("PATH", a_list), ':');
-    //print_comm(&comm);
-    if (if_builtin(comm.cmd) == 0)
-    {
-      printf("builtin to do.\n");
-      return (builtin(comm, a_list, b_list));
-    }
-    else
-      printf("continue the parse\n");
-    if(access(comm.cmd[0], F_OK) == 0)
-      printf("command found whithout path\n");
-    if (path)
-    {
-      while (path[k])
-      {
-        str = ft_strcat_cmd(path[k], comm.cmd[0]);
-        if (access(str, F_OK) == 0)
-          k = 0;
-        if (access(str, F_OK) == 0)
-          break;
-        k++;
-      }
-    }
-    else
-    {
-      printf("%s: No such file or directory\n", comm.cmd[0]);
-      return (127);
-    }
-    printf("found with path command = %s\n", str);
-    k = fork();
-    if (k == 0)
-      exec_cmd(str, comm);
-    else
-      waitpid(k, NULL, 0);
-    return (0);
+		k = 0;
+		path = ft_split(getenv2("PATH", a_list), ':');
+		//print_comm(&comm);
+		if (if_builtin(comm.cmd) == 0)
+		{
+			printf("builtin to do.\n");
+			return (builtin(comm, a_list, b_list));
+		}
+		else
+			printf("continue the parse\n");
+		if(access(comm.cmd[0], F_OK) == 0)
+			printf("command found whithout path\n");
+		if (path)
+		{
+			while (path[k])
+			{
+				str = ft_strcat_cmd(path[k], comm.cmd[0]);
+				if (access(str, F_OK) == 0)
+					k = 0;
+				if (access(str, F_OK) == 0)
+					break;
+				k++;
+			}
+		}
+		else
+		{
+			printf("%s: No such file or directory\n", comm.cmd[0]);
+			return (127);
+		}
+		printf("found with path command = %s\n", str);
+		k = fork();
+		if (k == 0)
+			exec_cmd(str, comm);
+		else
+			waitpid(k, NULL, 0);
+		return (0);
 }
 
 int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 {
-    print_comm(comm);
-    if (comm.nb_pipe > 0)
-      parsing_pipes(comm);
-    else
-      return(uniq_cmd(comm, a_list, b_list));
-    return (0);
+		print_comm(comm);
+		if (comm.nb_pipe > 0)
+			parsing_pipes(comm);
+		else
+			return(uniq_cmd(comm, a_list, b_list));
+		return (0);
 }
 
 void    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 {
-    if (!all_cmd)
-      return ;
-    if (all_cmd && ft_strchr(all_cmd, '|') != 0)
-      comm.cmd = ft_split(all_cmd, '|');
-    else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
-      comm.cmd = ft_split(all_cmd, ' ');
-    comm = fill_comm(comm, all_cmd);
-    //print_comm(comm);
-    redir_comm(comm, a_list, b_list);
+		if (all_cmd && ft_strchr(all_cmd, '|') != 0)
+			comm.cmd = ft_split(all_cmd, '|');
+		else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
+			comm.cmd = ft_split(all_cmd, ' ');
+		comm = fill_comm(comm, all_cmd);
+		//print_comm(comm);
+		redir_comm(comm, a_list, b_list);
 }
 
 static void    handle_sigusr1(int s, siginfo_t *siginfo, void *context)
 {
-  if (s == 2)
-    printf("\n$> ");
-  if (s==3)
-    return;
-  if (s==1)
-    return;
+	if (s == 2)
+		printf("\n$> ");
+	if (s==3)
+		return;
+	if (s==1)
+		return;
 }
 
 int main(int argc, char **argv, char **envp)
 {
-    t_comm  comm;
-    t_list *a_list;
-    t_list *b_list;
-    char *line;
-    struct sigaction sa;
-    (void)argc;
+		t_comm  comm;
+		t_list *a_list;
+		t_list *b_list;
+		char *line;
+		struct sigaction sa;
+		(void)argc;
 
-    sa.sa_sigaction = handle_sigusr1;
-	  sa.sa_flags = SA_SIGINFO;
-    comm.env = NULL;
-    make_list(&a_list, envp);
-    make_list(&b_list, envp);
-    while (1)
-    {
-      sigaction(SIGINT, &sa, NULL);
-      sigaction(SIGQUIT, &sa, NULL);
-      sigaction(SIGHUP, &sa, NULL);
-      kill(SIGINT, 0);
-      kill(SIGQUIT, 0);
-      kill(SIGHUP, 0);
-      line = readline("$> ");
-      
-      if (line[0])
-      {
-        add_history(line);
-        parcing(line, comm, &a_list, &b_list);
-      }
-      free(line);
-    }
-    return 0;
+		sa.sa_sigaction = handle_sigusr1;
+		sa.sa_flags = SA_SIGINFO;
+		comm.env = NULL;
+		make_list(&a_list, envp);
+		make_list(&b_list, envp);
+		sigaction(SIGINT, &sa, NULL);
+			sigaction(SIGQUIT, &sa, NULL);
+			sigaction(SIGHUP, &sa, NULL);
+			kill(SIGINT, 0);
+			kill(SIGQUIT, 0);
+			kill(SIGHUP, 0);
+		while (1)
+		{
+			line = readline("$> ");
+			
+			if (line[0])
+			{
+				add_history(line);
+				parcing(line, comm, &a_list, &b_list);
+			}
+			free(line);
+		}
+		return 0;
 }

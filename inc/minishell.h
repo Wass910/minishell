@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <readline/readline.h> 
 #include <readline/history.h>
 
@@ -66,6 +67,7 @@ typedef struct s_data{
 typedef struct s_pip{
 	char	**cmd;
 	int		nb_cmd;
+	int		pipefd[2];
 	char	*path;
 	int		read_file;
 	int		write_file;
@@ -92,6 +94,7 @@ typedef struct	s_comm
     int double_quote;
 }				t_comm;
 
+void	pipex_for_one(t_pip *parse_pip);
 void	ft_lstadd_front(t_comm **alst, t_comm *new);
 t_comm	*ft_add_back(t_comm **alst, t_comm *new);
 char	**ft_split(char *s, char c);
