@@ -102,28 +102,40 @@ void    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
     redir_comm(comm, a_list, b_list);
 }
 
+static void    handle_sigusr1(int s, siginfo_t *siginfo, void *context)
+{
+  if (s == 2)
+    printf("\n$> ");
+  if (s==3)
+    return;
+  if (s==1)
+    return;
+}
+
 int main(int argc, char **argv, char **envp)
 {
     t_comm  comm;
     t_list *a_list;
     t_list *b_list;
     char *line;
-    char *test;
-
+    struct sigaction sa;
     (void)argc;
+
+    sa.sa_sigaction = handle_sigusr1;
+	  sa.sa_flags = SA_SIGINFO;
     comm.env = NULL;
     make_list(&a_list, envp);
     make_list(&b_list, envp);
     while (1)
     {
-      // write(1, "test 1\n", 7);
-      // write(0, "test 0\n", 7);
+      sigaction(SIGINT, &sa, NULL);
+      sigaction(SIGQUIT, &sa, NULL);
+      sigaction(SIGHUP, &sa, NULL);
+      kill(SIGINT, 0);
+      kill(SIGQUIT, 0);
+      kill(SIGHUP, 0);
       line = readline("$> ");
-      // write(1, "test 1\n", 7);
-      // write(0, "test 0\n", 7);
-      //printf("line = \n");
-      //write(1, "bob\n", 4);
-      //write(1, "lol", 3);
+      
       if (line[0])
       {
         add_history(line);
@@ -131,9 +143,5 @@ int main(int argc, char **argv, char **envp)
       }
       free(line);
     }
-    //parcing(argv, comm);
-    //variable = readline(NULL);
-    // variable = getenv(argv[1]);
-    // variable = ft_strcat(variable, "/salut");
     return 0;
 }
