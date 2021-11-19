@@ -11,11 +11,7 @@ int verif_the_builtin(char **str)
     }
     else if ((ft_strncmp(str[0], "echo", 4) == 0) && ft_strlen(str[0]) == 4)
     {    
-<<<<<<< HEAD:src/check_builtin.c
         //printf("The command is echo.\n");
-=======
-        printf("The command is echo.\n");
->>>>>>> main:check_builtin.c
         return 0;
     }
     else if ((ft_strncmp(str[0], "pwd", 3) == 0) && ft_strlen(str[0]) == 3)
