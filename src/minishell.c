@@ -107,6 +107,9 @@ int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 
 int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 {
+  int i;
+
+  i = 0;
   if (!all_cmd)
     return 1;
     if (all_cmd && ft_strchr(all_cmd, '|') != 0)
@@ -114,6 +117,11 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
     else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
       comm.cmd = ft_split(all_cmd, ' ');
     comm = fill_comm(comm, all_cmd);
+    while (comm.cmd[i])
+    {
+      comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
+      i++;
+    }
     return (redir_comm(comm, a_list, b_list));
 }
 
