@@ -117,21 +117,40 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
     return (redir_comm(comm, a_list, b_list));
 }
 
+static void    handle_sigusr1(int s, siginfo_t *siginfo, void *context)
+{
+  if (s == 2)
+    printf("\n$> ");
+  if (s==3)
+    return;
+  if (s==1)
+    return;
+}
+
 int main(int argc, char **argv, char **envp)
 {
     t_comm  comm;
     t_list *a_list;
     t_list *b_list;
     char *line;
-    char *test;
-
+    struct sigaction sa;
     (void)argc;
+
+    sa.sa_sigaction = handle_sigusr1;
+          sa.sa_flags = SA_SIGINFO;
     comm.env = NULL;
     make_list(&a_list, envp);
     make_list(&b_list, envp);
+    sigaction(SIGINT, &sa, NULL);
+      sigaction(SIGQUIT, &sa, NULL);
+      sigaction(SIGHUP, &sa, NULL);
+      kill(SIGINT, 0);
+      kill(SIGQUIT, 0);
+      kill(SIGHUP, 0);
     while (1)
     {
       line = readline("$> ");
+      
       if (line[0])
       {
         add_history(line);

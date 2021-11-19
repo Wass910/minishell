@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include <readline/readline.h> 
 #include <readline/history.h>
+#include <signal.h>
 
 # define STDIN 0
 # define STDOUT 1
@@ -162,7 +163,7 @@ int		ft_strchr(char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strcat_cmd(char *dest, char *src);
 void	free_str(char **str);
-void	pipex(t_pip *data);
+void	pipex(t_pip *data, int i);
 void	create_process(t_data data, t_comm comm);
 int		get_next_line(int fd, char **line);
 void	*ft_calloc(int count, int size);
