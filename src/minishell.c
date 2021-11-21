@@ -120,6 +120,8 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
     while (comm.cmd[i])
     {
       comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
+      if (!comm.cmd[i])
+        return (130);
       i++;
     }
     return (redir_comm(comm, a_list, b_list));
