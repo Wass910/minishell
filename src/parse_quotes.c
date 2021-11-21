@@ -206,20 +206,39 @@ int pair_quotes(char *s)
     while (s[i])
     {
         if (s[i] == 34)
-            simple++;
-        else if (s[i] == 39)
             duble++;
+        else if (s[i] == 39)
+            simple++;
         i++;
     }
+    //printf("simple = %d | duble = %d | simple / 2 = %d | duble / 2 == %d\n", simple, duble, (simple / 2), (duble / 2));
+    if (!simple)
+    {
+        if ((duble / 2) % 2 == 0)
+            return (2);
+        else
+            return (0);
+    }
+    if (!duble)
+    {
+        if ((simple / 2) % 2 == 0)
+            return (1);
+        else
+            return (0);
+    }
+    if ((simple / 2) % 2 == 0 && (duble / 2) % 2 == 0)
+        return (3);
+    if ((simple / 2) % 2 != 0 && (duble / 2) % 2 == 0)
+        return (2);
+    if ((simple / 2) % 2 == 0 && (duble / 2) % 2 != 0)
+        return (1);
+    return (0);
 }
 
 char *parse_quotes(char *s, t_list **a_list)
 {
     int i;
     int j;
-    char *str;
-    char *temp;
-    int doll;
 
     i = 0;
     j = 0;
@@ -236,9 +255,11 @@ char *parse_quotes(char *s, t_list **a_list)
             printf("Unclosed quotes, check your inport before retrying\n");
             return (NULL);
         }
-        if (pair_quotes(s))
+        j = pair_quotes(s);
+        printf("%d\n", j);
+        if (j)
         {
-
+            return (NULL);
         }
     }
     return (NULL);
