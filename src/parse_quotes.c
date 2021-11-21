@@ -151,6 +151,7 @@ char *fill_doll(char *s, t_list **a_list)
         free(temp2);
     }
     str[j] = '\0';
+    free(s);
     return (str);
 }
 
@@ -235,6 +236,92 @@ int pair_quotes(char *s)
     return (0);
 }
 
+int no_cross(char *s)
+{
+    int tab[1000];
+    int i;
+    int j;
+    int mid;
+    int change;
+
+    j = 0;
+    i = 0;
+    change = 0;
+    while (s[i])
+    {
+        if (s[i] == 34)
+            tab[j++] = 0;
+        else if (s[i] == 39)
+            tab[j++] = 1;
+        i++;
+    }
+    i = 0;
+    j--;
+    mid = j / 2;
+    while (i <= mid)
+    {
+        if (tab[i] != tab[j])
+            return (0);
+        i++;
+        j--;
+        if (tab[i] != tab[i - 1])
+            change++;
+        if (change == 2)
+            return (0);
+    }
+    return (1);
+}
+
+char *app_nocross(char *s, t_list **a_list)
+{
+    char *str;
+    char *temp;
+    char *temp2;
+    int i;
+    int j;
+    int c;
+
+    i = 0;
+    j = 0;
+    c = 0;
+    temp = NULL;
+    str = malloc(sizeof(char) * 1000);
+    while (s[i])
+    {
+        if (s[i] && (s[i] == 34 || s[i] == 39))
+            i++;
+        else if (s[i] == '$')
+        {
+            i++;
+            temp = after_env(&s[i]);
+            temp2 = getenv2(temp, a_list);
+            free(temp);
+            if (temp2)
+            {
+                while (temp2[c])
+                {
+                    str[j] = temp2[c];
+                    j++;
+                    c++;
+                }
+                c = 0;
+                free(temp2);
+            }
+            while (char_alphanum(s[i]))
+                i++;
+        }
+        else if (s[i] != 34 && s[i] != 39)
+        {
+            str[j] = s[i];
+            j++;
+            i++;
+        }
+    }
+    str[j] = '\0';
+    free(s);
+    return (str);
+}
+
 char *parse_quotes(char *s, t_list **a_list)
 {
     int i;
@@ -259,6 +346,8 @@ char *parse_quotes(char *s, t_list **a_list)
         printf("%d\n", j);
         if (j)
         {
+            if (no_cross(s))
+                return(app_nocross(s, a_list));
             return (NULL);
         }
     }
