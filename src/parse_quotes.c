@@ -322,6 +322,70 @@ char *app_nocross(char *s, t_list **a_list)
     return (str);
 }
 
+char *delete_pair(char*s)
+{
+    char *str;
+    int type;
+    int i;
+    int j;
+    int mid;
+    int repeat;
+
+    j = 0;
+    i = 0;
+    while (s[i])
+    {
+        if (s[i] == 34 || s[i] == 39)
+            j++;
+        i++;
+    }
+    i = 0;
+    j--;
+    mid = j / 2;
+    str = malloc(sizeof(char) * 1000);
+    if (!str)
+        return (NULL);
+    j = 0;
+    while (i <= mid)
+    {
+        if (s[i] == 34 || s[i] == 39)
+        {
+            repeat = i;
+            type = s[i];
+            while (s[i] == type)
+                i++;
+        }
+        //printf("type = %d | i = %d | repeat = %d | s[i] = %c\n", type, i, repeat, s[i]);
+        if((i - repeat) % 2 == 0)
+        {
+            i = repeat;
+            while (s[i] == type)
+                i++;
+        }
+        else
+        {
+            i = repeat;
+            //printf("type = %d | s[i] = %c\n", type, s[i]);
+            while (s[i] == type)
+            {
+                str[j] = s[i];
+                //printf("c = %c\n", str[j]);
+                j++;
+                i++;
+            }
+        }
+        while (s[i] && s[i] != 39 && s[i] != 34)
+        {
+            str[j] = s[i];
+            j++;
+            i++;
+        }
+    }
+    str[j] = '\0';
+    printf("str = %s\n", str);
+    return (NULL);
+}
+
 char *parse_quotes(char *s, t_list **a_list)
 {
     int i;
@@ -344,12 +408,12 @@ char *parse_quotes(char *s, t_list **a_list)
         }
         j = pair_quotes(s);
         printf("%d\n", j);
-        if (j)
+        if (j == 3)
         {
             if (no_cross(s))
                 return(app_nocross(s, a_list));
-            return (NULL);
         }
+        s = delete_pair(s);
     }
     return (NULL);
 }
