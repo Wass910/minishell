@@ -184,5 +184,12 @@ void	add_line(t_list **b_list, t_comm comm, int j);
 char	*ft_strdup(char *s1);
 char	**make_expenv(t_comm comm);
 char *parse_quotes(char *s, t_list **a_list);
+    // quotes management
+int no_quotes(char *s);
+int check_doll(char *s);
+int char_alphanum(char c);
+char *after_env(char *s);
+char *fill_doll(char *s, t_list **a_list);
+int unclosed_quotes(char *s);
 
 #endif

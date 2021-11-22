@@ -1,185 +1,5 @@
 #include "../inc/minishell.h"
 
-int no_quotes(char *s)
-{
-    int i;
-
-    i = 0;
-    while (s[i])
-    {
-        if (s[i] == 34 || s[i] == 39)
-            return (0);
-        i++;
-    }
-    return (1);
-}
-
-int closing_quotes(char *s)
-{
-    int i;
-    int type;
-
-    i = 0;
-    if (s[i] == 39 || s[i] == 34)
-    {
-        if (s[i] == 39)
-            type = 39;
-        if (s[i] == 34)
-            type = 34;
-        i++;
-    }
-    while (s[i] != 39 && s[i] != 34 && s[i])
-        i++;
-    if (s[i] == 39 && type == 39 && !s[i + 1])
-        return (1);
-    if (s[i] == 34 && type == 34 && !s[i + 1])
-        return (1);
-    else
-        return (0);
-}
-
-char *fill_closing(char *s, t_list **a_list)
-{
-    int i;
-    int j;
-    char *str;
-    int type;
-
-    i = 0;
-    j = 0;
-    str = malloc(sizeof(char) * 1000);
-    if (!str)
-        return (NULL);
-    if (s[i] == 34)
-        type = 34;
-    else
-        type = 39;
-    i++;
-    while (s[i] != type)
-    {
-        str[j] = s[i];
-        i++;
-        j++;
-    }
-    str[j] = '\0';
-    if (type == 34 && check_inenv(&str[1], a_list))
-        str = getenv(&str[1]);
-    free(s);
-    return (str);
-}
-
-int check_doll(char *s)
-{
-    int i;
-
-    i = 0;
-    while (s[i])
-    {
-        if (s[i] == '$')
-            return (1);
-        i++;
-    }
-    return (0);
-}
-
-int char_alphanum(char c)
-{
-    if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-        return (1);
-    return (0);
-}
-
-char *after_env(char *s)
-{
-    char *temp;
-    int i;
-    int c;
-
-    i = 0;
-    c = 0;
-    temp = malloc(sizeof(char) * 1000);
-    if (!temp)
-        return (NULL);
-    if (s[i] == '$')
-        i++;
-    while (char_alphanum(s[i]))
-    {
-        temp[c] = s[i];
-        i++;
-        c++;
-    }
-    temp[c] = '\0';
-    return (temp);
-}
-
-char *fill_doll(char *s, t_list **a_list)
-{
-    char *str;
-    char *temp;
-    char *temp2;
-    int i;
-    int c;
-    int j;
-
-    i = 0;
-    c = 0;
-    j = 0;
-    str = malloc(sizeof(char) * 1000);
-    if (!str)
-        return (NULL);
-    while (s[i])
-    {
-        while (s[i] != '$')
-        {
-            str[j] = s[i];
-            j++;
-            i++;
-        }
-        temp = after_env(&s[i]);
-        temp2 = getenv2(temp, a_list);
-        free(temp);
-        while (temp2 && temp2[c])
-        {
-            str[j] = temp2[c];
-            j++;
-            c++;
-        }
-        i++;
-        while (char_alphanum(s[i]))
-            i++;
-        c = 0;
-        free(temp2);
-    }
-    str[j] = '\0';
-    free(s);
-    return (str);
-}
-
-int unclosed_quotes(char *s)
-{
-    int i;
-    int j;
-    int type;
-
-    i = 0;
-    j = 0;
-    type = 0;
-    while (s[i])
-    {
-        if (s[i] == 34 || s[i] == 39)
-        {
-            type = s[i];
-            i++;
-            while (s[i] && s[i] != type)
-                i++;
-            if (!s[i])
-                return(1);
-        }
-        i++;
-    }
-    return (0);
-}
-
 int pair_quotes(char *s)
 {
     int simple;
@@ -341,16 +161,19 @@ char *delete_pair(char *s, t_list **a_list)
                 i++;
             }
             temp[k] = '\0';
+            i++;
         }
+        printf("%s\n", temp);
         k = 0;
         while (temp && temp[k])
         {
-            if (temp[k] == '$' && temp[k + 1] && char_alphanum(temp[k + 1]))
+            if (temp[k] == '$' && temp[k + 1] && char_alphanum(temp[k + 1]) && type == 34)
             {
+                k++;
                 temp2[0] = after_env(&temp[k]);
                 temp2[1] = getenv2(temp2[0], a_list);
                 free(temp2[0]);
-                while (temp2[1][c])
+                while (temp2[1] && temp2[1][c])
                 {
                     str[j] = temp2[1][c];
                     c++;
@@ -359,19 +182,19 @@ char *delete_pair(char *s, t_list **a_list)
                 c = 0;
                 if (temp2[1])
                 {
-                    i++;
-                    while(s[i] && char_alphanum(s[i]))
-                        i++;
+                    while(temp[k] && char_alphanum(temp[k]))
+                        k++;
                 }
                 free(temp2[1]);
             }
-            else
+            else if (temp[k])
             {
                 str[j] = temp[k];
                 k++;
                 j++;
             }
         }
+        temp[0] = '\0';
         if (s[i] && s[i] != 34 && s[i] != 39)
         {
             if (s[i] == '$' && s[i + 1] && char_alphanum(s[i + 1]))
@@ -402,8 +225,11 @@ char *delete_pair(char *s, t_list **a_list)
             }
         }
     }
+    free(temp);
+    free(s);
     str[j] = '\0';
     printf("%s\n", str);
+    free(str);
     return (NULL);
 }
 
