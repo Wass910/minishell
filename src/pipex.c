@@ -6,11 +6,23 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
-/*   Updated: 2021/11/19 17:16:26 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/11/22 11:12:28 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+int	open_file2(char *filename)
+{
+  filename++;
+  filename++;
+  filename++;
+	if (access(filename, F_OK) == 0)
+		return (open(filename, O_RDWR));
+	else
+		return (open(filename, O_CREAT | S_IWOTH));
+	return (-1);
+}
 
 void	pipex(t_pip *parse_pip, int nb_cmds)
 {
@@ -18,6 +30,7 @@ void	pipex(t_pip *parse_pip, int nb_cmds)
 	pid_t pid1;
 	int i;
 
+    i = 0;
     while (nb_cmds > 0)
     {
       if (pipe(parse_pip->pipefd) == -1)
@@ -39,8 +52,8 @@ void	pipex(t_pip *parse_pip, int nb_cmds)
       else
       {
         close(parse_pip->pipefd[0]);
-        if(nb_cmds != 1)
-			  dup2(parse_pip->pipefd[1], STDOUT);
+        if(nb_cmds != 1 && !parse_pip->file_out)
+			    dup2(parse_pip->pipefd[1], STDOUT);
 		    if (nb_cmds != 1)
         	execve(parse_pip->path, parse_pip->cmd, NULL);
 		    else

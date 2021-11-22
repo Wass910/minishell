@@ -88,6 +88,14 @@ int error_in_red(char *str)
 			if (str[j] == '<')
 					return ERROR_RED;
 		}
+		if(str[i] == '<')
+		{
+			j = i + 1;
+			while(str[j] == ' ')
+				j++;
+			if (str[j] == '>' && str[j + 1] == '>')
+					return ERROR_RED;
+		}
 		i++;
 	}
 	return 0;
@@ -334,43 +342,46 @@ void    parsing_pipes(t_comm comm)
 		nb_cmds--;
 	}
 	//print_pipe(parse_pip);
-	if(nb_cmds == 1)
+	if (parse_pip)
 	{
-		if (ft_strncmp(parse_pip->cmd[0], "cat", 3) == 0 || 
-				ft_strncmp(parse_pip->cmd[0], "grep", 4) == 0)
-			return ;
-		else if (ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0 && parse_pip->cmd[1])
-		{
-			printf("0\n");
-			return ;
-		}
-		else if (ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0 && !parse_pip->cmd[1])
-		{
-			printf("      0       0       0\n");
-			return ;
-		}
-		else
-			pipex_for_one(parse_pip);
-	}
-	else
-	{
-		if (ft_strncmp(parse_pip->cmd[0], "cat", 3) == 0 || 
-				ft_strncmp(parse_pip->cmd[0], "grep", 4) == 0 || 
-				ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0)
-		{
-			while (ft_strncmp(parse_pip->cmd[0], "cat", 3) == 0 || 
-				ft_strncmp(parse_pip->cmd[0], "grep", 4) == 0 || 
-				ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0)
-			{
-				parse_pip = parse_pip->next;
-				nb_cmds--;
-			}
-		}
 		if(nb_cmds == 1)
-			pipex_for_one(parse_pip);
+		{
+			if (ft_strncmp(parse_pip->cmd[0], "cat", 3) == 0 || 
+					ft_strncmp(parse_pip->cmd[0], "grep", 4) == 0)
+				return ;
+			else if (ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0 && parse_pip->cmd[1])
+			{
+				printf("0\n");
+				return ;
+			}
+			else if (ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0 && !parse_pip->cmd[1])
+			{
+				printf("      0       0       0\n");
+				return ;
+			}
+			else
+				pipex_for_one(parse_pip);
+		}
 		else
-			pipex(parse_pip, nb_cmds);
-	
+		{
+			if (ft_strncmp(parse_pip->cmd[0], "cat", 3) == 0 || 
+					ft_strncmp(parse_pip->cmd[0], "grep", 4) == 0 || 
+					ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0)
+			{
+				while (ft_strncmp(parse_pip->cmd[0], "cat", 3) == 0 || 
+					ft_strncmp(parse_pip->cmd[0], "grep", 4) == 0 || 
+					ft_strncmp(parse_pip->cmd[0], "wc", 3) == 0)
+				{
+					parse_pip = parse_pip->next;
+					nb_cmds--;
+				}
+			}
+			if(nb_cmds == 1)
+				pipex_for_one(parse_pip);
+			else
+				pipex(parse_pip, nb_cmds);
+		
+		}
 	}
 	return ;
 

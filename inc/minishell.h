@@ -90,12 +90,16 @@ typedef struct	s_comm
 	char **env;
 	char **expenv;
 	char **cmd;
+	char	*path;
     int nb_pipe;
     int redir_output;
     int redir_input;
     int single_quote;
     int double_quote;
 	int retclone;
+	char	**file_out;
+	char	**file_in;
+	int		error_parse_red;
 }				t_comm;
 
 // PRINT FUNCTION
@@ -116,6 +120,7 @@ t_pip	*initializing_cmd(t_pip *parse_pip, char **tmp_all);
 char *ft_split_command(char *str);
 int error_in_red(char *str);
 t_pip   *redirection(t_pip *new, char **tmp_all, char *str);
+t_comm	ft_redir_single(char *str, int i);
 
 // BUILD BUILTIN
 int		builtin(t_comm comm, t_list **a_list, t_list **b_list);

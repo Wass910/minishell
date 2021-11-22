@@ -15,11 +15,30 @@ void	print_comm(t_comm comm)
       printf("| comm.cmd_sep       : %s            \n", comm.cmd[a]);
       a++;
     }
+    a=0;
+    if (comm.file_out)
+    {
+      while (comm.file_out[a])
+        {
+            printf("| comm.file_out      : %s            \n", comm.file_out[a]);
+            a++;
+        }
+    }
+    a= 0;
+    if (comm.file_in)
+    {
+      while (comm.file_in[a])
+        {
+            printf("| comm.file_in       : %s            \n", comm.file_in[a]);
+            a++;
+        }
+    }
     printf("| comm.nb_pipe       : %d            \n", comm.nb_pipe);
     printf("| comm.redir_input   : %d            \n", comm.redir_input);
     printf("| comm.redir_output  : %d            \n", comm.redir_output);
     printf("| comm.single_quote  : %d            \n", comm.single_quote);
     printf("| comm.double_quote  : %d            \n", comm.double_quote);
+    printf("| comm.error_parse   : %d            \n", comm.error_parse_red);
   	printf("-----------------------------------\n");
 }
 
@@ -81,6 +100,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 		}
     //printf("found with path command = %s\n", str);
     k = fork();
+
     if (k == 0)
     {
       exec_cmd(str, comm);
@@ -115,13 +135,13 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
     if (all_cmd && ft_strchr(all_cmd, '|') != 0)
       comm.cmd = ft_split(all_cmd, '|');
     else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
-      comm.cmd = ft_split(all_cmd, ' ');
+      comm = ft_redir_single(all_cmd, i );
     comm = fill_comm(comm, all_cmd);
-    while (comm.cmd[i])
-    {
-      comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
-      i++;
-    }
+    // while (comm.cmd[i])
+    // {
+    //   comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
+    //   i++;
+    // }
     return (redir_comm(comm, a_list, b_list));
 }
 
