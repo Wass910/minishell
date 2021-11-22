@@ -164,8 +164,8 @@ char *delete_pair(char *s, t_list **a_list)
             }
             temp[k] = '\0';
             i++;
+            //printf("temp = %s\n", temp);
         }
-        //printf("%s\n", temp);
         k = 0;
         while (temp && temp[k])
         {
@@ -175,6 +175,12 @@ char *delete_pair(char *s, t_list **a_list)
                 temp2[0] = after_env(&temp[k]);
                 temp2[1] = getenv2(temp2[0], a_list);
                 free(temp2[0]);
+                if (!temp2[1])
+                {
+                    str[j] = s[i];
+                    i++;
+                    j++;
+                }
                 while (temp2[1] && temp2[1][c])
                 {
                     str[j] = temp2[1][c];
@@ -253,13 +259,13 @@ char *parse_quotes(char *s, t_list **a_list)
             printf("Unclosed quotes, check your inport before retrying\n");
             return (NULL);
         }
-        j = pair_quotes(s);
-        if (j == 3)
-        {
-            if (no_cross(s))
-                return(app_nocross(s, a_list));
-        }
+        //j = pair_quotes(s);
+        //if (j == 3)
+        //{
+         //   if (no_cross(s))
+         //       return(app_nocross(s, a_list));
+        //}
         s = delete_pair(s, a_list);
     }
-    return (NULL);
+    return (s);
 }
