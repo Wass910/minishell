@@ -150,6 +150,7 @@ char *delete_pair(char *s, t_list **a_list)
         return (NULL);
     while (s[i])
     {
+        k = 0;
         if (s[i] == 34 || s[i] == 39)
         {
             type = s[i];
@@ -157,13 +158,14 @@ char *delete_pair(char *s, t_list **a_list)
             while (s[i] && s[i] != type)
             {
                 temp[k] = s[i];
+                //printf("s[i] = %c\n", s[k]);
                 k++;
                 i++;
             }
             temp[k] = '\0';
             i++;
         }
-        printf("%s\n", temp);
+        //printf("%s\n", temp);
         k = 0;
         while (temp && temp[k])
         {
@@ -228,9 +230,7 @@ char *delete_pair(char *s, t_list **a_list)
     free(temp);
     free(s);
     str[j] = '\0';
-    printf("%s\n", str);
-    free(str);
-    return (NULL);
+    return (str);
 }
 
 char *parse_quotes(char *s, t_list **a_list)
@@ -254,7 +254,6 @@ char *parse_quotes(char *s, t_list **a_list)
             return (NULL);
         }
         j = pair_quotes(s);
-        printf("%d\n", j);
         if (j == 3)
         {
             if (no_cross(s))
