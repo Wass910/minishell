@@ -6,37 +6,37 @@ int find_builtin(char **str)
     if ((ft_strncmp(str[0], "cd", 2) == 0) && ft_strlen(str[0]) == 2)
     {
         
-        printf("The command is cd.\n");
+        //printf("The command is cd.\n");
         return CD_TYPE;
     }
     else if ((ft_strncmp(str[0], "echo", 4) == 0) && ft_strlen(str[0]) == 4)
     {    
-        printf("The command is echo.\n");
+        //printf("The command is echo.\n");
         return ECHO_TYPE;
     }
     else if ((ft_strncmp(str[0], "pwd", 3) == 0) && ft_strlen(str[0]) == 3)
     {
-        printf("The command is pwd.\n");
+        //printf("The command is pwd.\n");
         return PWD_TYPE;
     }
     else if ((ft_strncmp(str[0], "export", 6) == 0) && ft_strlen(str[0]) == 6)
     {
-        printf("The command is export.\n");
+        //printf("The command is export.\n");
         return EXPORT_TYPE;
     }
     else if ((ft_strncmp(str[0], "unset", 5) == 0) && ft_strlen(str[0]) == 5)
     {
-        printf("The command is unset.\n");
+        //printf("The command is unset.\n");
         return UNSET_TYPE;
     }
     else if ((ft_strncmp(str[0], "env", 3) == 0) && ft_strlen(str[0]) == 3)
     {
-        printf("The command is env.\n");
+        //printf("The command is env.\n");
         return ENV_TYPE;
     }
     else if ((ft_strncmp(str[0], "exit", 4) == 0) && ft_strlen(str[0]) == 4)
     {
-        printf("The command is exit.\n");
+        //printf("The command is exit.\n");
         return EXIT_TYPE;
     }
     return (-1);

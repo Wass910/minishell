@@ -53,7 +53,6 @@ char *getenv2(char *s, t_list **a_list)
         if (!is_same(temp->content, s))
         {
             str = ft_strcat_ns(&temp->content[ft_strlen(s)], NULL);
-            printf("%s\n", str);
             return (str);
         }
         temp = temp->next;
