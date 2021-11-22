@@ -125,6 +125,16 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
     return (redir_comm(comm, a_list, b_list));
 }
 
+static void    handle_sigusr1(int s, siginfo_t *siginfo, void *context)
+{
+	if (s == 2)
+		printf("\n$> ");
+	if (s==3)
+		return;
+	if (s==1)
+		return;
+}
+
 int main(int argc, char **argv, char **envp)
 {
 		t_comm  comm;

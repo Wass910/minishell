@@ -26,6 +26,7 @@
 # define EXIT_TYPE 6
 # define INFILE 0
 # define OUTFILE 1
+# define ERROR_RED 1
 
 static int retval = 12;
 
@@ -80,6 +81,7 @@ typedef struct s_pip{
     int 	double_quote;
 	char	**file_out;
 	char	**file_in;
+	int		error_parse_red;
 	struct s_pip *next;
 }				t_pip;
 
@@ -108,9 +110,12 @@ t_comm	fill_comm(t_comm comm, char *cmd);
 t_data	path2(t_data data, char *command, char **env);
 t_data	path1(char *command, char **env);
 t_data	uniq_path(t_data data, t_comm comm);
-t_pip	*initializing_redout(t_pip *parse_pip, char **tmp_all);
-t_pip	*initializing_redin(t_pip *parse_pip, char **tmp_all);
-t_pip	*fill_parse_pipe(t_pip *parse_pip, char *str, int i);
+t_pip	*initializing_red(t_pip *parse_pip, char **tmp_all);
+t_pip	*check_initializing_red(t_pip *parse_pip, char **tmp_all, char *str);
+t_pip	*initializing_cmd(t_pip *parse_pip, char **tmp_all);
+char *ft_split_command(char *str);
+int error_in_red(char *str);
+t_pip   *redirection(t_pip *new, char **tmp_all, char *str);
 
 // BUILD BUILTIN
 int		builtin(t_comm comm, t_list **a_list, t_list **b_list);
@@ -164,7 +169,8 @@ int		ft_strchr(char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strcat_cmd(char *dest, char *src);
 void	free_str(char **str);
-void	pipex(t_pip *data);
+void	pipex(t_pip *data, int i);
+void	pipex_for_one(t_pip *parse_pip);
 void	create_process(t_data data, t_comm comm);
 int		get_next_line(int fd, char **line);
 void	*ft_calloc(int count, int size);
