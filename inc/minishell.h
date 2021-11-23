@@ -97,8 +97,7 @@ typedef struct	s_comm
     int single_quote;
     int double_quote;
 	int retclone;
-	char	**file_out;
-	char	**file_in;
+	char	**redir;
 	int		error_parse_red;
 }				t_comm;
 
@@ -197,5 +196,6 @@ void	add_line(t_list **b_list, t_comm comm, int j);
 char	*ft_strdup(char *s1);
 char	**make_expenv(t_comm comm);
 char *parse_quotes(char *s, t_list **a_list);
+int	open_file2(char *filename);
 
 #endif

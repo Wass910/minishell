@@ -31,25 +31,16 @@ t_comm	initializing_red_single(t_comm parse_pip, char **tmp_all)
 	dest = 0;
 	count_out = 0;
 	count_in = 0;
-	parse_pip.file_out = malloc(sizeof(char *) * (50));
-	parse_pip.file_in = malloc(sizeof(char *) * (50));
+	parse_pip.redir = malloc(sizeof(char *) * (50));
 	while (tmp_all[dest]) 
 	{
-		if (ft_strchr(tmp_all[dest], '>') > 0)
+		if (ft_strchr(tmp_all[dest], '>') > 0 || ft_strchr(tmp_all[dest], '<') > 0)
 		{
 			if (tmp_all[dest][1])
-				parse_pip.file_out[count_out] = ft_strcat_red_glu("", tmp_all[dest]);
+				parse_pip.redir[count_out] = ft_strcat_red_glu("", tmp_all[dest]);
 			else if (tmp_all[dest + 1])
-				parse_pip.file_out[count_out] = ft_strcat_redf(tmp_all[dest], tmp_all[dest +1]);
+				parse_pip.redir[count_out] = ft_strcat_redf(tmp_all[dest], tmp_all[dest +1]);
 			count_out++;
-		}
-		if (ft_strchr(tmp_all[dest], '<') > 0)
-		{
-			if (tmp_all[dest][1])
-				parse_pip.file_in[count_in] = ft_strcat_red_glu("", tmp_all[dest]);
-			else if (tmp_all[dest + 1])
-				parse_pip.file_in[count_in] = ft_strcat_redf(tmp_all[dest], tmp_all[dest +1]);
-			count_in++;
 		}
 	dest++;
 	}
@@ -78,8 +69,8 @@ t_comm   redirection_single(t_comm new, char **tmp_all, char *str)
 	else
 	{
 		new.cmd = ft_split(str,' ');
-		new.file_out = NULL;
-		new.file_in = NULL;
+		new.redir = NULL;
+
 	}
   return new;
 }

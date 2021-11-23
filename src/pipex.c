@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
-/*   Updated: 2021/11/22 11:12:28 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/11/23 14:11:33 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@ int	open_file2(char *filename)
 {
   filename++;
   filename++;
-  filename++;
 	if (access(filename, F_OK) == 0)
+  {
 		return (open(filename, O_RDWR));
+  }
 	else
 		return (open(filename, O_CREAT | S_IWOTH));
 	return (-1);

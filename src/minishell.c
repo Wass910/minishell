@@ -1,8 +1,41 @@
 #include "../inc/minishell.h"
 
+int	ft_cant_open(int i, char *file)
+{
+  file++;
+  file++;
+  char *s;
+	if (i == -1 )
+	{
+		s = strerror(errno);
+    printf("%s: %s\n", file, s);
+		return -1;
+	}
+  return 0;
+}
+
 void  prompt(void)
 {
     write(1, "$>", ft_strlen("$>"));
+}
+
+int	open_file(char *filename)
+{
+  filename++;
+  filename++;
+	if (open(filename, __O_DIRECTORY) != -1)
+	{
+		write(1, "the file is a directory.\n", 25);
+		return (-1);
+	}
+	if (access(filename, F_OK) == 0)
+		return (open(filename, O_RDONLY));
+	else
+	{
+		write(1, "The file doesn't exist.\n", 24);
+	  return -1;
+	}
+	return (-1);
 }
 
 void	print_comm(t_comm comm)
@@ -16,20 +49,11 @@ void	print_comm(t_comm comm)
       a++;
     }
     a=0;
-    if (comm.file_out)
+    if (comm.redir)
     {
-      while (comm.file_out[a])
+      while (comm.redir[a])
         {
-            printf("| comm.file_out      : %s            \n", comm.file_out[a]);
-            a++;
-        }
-    }
-    a= 0;
-    if (comm.file_in)
-    {
-      while (comm.file_in[a])
-        {
-            printf("| comm.file_in       : %s            \n", comm.file_in[a]);
+            printf("| comm.redir         : %s            \n", comm.redir[a]);
             a++;
         }
     }
@@ -54,15 +78,117 @@ void	print_comm(t_comm comm)
 // 	free(data.path1);
 // }
 
+int red_uniq_comm(t_comm comm, char *str)
+{
+  int read_file = -3;
+  int write_file = -3;
+  int k;
+  int status;
+  int i = 0;
+  int to_read = -1;
+  int to_write = -1;
+  while (comm.redir[i])
+  {
+    if (comm.redir[i] && ft_strchr(comm.redir[i], '>') > 0)
+    {
+      if ( ft_cant_open(open_file2(comm.redir[i]), comm.redir[i]) == -1)
+        return -1;
+      to_write = i;
+    }
+    if (comm.redir[i] && ft_strchr(comm.redir[i], '<') > 0)
+    {
+      if (ft_cant_open(open_file(comm.redir[i]), comm.redir[i]) == -1)
+        return -1;
+      to_read = i;
+
+    }
+    i++;
+  }
+  printf("%d\n",to_write);
+  printf("%d\n",to_read);
+  if(to_read >= 0)
+    read_file = open_file(comm.redir[to_read]);
+  if(to_write >= 0)
+    write_file = open_file2(comm.redir[to_write]);
+  if(to_read >= 0 && to_write >= 0)
+  {
+    k = fork();
+      if (k == 0)
+      {
+        dup2(write_file,STDOUT);
+        dup2(read_file, STDIN);
+        exec_cmd(str, comm);
+        return (0);
+      }
+      else
+      {
+        waitpid(k, &status, 0);
+        k = WEXITSTATUS(status);
+      }
+  }
+  if(to_read < 0 && to_write >= 0)
+  {
+    k = fork();
+      if (k == 0)
+      {
+        dup2(write_file,STDOUT);
+        exec_cmd(str, comm);
+        return (0);
+      }
+      else
+      {
+        waitpid(k, &status, 0);
+        k = WEXITSTATUS(status);
+      }
+  }
+  if(to_read >= 0 && to_write < 0)
+  {
+    k = fork();
+      if (k == 0)
+      {
+        dup2(read_file, STDIN);
+        exec_cmd(str, comm);
+        return (0);
+      }
+      else
+      {
+        waitpid(k, &status, 0);
+        k = WEXITSTATUS(status);
+      }
+  }
+  // if(to_read > 0 && to_write <= 0)
+  // {
+  //   k = fork();
+  //     if (k == 0)
+  //     {
+  //       dup2(read_file, STDIN);
+  //       exec_cmd(str, comm);
+  //       return (0);
+  //     }
+  //     else
+  //     {
+  //       waitpid(k, &status, 0);
+  //       k = WEXITSTATUS(status);
+  //     }
+  // }
+  return k;
+}
+
 int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 {
     char **path;
     int k;
     char *str;
+    int i = 0;
     int status;
     char *tmp;
-
+    int write_file ;
     k = 0;
+    if (comm.error_parse_red == 1)
+    {
+      printf("bash: syntax error near unexpected token\n");
+      return 1;
+    }
     path = ft_split(getenv2("PATH", a_list), ':');
     if (if_builtin(comm.cmd) == 0)
     {
@@ -99,17 +225,23 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 			return (127);
 		}
     //printf("found with path command = %s\n", str);
-    k = fork();
-
-    if (k == 0)
+    if (comm.redir)
     {
-      exec_cmd(str, comm);
-      return (0);
+      k = red_uniq_comm(comm, str);
     }
     else
-    {
-      waitpid(k, &status, 0);
-      k = WEXITSTATUS(status);
+    { 
+      k = fork();
+      if (k == 0)
+      {
+        exec_cmd(str, comm);
+        return (0);
+      }
+      else
+      {
+        waitpid(k, &status, 0);
+        k = WEXITSTATUS(status);
+      }
     }
     free(path);
     return (k);
