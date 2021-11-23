@@ -1,19 +1,5 @@
 #include "../inc/minishell.h"
 
-int	ft_cant_open(int i, char *file)
-{
-  file++;
-  file++;
-  char *s;
-	if (i == -1 )
-	{
-		s = strerror(errno);
-    printf("%s: %s\n", file, s);
-		return -1;
-	}
-  return 0;
-}
-
 void  prompt(void)
 {
     write(1, "$>", ft_strlen("$>"));
@@ -21,21 +7,18 @@ void  prompt(void)
 
 int	open_file(char *filename)
 {
+  char *str;
+  int i;
   filename++;
   filename++;
-	if (open(filename, __O_DIRECTORY) != -1)
+  i = open(filename, O_RDONLY);
+	if (i == -1)
 	{
-		write(1, "the file is a directory.\n", 25);
+		str = strerror(errno);
+    printf("%s: %s\n", filename, str);
 		return (-1);
 	}
-	if (access(filename, F_OK) == 0)
-		return (open(filename, O_RDONLY));
-	else
-	{
-		write(1, "The file doesn't exist.\n", 24);
-	  return -1;
-	}
-	return (-1);
+  return (i);
 }
 
 void	print_comm(t_comm comm)
@@ -83,6 +66,7 @@ int red_uniq_comm(t_comm comm, char *str)
   int read_file = -3;
   int write_file = -3;
   int k;
+  int retnd;
   int status;
   int i = 0;
   int to_read = -1;
@@ -91,21 +75,21 @@ int red_uniq_comm(t_comm comm, char *str)
   {
     if (comm.redir[i] && ft_strchr(comm.redir[i], '>') > 0)
     {
-      if ( ft_cant_open(open_file2(comm.redir[i]), comm.redir[i]) == -1)
-        return -1;
+       retnd = open_file2(comm.redir[i]);
+      if (retnd == -1)
+        return (retnd);
       to_write = i;
     }
     if (comm.redir[i] && ft_strchr(comm.redir[i], '<') > 0)
     {
-      if (ft_cant_open(open_file(comm.redir[i]), comm.redir[i]) == -1)
-        return -1;
+      retnd = open_file(comm.redir[i]);
+      if (retnd == -1)
+        return (retnd);
       to_read = i;
 
     }
     i++;
   }
-  printf("%d\n",to_write);
-  printf("%d\n",to_read);
   if(to_read >= 0)
     read_file = open_file(comm.redir[to_read]);
   if(to_write >= 0)
@@ -156,21 +140,6 @@ int red_uniq_comm(t_comm comm, char *str)
         k = WEXITSTATUS(status);
       }
   }
-  // if(to_read > 0 && to_write <= 0)
-  // {
-  //   k = fork();
-  //     if (k == 0)
-  //     {
-  //       dup2(read_file, STDIN);
-  //       exec_cmd(str, comm);
-  //       return (0);
-  //     }
-  //     else
-  //     {
-  //       waitpid(k, &status, 0);
-  //       k = WEXITSTATUS(status);
-  //     }
-  // }
   return k;
 }
 

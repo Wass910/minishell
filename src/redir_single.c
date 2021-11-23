@@ -20,6 +20,7 @@ t_comm	initializing_cmd_single(t_comm parse_pip, char **tmp_all)
 				dest++;
 		dest++;
 	}
+	parse_pip.cmd[count] = NULL;
 	return parse_pip;
 }
 
@@ -44,6 +45,7 @@ t_comm	initializing_red_single(t_comm parse_pip, char **tmp_all)
 		}
 	dest++;
 	}
+	parse_pip.redir[count_out] = NULL;
 	parse_pip = initializing_cmd_single(parse_pip, tmp_all);
 	return parse_pip;	
 }
@@ -52,6 +54,7 @@ t_comm	check_initializing_red_single(t_comm parse_pip, char **tmp_all, char *str
 {
 	char *cmd;
 	char **to_parse;
+
 	cmd = ft_split_command(str);
 	if (error_in_red(str) == ERROR_RED)
 		parse_pip.error_parse_red = 1;

@@ -43,7 +43,8 @@ int	ft_redir_strchr(char *s, int c)
     nb_chr = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] == c && s[i + 1] != c && s[i - 1] && s[i - 1] != c)
+		if ((s[i] == c && s[i + 1] != c) || 
+			(s[i] == c && s[i + 1] != c && s[i - 1] && s[i - 1] != c))
 			nb_chr++;
 		i++;
 	}

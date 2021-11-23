@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
-/*   Updated: 2021/11/23 14:11:33 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/11/23 15:26:58 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,20 @@
 
 int	open_file2(char *filename)
 {
+  int i;
+  char *str;
   filename++;
   filename++;
-	if (access(filename, F_OK) == 0)
+	i = open(filename, O_RDWR | O_CREAT | S_IWOTH, 0664);
+  if (i == -1)
   {
-		return (open(filename, O_RDWR));
+    str = strerror(errno);
+    printf("%s: %s\n", filename, str);
+    return (-1);
   }
-	else
-		return (open(filename, O_CREAT | S_IWOTH));
-	return (-1);
+  return (i);
 }
+
 
 void	pipex(t_pip *parse_pip, int nb_cmds)
 {
