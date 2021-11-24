@@ -122,6 +122,7 @@ t_pip   *redirection(t_pip *new, char **tmp_all, char *str);
 t_comm	ft_redir_single(char *str, int i);
 
 // BUILD BUILTIN
+int find_builtin(char **str);
 int		builtin(t_comm comm, t_list **a_list, t_list **b_list);
 int		build_cd(t_comm comm);
 int		build_echo(t_comm comm, t_list **a_list);
@@ -198,5 +199,6 @@ char	**make_expenv(t_comm comm);
 char *parse_quotes(char *s, t_list **a_list);
 int	open_file2(char *filename);
 int verif_the_builtin(char **str);
+void free_stab(char **tab);
 
 #endif

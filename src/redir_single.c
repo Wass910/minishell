@@ -88,7 +88,7 @@ t_comm	ft_redir_single(char *str, int i)
 	parse_pip.redir_output = ft_redir_strchr(str, '>');
 	parse_pip.redir_input = ft_redir_strchr(str, '<');
   parse_pip = redirection_single(parse_pip, tmp_all, str);
-	parse_pip.path = path(parse_pip.cmd[0]);
+	parse_pip.path = NULL;
   free_str(tmp_all);
 	return (parse_pip);
 }

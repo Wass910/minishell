@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
-/*   Updated: 2021/11/24 01:13:05 by user42           ###   ########.fr       */
+/*   Updated: 2021/11/24 10:16:37 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	open_file2(char *filename)
   char *str;
   filename++;
   filename++;
-	i = open(filename, O_RDWR | O_CREAT | S_IWOTH, 0664);
+	i = open(filename, O_CREAT | O_RDWR | O_TRUNC, 0664);
   if (i == -1)
   {
     str = strerror(errno);

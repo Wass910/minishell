@@ -112,7 +112,11 @@ int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
   }
   if(to_read < 0 && to_write >= 0)
   {
-    k = fork();
+    if (find_builtin(comm.cmd) == CD_TYPE || (find_builtin(comm.cmd) == EXPORT_TYPE && comm.cmd[1]) || (find_builtin(comm.cmd) == UNSET_TYPE && comm.cmd[1]))
+      builtin(comm, a_list, b_list);
+    else
+    {
+      k = fork();
       if (k == 0)
       {
         if (verif_the_builtin(comm.cmd))
@@ -132,6 +136,7 @@ int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
         waitpid(k, &status, 0);
         k = WEXITSTATUS(status);
       }
+    }
   }
   if(to_read >= 0 && to_write < 0)
   {
@@ -172,37 +177,45 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
       //printf("builtin to do.\n");
       comm.retclone = retval;
       k = builtin(comm, a_list, b_list);
+      free_stab(path);
       return (k);
     }
     //else
       //printf("continue the parse\n");
     //if(access(comm.cmd[0], F_OK) == 0)
       //printf("command found whithout path\n");
-    if (path)
+    if (find_builtin(comm.cmd) == -1)
     {
-      while (path[k])
+      if (path)
       {
-        str = ft_strcat_cmd(path[k], comm.cmd[0]);
-        if (access(str, F_OK) == 0)
-          k = 0;
-        if (access(str, F_OK) == 0)
-          break;
-        k++;
+        while (path[k])
+        {
+          str = ft_strcat_cmd(path[k], comm.cmd[0]);
+          if (access(str, F_OK) == 0)
+            k = 0;
+          if (access(str, F_OK) == 0)
+            break;
+          k++;
+        }
       }
-    }
-    else
-    {
-      free(path);
+      else
+      {
+        if (path)
+          free_stab(path);
       //printf("%s: No such file or directory\n", comm.cmd[0]);
-      return (127);
-    }
-    if (access(str, F_OK) != 0)
-		{
+        return (127);
+      }
+      if (access(str, F_OK) != 0)
+		  {
       //printf("%s: command not found\n", comm.cmd[0]);
-			return (127);
-		}
+        if (path)
+          free_stab(path);
+        free(str);
+			  return (127);
+		  }
+    }
     //printf("found with path command = %s\n", str);
-    if (comm.redir)
+    if (comm.redir && comm.redir[0])
     {
       k = red_uniq_comm(comm, str, a_list, b_list);
     }
@@ -220,7 +233,10 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
         k = WEXITSTATUS(status);
       }
     }
-    free(path);
+    if (path)
+      free_stab(path);
+    if (!comm.redir)
+      free(str);
     return (k);
 }
 
@@ -243,8 +259,8 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
     return 1;
     if (all_cmd && ft_strchr(all_cmd, '|') != 0)
       comm.cmd = ft_split(all_cmd, '|');
-    else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
-      comm = ft_redir_single(all_cmd, i );
+    else if(all_cmd)
+      comm = ft_redir_single(all_cmd, i);
     comm = fill_comm(comm, all_cmd);
     // while (comm.cmd[i])
     // {
