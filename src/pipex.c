@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
-/*   Updated: 2021/11/23 15:26:58 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/11/24 01:13:05 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	pipex(t_pip *parse_pip, int nb_cmds)
         	execve(parse_pip->path, parse_pip->cmd, NULL);
 		    else
 			    execve(parse_pip->next->path, parse_pip->next->cmd, NULL);
-		    return ;
+		    exit(0);
       }
 	  nb_cmds--;
 	  if (nb_cmds != 1)
@@ -92,7 +92,7 @@ void	pipex_for_one(t_pip *parse_pip)
       {
         execve(parse_pip->path, parse_pip->cmd, NULL);
         kill(SIGHUP, 0);
-		    return ;
+		    exit(0);
       }
 
 }

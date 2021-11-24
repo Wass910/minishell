@@ -197,5 +197,6 @@ char	*ft_strdup(char *s1);
 char	**make_expenv(t_comm comm);
 char *parse_quotes(char *s, t_list **a_list);
 int	open_file2(char *filename);
+int verif_the_builtin(char **str);
 
 #endif

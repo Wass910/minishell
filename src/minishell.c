@@ -61,7 +61,7 @@ void	print_comm(t_comm comm)
 // 	free(data.path1);
 // }
 
-int red_uniq_comm(t_comm comm, char *str)
+int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
 {
   int read_file = -3;
   int write_file = -3;
@@ -102,7 +102,7 @@ int red_uniq_comm(t_comm comm, char *str)
         dup2(write_file,STDOUT);
         dup2(read_file, STDIN);
         exec_cmd(str, comm);
-        return (0);
+        exit(0);
       }
       else
       {
@@ -115,9 +115,17 @@ int red_uniq_comm(t_comm comm, char *str)
     k = fork();
       if (k == 0)
       {
-        dup2(write_file,STDOUT);
-        exec_cmd(str, comm);
-        return (0);
+        if (verif_the_builtin(comm.cmd))
+        {
+          dup2(write_file,STDOUT);
+          exec_cmd(str, comm);
+        }
+        else
+        {
+          dup2(write_file, STDOUT);
+          builtin(comm, a_list, b_list);
+        }
+        exit(0);
       }
       else
       {
@@ -132,7 +140,7 @@ int red_uniq_comm(t_comm comm, char *str)
       {
         dup2(read_file, STDIN);
         exec_cmd(str, comm);
-        return (0);
+        exit(0);
       }
       else
       {
@@ -159,7 +167,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
       return 1;
     }
     path = ft_split(getenv2("PATH", a_list), ':');
-    if (if_builtin(comm.cmd) == 0)
+    if (if_builtin(comm.cmd) == 0 && !comm.redir)
     {
       //printf("builtin to do.\n");
       comm.retclone = retval;
@@ -196,7 +204,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
     //printf("found with path command = %s\n", str);
     if (comm.redir)
     {
-      k = red_uniq_comm(comm, str);
+      k = red_uniq_comm(comm, str, a_list, b_list);
     }
     else
     { 
@@ -204,7 +212,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
       if (k == 0)
       {
         exec_cmd(str, comm);
-        return (0);
+        exit(0);
       }
       else
       {
