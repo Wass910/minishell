@@ -7,7 +7,7 @@ t_comm	initializing_cmd_single(t_comm parse_pip, char **tmp_all)
 
 	parse_pip.cmd = malloc(sizeof(char *) * (50));
 	if (!parse_pip.cmd)
-		return (NULL);
+		return (parse_pip);
 	dest = 0;
 	count = 0;
 	while (tmp_all[dest]) 
@@ -36,7 +36,7 @@ t_comm	initializing_red_single(t_comm parse_pip, char **tmp_all)
 	count_in = 0;
 	parse_pip.redir = malloc(sizeof(char *) * (50));
 	if (!parse_pip.redir)
-		return (NULL);
+		return(parse_pip);
 	while (tmp_all[dest]) 
 	{
 		if (ft_strchr(tmp_all[dest], '>') > 0 || ft_strchr(tmp_all[dest], '<') > 0)

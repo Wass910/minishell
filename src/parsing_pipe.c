@@ -83,7 +83,7 @@ int error_in_red(char *str)
 	a = 0;
 	file_to_create = malloc(sizeof(char) * 100);
 	if (!file_to_create)
-		return (NULL);
+		return (1);
 	while(str[i] != '\0')
 	{
 		if(str[i] == '>')
