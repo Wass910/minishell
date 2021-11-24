@@ -84,6 +84,8 @@ char    *make_test(char *s)
 
     i = 0;
     str = malloc(sizeof(char) * 100);
+    if (!str)
+        return (NULL);
     while(s[i] != '=' && s[i])
     {
         str[i] = s[i];
