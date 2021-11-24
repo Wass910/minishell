@@ -28,7 +28,7 @@ void	print_comm(t_comm comm)
   	printf("-----------------------------------\n");
   	while (comm.cmd[a] != NULL)
     {
-      printf("| comm.cmd_sep       : %s            \n", comm.cmd[a]);
+      printf("| comm.cmd_sep        : %s            \n", comm.cmd[a]);
       a++;
     }
     a=0;
@@ -36,16 +36,17 @@ void	print_comm(t_comm comm)
     {
       while (comm.redir[a])
         {
-            printf("| comm.redir         : %s            \n", comm.redir[a]);
+            printf("| comm.redir          : %s            \n", comm.redir[a]);
             a++;
         }
     }
-    printf("| comm.nb_pipe       : %d            \n", comm.nb_pipe);
-    printf("| comm.redir_input   : %d            \n", comm.redir_input);
-    printf("| comm.redir_output  : %d            \n", comm.redir_output);
-    printf("| comm.single_quote  : %d            \n", comm.single_quote);
-    printf("| comm.double_quote  : %d            \n", comm.double_quote);
-    printf("| comm.error_parse   : %d            \n", comm.error_parse_red);
+    printf("| comm.nb_pipe        : %d            \n", comm.nb_pipe);
+    printf("| comm.redir_input    : %d            \n", comm.redir_input);
+    printf("| comm.redir_output   : %d            \n", comm.redir_output);
+    printf("| comm.single_quote   : %d            \n", comm.single_quote);
+    printf("| comm.double_quote   : %d            \n", comm.double_quote);
+    printf("| comm.error_parse    : %d            \n", comm.error_parse_red);
+    printf("| comm.redir_output_A : %d            \n", comm.redir_output_A);
   	printf("-----------------------------------\n");
 }
 
@@ -60,14 +61,95 @@ void	print_comm(t_comm comm)
 // 	create_process(data, comm);
 // 	free(data.path1);
 // }
+int r_and_w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
+{
+  int k;
+  int status;
+  k = fork();
+  if (k == 0)
+  {
+    if (verif_the_builtin(comm.cmd))
+    {
+      dup2(comm.write_file,STDOUT);
+      dup2(comm.read_file, STDIN);
+      exec_cmd(str, comm);
+    }
+    else
+    {
+      dup2(comm.write_file,STDOUT);
+      dup2(comm.read_file, STDIN);
+      builtin(comm, a_list, b_list);
+    }
+    exit(0);
+  }
+  else
+  {
+    waitpid(k, &status, 0);
+    k = WEXITSTATUS(status);
+  }
+  return k;
+}
+
+int r_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
+{
+  int k;
+  int status;
+  k = fork();
+  if (k == 0)
+  {
+    if (verif_the_builtin(comm.cmd))
+    {
+    dup2(comm.read_file, STDIN);
+    exec_cmd(str, comm);
+    }
+    else
+    {
+    dup2(comm.read_file, STDIN);
+    builtin(comm, a_list, b_list);
+    }
+    exit(0);
+  }
+  else
+  {
+    waitpid(k, &status, 0);
+    k = WEXITSTATUS(status);
+  }
+  return k;
+}
+
+int w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
+{
+  int k;
+  int status;
+  k = fork();
+  if (k == 0)
+  {
+    if (verif_the_builtin(comm.cmd))
+    {
+      dup2(comm.write_file,STDOUT);
+      exec_cmd(str, comm);
+    }
+    else
+    {
+      dup2(comm.write_file, STDOUT);
+      builtin(comm, a_list, b_list);
+    }
+    exit(0);
+  }
+  else
+  {
+    waitpid(k, &status, 0);
+    k = WEXITSTATUS(status);
+  }
+  return k;
+}
 
 int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
 {
-  int read_file = -3;
-  int write_file = -3;
+  comm.read_file = -3;
+  comm.write_file = -3;
   int k;
   int retnd;
-  int status;
   int i = 0;
   int to_read = -1;
   int to_write = -1;
@@ -86,73 +168,19 @@ int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
       if (retnd == -1)
         return (retnd);
       to_read = i;
-
     }
     i++;
   }
   if(to_read >= 0)
-    read_file = open_file(comm.redir[to_read]);
+    comm.read_file = open_file(comm.redir[to_read]);
   if(to_write >= 0)
-    write_file = open_file2(comm.redir[to_write]);
+    comm.write_file = open_file2(comm.redir[to_write]);
   if(to_read >= 0 && to_write >= 0)
-  {
-    k = fork();
-      if (k == 0)
-      {
-        dup2(write_file,STDOUT);
-        dup2(read_file, STDIN);
-        exec_cmd(str, comm);
-        exit(0);
-      }
-      else
-      {
-        waitpid(k, &status, 0);
-        k = WEXITSTATUS(status);
-      }
-  }
+    k = r_and_w_redirection(comm, a_list, b_list, str);
   if(to_read < 0 && to_write >= 0)
-  {
-    if (find_builtin(comm.cmd) == CD_TYPE || (find_builtin(comm.cmd) == EXPORT_TYPE && comm.cmd[1]) || (find_builtin(comm.cmd) == UNSET_TYPE && comm.cmd[1]))
-      builtin(comm, a_list, b_list);
-    else
-    {
-      k = fork();
-      if (k == 0)
-      {
-        if (verif_the_builtin(comm.cmd))
-        {
-          dup2(write_file,STDOUT);
-          exec_cmd(str, comm);
-        }
-        else
-        {
-          dup2(write_file, STDOUT);
-          builtin(comm, a_list, b_list);
-        }
-        exit(0);
-      }
-      else
-      {
-        waitpid(k, &status, 0);
-        k = WEXITSTATUS(status);
-      }
-    }
-  }
+     k = w_redirection(comm, a_list, b_list, str);
   if(to_read >= 0 && to_write < 0)
-  {
-    k = fork();
-      if (k == 0)
-      {
-        dup2(read_file, STDIN);
-        exec_cmd(str, comm);
-        exit(0);
-      }
-      else
-      {
-        waitpid(k, &status, 0);
-        k = WEXITSTATUS(status);
-      }
-  }
+    k = r_redirection(comm, a_list, b_list, str);
   return k;
 }
 
@@ -177,45 +205,37 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
       //printf("builtin to do.\n");
       comm.retclone = retval;
       k = builtin(comm, a_list, b_list);
-      free_stab(path);
       return (k);
     }
     //else
       //printf("continue the parse\n");
     //if(access(comm.cmd[0], F_OK) == 0)
       //printf("command found whithout path\n");
-    if (find_builtin(comm.cmd) == -1)
+    if (path)
     {
-      if (path)
+      while (path[k])
       {
-        while (path[k])
-        {
-          str = ft_strcat_cmd(path[k], comm.cmd[0]);
-          if (access(str, F_OK) == 0)
-            k = 0;
-          if (access(str, F_OK) == 0)
-            break;
-          k++;
-        }
+        str = ft_strcat_cmd(path[k], comm.cmd[0]);
+        if (access(str, F_OK) == 0)
+          k = 0;
+        if (access(str, F_OK) == 0)
+          break;
+        k++;
       }
-      else
-      {
-        if (path)
-          free_stab(path);
-      //printf("%s: No such file or directory\n", comm.cmd[0]);
-        return (127);
-      }
-      if (access(str, F_OK) != 0)
-		  {
-      //printf("%s: command not found\n", comm.cmd[0]);
-        if (path)
-          free_stab(path);
-        free(str);
-			  return (127);
-		  }
     }
+    else
+    {
+      free(path);
+      //printf("%s: No such file or directory\n", comm.cmd[0]);
+      return (127);
+    }
+    if (access(str, F_OK) != 0)
+		{
+      //printf("%s: command not found\n", comm.cmd[0]);
+			return (127);
+		}
     //printf("found with path command = %s\n", str);
-    if (comm.redir && comm.redir[0])
+    if (comm.redir)
     {
       k = red_uniq_comm(comm, str, a_list, b_list);
     }
@@ -233,16 +253,13 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
         k = WEXITSTATUS(status);
       }
     }
-    if (path)
-      free_stab(path);
-    if (!comm.redir)
-      free(str);
+    free(path);
     return (k);
 }
 
 int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 {
-  print_comm(comm);
+    //print_comm(comm);
     if (comm.nb_pipe > 0)
       parsing_pipes(comm);
     else
@@ -255,24 +272,17 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
   int i;
 
   i = 0;
-  if (!all_cmd)
-    return 1;
     if (all_cmd && ft_strchr(all_cmd, '|') != 0)
       comm.cmd = ft_split(all_cmd, '|');
-    else if(all_cmd)
-      comm = ft_redir_single(all_cmd, i);
+    else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
+      comm = ft_redir_single(all_cmd, i );
     comm = fill_comm(comm, all_cmd);
-     while (comm.cmd[i])
-     {
-       comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
-       i++;
-    }
-    int j = 0;
-    while (comm.cmd[j])
-    {
-      printf("%s\n", comm.cmd[j]);
-      j++;
-    }
+    // while (comm.cmd[i])
+    // {
+    //   comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
+    //   i++;
+    // }
+
     return (redir_comm(comm, a_list, b_list));
 }
 

@@ -36,35 +36,8 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
-typedef struct s_data{
-	char	**cmd1;
-	char	*path1;
-	char	**cmd2;
-	char	*path2;
-	int		read_file;
-	int		write_file;
-	int		pid1;
-	int		pid2;
-	int		pipefd[2];
-}				t_data;
 
-// typedef struct s_pip{
-// 	char	*cmd;
-// 	int		nb_cmd;
-// 	char	*path;
-// 	int		read_file;
-// 	int		write_file;
-// 	int 	redir_output;
-//     int 	redir_input;
-// 	int 	redir_output_A;
-//     int 	redir_double_input;
-// 	int 	single_quote;
-//     int 	double_quote;
-// 	int		pid1;
-// 	int		pid2;
-// 	int		pipefd[2];
-// 	struct s_pip *next;
-// }		t_pip;
+
 
 typedef struct s_pip{
 	char	**cmd;
@@ -79,9 +52,11 @@ typedef struct s_pip{
     int 	redir_double_input;
 	int 	single_quote;
     int 	double_quote;
-	char	**file_out;
-	char	**file_in;
+	char	**redir;
+	char 	*file_to_out;
+	char 	*file_to_in;
 	int		error_parse_red;
+	int		not_fil_red;
 	struct s_pip *next;
 }				t_pip;
 
@@ -94,11 +69,14 @@ typedef struct	s_comm
     int nb_pipe;
     int redir_output;
     int redir_input;
+	int 	redir_output_A;
     int single_quote;
     int double_quote;
 	int retclone;
 	char	**redir;
 	int		error_parse_red;
+	int 	read_file;
+  	int 	write_file;
 }				t_comm;
 
 // PRINT FUNCTION
@@ -110,9 +88,6 @@ void	parsing_pipes(t_comm comm);
 int		where_redir(char **str);
 int		if_builtin(char **str);
 t_comm	fill_comm(t_comm comm, char *cmd);
-t_data	path2(t_data data, char *command, char **env);
-t_data	path1(char *command, char **env);
-t_data	uniq_path(t_data data, t_comm comm);
 t_pip	*initializing_red(t_pip *parse_pip, char **tmp_all);
 t_pip	*check_initializing_red(t_pip *parse_pip, char **tmp_all, char *str);
 t_pip	*initializing_cmd(t_pip *parse_pip, char **tmp_all);
@@ -122,7 +97,6 @@ t_pip   *redirection(t_pip *new, char **tmp_all, char *str);
 t_comm	ft_redir_single(char *str, int i);
 
 // BUILD BUILTIN
-int find_builtin(char **str);
 int		builtin(t_comm comm, t_list **a_list, t_list **b_list);
 int		build_cd(t_comm comm);
 int		build_echo(t_comm comm, t_list **a_list);
@@ -155,6 +129,7 @@ char	*ft_strcat_redf(char *dest, char *src);
 char	*ft_strcat_red_glu(char *dest, char *src);
 char	*ft_strcat_w(char *dest, char *src);
 char	*ft_strcat_ns(char *dest, char *src);
+char	*ft_strcat_red_glu2(char *dest, char *src);
      // others
 void	add_line2(t_list **b_list, t_comm comm, int j);
 int		ft_atoi(const char *str);
@@ -176,7 +151,6 @@ char	*ft_strcat_cmd(char *dest, char *src);
 void	free_str(char **str);
 void	pipex(t_pip *data, int i);
 void	pipex_for_one(t_pip *parse_pip);
-void	create_process(t_data data, t_comm comm);
 int		get_next_line(int fd, char **line);
 void	*ft_calloc(int count, int size);
 char	*ft_strjoin_free(char *s1, char *s2, int f);
@@ -198,14 +172,8 @@ char	*ft_strdup(char *s1);
 char	**make_expenv(t_comm comm);
 char *parse_quotes(char *s, t_list **a_list);
 int	open_file2(char *filename);
+int	open_file(char *filename);
 int verif_the_builtin(char **str);
-void free_stab(char **tab);
-	// quotes management
-int no_quotes(char *s);
-int check_doll(char *s);
-int char_alphanum(char c);
-char *after_env(char *s);
-char *fill_doll(char *s, t_list **a_list);
-int unclosed_quotes(char *s);
+int	ft_double_strchr_file(char *s, int c);
 
 #endif

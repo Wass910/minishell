@@ -1,30 +1,104 @@
 
 #include "../inc/minishell.h"
 
+t_pip *fill_redir_attribut(t_pip *parse_pip, int to_read, int to_write)
+{
+	if(to_read >= 0)
+	{
+		parse_pip->file_to_in = ft_strcat_red("", parse_pip->redir[to_read]);
+		parse_pip->read_file = open_file(parse_pip->redir[to_read]);
+	}
+	else
+		parse_pip->file_to_in = NULL;
+  	if(to_write >= 0)
+    {
+		parse_pip->file_to_out= ft_strcat_red("", parse_pip->redir[to_write]);
+		parse_pip->write_file = open_file2(parse_pip->redir[to_write]);
+	}
+	else 
+		parse_pip->file_to_out = NULL;
+	return (parse_pip);
+}
+
+t_pip *open_file_redir(t_pip *parse_pip)
+{
+	int retnd;
+	int i = 0;
+	t_pip *tmp;
+	int err;
+	int to_read = -1;
+  	int to_write = -1;
+	
+	if (parse_pip->redir)
+	{
+		while (parse_pip->redir[i])
+		{
+			if (parse_pip->redir[i] && ft_strchr(parse_pip->redir[i], '>') > 0)
+			{
+				retnd = open_file2(parse_pip->redir[i]);
+				if (retnd == -1)
+					parse_pip->not_fil_red = 1;
+				if (retnd != -1)
+					to_write = i;
+			}
+			if (parse_pip->redir[i] && ft_strchr(parse_pip->redir[i], '<') > 0)
+			{
+				retnd = open_file(parse_pip->redir[i]);
+				if (retnd == -1)
+					parse_pip->not_fil_red = 1;
+				if (retnd != -1)
+					to_read = i;
+			}
+			i++;
+		}
+	}
+	parse_pip = fill_redir_attribut(parse_pip, to_read, to_write);
+	return parse_pip;
+}
+
+// char *split_command_one_redir(char*str)
+// {
+// 	if((str[i] == '>' && str[i + 1] != '>') || str[i] == '<')
+// 	{
+// 			cmd[j] = ' ';
+// 			j++;
+// 		}
+// 		if(str[i] == '<')
+// 		{
+// 			count = i + 1;
+// 			while(str[count] == ' ')
+// 				count++;
+// 			if (str[count] == '>')
+// 			{
+// 				i = count + 1;
+// 				count++;
+// 				if (str[count] == ' ')
+// 				{
+// 					while(str[count] == ' ')
+// 					{
+// 						count++;
+// 						i++;
+// 					}
+
+// 				}
+// 			}
+// 		}
+// }
+
 char *ft_split_command(char *str)
 {
 	char *cmd;
 	int i;
 	int j;
 	int count;
-	char *file_to_create;
-	int a;
 
 	j = 0;
 	i = 0;
-	a = 0;
-	file_to_create = malloc(sizeof(char) * 100);
-	while(str[i] != '\0')
-	{
-		if (str[i] == '>')
-			i++;
-		i++;
-	}
-	cmd = malloc(sizeof(char) * i + 20);
+	cmd = malloc(sizeof(char) * 100);
 	i = 0;
 	while(str[i] != '\0')
 	{
-		if(str[i] == '>' || str[i] == '<')
+		if((str[i] == '>' && str[i + 1] != '>') || str[i] == '<')
 		{
 			cmd[j] = ' ';
 			j++;
@@ -36,27 +110,51 @@ char *ft_split_command(char *str)
 				count++;
 			if (str[count] == '>')
 			{
-				i = count + 1;
-				count++;
-				if (str[count] == ' ')
+				i = count;
+				cmd[j] = ' ';
+				j++;
+				if (str[i] == ' ')
 				{
-					while(str[count] == ' ')
+					while(str[i] == ' ')
 					{
 						count++;
 						i++;
 					}
 
 				}
-				while(str[count] != ' ' && str[count] != '\0' && str[count] != '<' && str[count] != '>')
+				while(str[i] != ' ' && str[i] != '<' && str[i] != '>')
 				{
-					file_to_create[a] = str[count];
-					a++;
-					count++;
+					cmd[j] = str[i];
+					j++;
 					i++;
 				}
-				file_to_create[a] = '\0';
-				printf("file to create = %s\n", file_to_create);
-				
+			}
+		}
+		if (str[i] == '>' && str[i + 1] == '>' && str[i + 2] != '>')
+		{
+			if (str[i + 2] == ' ')
+			{
+				cmd[j] = ' ';
+				j++;
+				while(str[i] != ' ')
+				{
+					cmd[j] = ' ';
+					j++;
+					cmd[j] = str[i];
+					j++;
+					i++;
+				}
+			}
+			else
+			{
+				cmd[j] = ' ';
+				j++;
+				while(str[i] == '>')
+				{
+					cmd[j] = str[i];
+					j++;
+					i++;
+				}
 			}
 		}
 		cmd[j] = str[i];
@@ -121,6 +219,7 @@ t_pip	*initializing_cmd(t_pip *parse_pip, char **tmp_all)
 				dest++;
 		dest++;
 	}
+	parse_pip->cmd[count] = NULL;
 	return parse_pip;
 }
 
@@ -132,28 +231,20 @@ t_pip	*initializing_red(t_pip *parse_pip, char **tmp_all)
 	dest = 0;
 	count_out = 0;
 	count_in = 0;
-	parse_pip->file_out = malloc(sizeof(char *) * (50));
-	parse_pip->file_in = malloc(sizeof(char *) * (50));
+	parse_pip->redir = malloc(sizeof(char *) * (50));
 	while (tmp_all[dest]) 
 	{
-		if (ft_strchr(tmp_all[dest], '>') > 0)
+		if (ft_strchr(tmp_all[dest], '>') > 0 || ft_strchr(tmp_all[dest], '<') > 0)
 		{
 			if (tmp_all[dest][1])
-				parse_pip->file_out[count_out] = ft_strcat_red_glu("", tmp_all[dest]);
+				parse_pip->redir[count_out] = ft_strcat_red_glu("", tmp_all[dest]);
 			else if (tmp_all[dest + 1])
-				parse_pip->file_out[count_out] = ft_strcat_redf(tmp_all[dest], tmp_all[dest +1]);
+				parse_pip->redir[count_out] = ft_strcat_redf(tmp_all[dest], tmp_all[dest +1]);
 			count_out++;
-		}
-		if (ft_strchr(tmp_all[dest], '<') > 0)
-		{
-			if (tmp_all[dest][1])
-				parse_pip->file_in[count_in] = ft_strcat_red_glu("", tmp_all[dest]);
-			else if (tmp_all[dest + 1])
-				parse_pip->file_in[count_in] = ft_strcat_redf(tmp_all[dest], tmp_all[dest +1]);
-			count_in++;
 		}
 	dest++;
 	}
+	parse_pip->redir[count_out] = NULL;
 	parse_pip = initializing_cmd(parse_pip, tmp_all);
 	return parse_pip;	
 }
@@ -179,8 +270,7 @@ t_pip   *redirection(t_pip *new, char **tmp_all, char *str)
 	else
 	{
 		new->cmd = ft_split(str,' ');
-		new->file_out = NULL;
-		new->file_in = NULL;
+		new->redir = NULL;
 	}
   return new;
 }
@@ -196,6 +286,7 @@ t_pip	*ft_lstnew_pip(char *str, int i)
   parse_pip->error_parse_red = 0;
 	parse_pip->redir_output = ft_redir_strchr(str, '>');
 	parse_pip->redir_input = ft_redir_strchr(str, '<');
+	parse_pip->not_fil_red = 0;
   parse_pip = redirection(parse_pip, tmp_all, str);
 	parse_pip->path = path(parse_pip->cmd[0]);
   parse_pip->redir_output_A = ft_double_strchr(str, '>');
@@ -205,6 +296,7 @@ t_pip	*ft_lstnew_pip(char *str, int i)
   parse_pip->single_quote = 0;
   parse_pip->double_quote = 0;
   parse_pip->nb_cmd = i;
+  parse_pip = open_file_redir(parse_pip);
 	parse_pip->next = NULL;
   free_str(tmp_all);
 	return (parse_pip);
@@ -231,10 +323,12 @@ t_pip	*fill_parse_pipe(t_pip *parse_pip, char *str, int i)
   new->write_file = 0;
   new->single_quote = 0;
   new->double_quote = 0;
+  new->not_fil_red = 0;
 	tmp_all = ft_split(str,' ');
 	new = redirection(new, tmp_all, str);
 	new->path = path(new->cmd[0]);
   free_str(tmp_all);
+	new = open_file_redir(new);
 	return new;
 }
 
@@ -255,49 +349,45 @@ void	print_pipe(t_pip *parse_pip)
     	}
 	}
 	i = 0;
-	if (parse_pip->file_out)
+	if (parse_pip->redir)
 	{
-		while (parse_pip->file_out[i])
+		while (parse_pip->redir[i])
     	{
-        		printf("| parse_pip->file_out             : %s            \n", parse_pip->file_out[i]);
-      		i++;
-    	}
-	}
-	i= 0;
-	if (parse_pip->file_in)
-	{
-		while (parse_pip->file_in[i])
-    	{
-        		printf("| parse_pip->file_in              : %s            \n", parse_pip->file_in[i]);
+        		printf("| parse_pip->redir                : %s            \n", parse_pip->redir[i]);
       		i++;
     	}
 	}
     printf("| parse_pip->path                 : %s            \n", parse_pip->path);
 	printf("| parse_pip->redir_output         : %d            \n", parse_pip->redir_output);
   	printf("| parse_pip->redir_input          : %d            \n", parse_pip->redir_input);
+	printf("| parse_pip->file_to_out          : %s            \n", parse_pip->file_to_out);
+  	printf("| parse_pip->file_to_in           : %s            \n", parse_pip->file_to_in);
 	//printf("| parse_pip->redir_output_A       : %d            \n", parse_pip->redir_output_A);
   	//printf("| parse_pip->redir_double_input   : %d            \n", parse_pip->redir_double_input);
 	//printf("| parse_pip->single_quote         : %d            \n", parse_pip->single_quote);
   	//printf("| parse_pip->double_quote         : %d            \n", parse_pip->double_quote);
 	printf("| parse_pip->error_parse_Red      : %d            \n", parse_pip->error_parse_red);
+	printf("| parse_pip->error_file_Red       : %d            \n", parse_pip->not_fil_red);
+	printf("| parse_pip->read_file            : %d            \n", parse_pip->read_file);
+	printf("| parse_pip->write_file           : %d            \n", parse_pip->write_file);
 	printf("-----------------------------------\n");
     parse_pip = parse_pip->next;
     i++;
     }
 }
-void	free_pip(t_pip *pipe)
-{
-  while (pipe)
-	{
-    free(path);
-    free_str(pipe->cmd);
-    if (pipe->file_out)
-      free_str(pipe->file_out);
-    if (pipe->file_in)
-      free_str(pipe->file_in);
-    pipe = pipe->next;
-  }
-}
+// void	free_pip(t_pip *pipe)
+// {
+//   while (pipe)
+// 	{
+//     free(path);
+//     free_str(pipe->cmd);
+//     if (pipe->file_out)
+//       free_str(pipe->file_out);
+//     if (pipe->file_in)
+//       free_str(pipe->file_in);
+//     pipe = pipe->next;
+//   }
+// }
 
 void    parsing_pipes(t_comm comm)
 {
@@ -341,7 +431,7 @@ void    parsing_pipes(t_comm comm)
 		cmd_begin--;
 		nb_cmds--;
 	}
-	//print_pipe(parse_pip);
+	print_pipe(parse_pip);
 	if (parse_pip)
 	{
 		if(nb_cmds == 1)
