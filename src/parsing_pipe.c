@@ -14,6 +14,8 @@ char *ft_split_command(char *str)
 	i = 0;
 	a = 0;
 	file_to_create = malloc(sizeof(char) * 100);
+	if (!file_to_create)
+		return (NULL);
 	while(str[i] != '\0')
 	{
 		if (str[i] == '>')
@@ -21,6 +23,8 @@ char *ft_split_command(char *str)
 		i++;
 	}
 	cmd = malloc(sizeof(char) * i + 20);
+	if (!cmd)
+		return (NULL);
 	i = 0;
 	while(str[i] != '\0')
 	{
@@ -78,6 +82,8 @@ int error_in_red(char *str)
 	i = 0;
 	a = 0;
 	file_to_create = malloc(sizeof(char) * 100);
+	if (!file_to_create)
+		return (NULL);
 	while(str[i] != '\0')
 	{
 		if(str[i] == '>')
@@ -107,6 +113,8 @@ t_pip	*initializing_cmd(t_pip *parse_pip, char **tmp_all)
 	int count;
 
 	parse_pip->cmd = malloc(sizeof(char *) * (50));
+	if (!parse_pip->cmd)
+		return (NULL);
 	dest = 0;
 	count = 0;
 	while (tmp_all[dest]) 
@@ -133,7 +141,11 @@ t_pip	*initializing_red(t_pip *parse_pip, char **tmp_all)
 	count_out = 0;
 	count_in = 0;
 	parse_pip->file_out = malloc(sizeof(char *) * (50));
+	if (!parse_pip->file_out)
+		return(NULL);
 	parse_pip->file_in = malloc(sizeof(char *) * (50));
+	if (!parse_pip->file_in)
+		return(NULL);
 	while (tmp_all[dest]) 
 	{
 		if (ft_strchr(tmp_all[dest], '>') > 0)

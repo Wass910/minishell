@@ -91,6 +91,8 @@ char *app_nocross(char *s, t_list **a_list)
     c = 0;
     temp = NULL;
     str = malloc(sizeof(char) * 1000);
+    if (!str)
+        return (NULL);
     while (s[i])
     {
         if (s[i] && (s[i] == 34 || s[i] == 39))
