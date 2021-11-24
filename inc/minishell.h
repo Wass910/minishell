@@ -200,5 +200,12 @@ char *parse_quotes(char *s, t_list **a_list);
 int	open_file2(char *filename);
 int verif_the_builtin(char **str);
 void free_stab(char **tab);
+	// quotes management
+int no_quotes(char *s);
+int check_doll(char *s);
+int char_alphanum(char c);
+char *after_env(char *s);
+char *fill_doll(char *s, t_list **a_list);
+int unclosed_quotes(char *s);
 
 #endif

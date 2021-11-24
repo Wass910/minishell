@@ -262,11 +262,17 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
     else if(all_cmd)
       comm = ft_redir_single(all_cmd, i);
     comm = fill_comm(comm, all_cmd);
-    // while (comm.cmd[i])
-    // {
-    //   comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
-    //   i++;
-    // }
+     while (comm.cmd[i])
+     {
+       comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
+       i++;
+    }
+    int j = 0;
+    while (comm.cmd[j])
+    {
+      printf("%s\n", comm.cmd[j]);
+      j++;
+    }
     return (redir_comm(comm, a_list, b_list));
 }
 
