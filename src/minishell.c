@@ -40,13 +40,13 @@ void	print_comm(t_comm comm)
             a++;
         }
     }
-    printf("| comm.nb_pipe        : %d            \n", comm.nb_pipe);
-    printf("| comm.redir_input    : %d            \n", comm.redir_input);
-    printf("| comm.redir_output   : %d            \n", comm.redir_output);
-    printf("| comm.single_quote   : %d            \n", comm.single_quote);
-    printf("| comm.double_quote   : %d            \n", comm.double_quote);
-    printf("| comm.error_parse    : %d            \n", comm.error_parse_red);
-    printf("| comm.redir_output_A : %d            \n", comm.redir_output_A);
+    // printf("| comm.nb_pipe        : %d            \n", comm.nb_pipe);
+    // printf("| comm.redir_input    : %d            \n", comm.redir_input);
+    // printf("| comm.redir_output   : %d            \n", comm.redir_output);
+    // printf("| comm.single_quote   : %d            \n", comm.single_quote);
+    // printf("| comm.double_quote   : %d            \n", comm.double_quote);
+    // printf("| comm.error_parse    : %d            \n", comm.error_parse_red);
+    // printf("| comm.redir_output_A : %d            \n", comm.redir_output_A);
   	printf("-----------------------------------\n");
 }
 
@@ -267,23 +267,42 @@ int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
     return (0);
 }
 
+int verif_quote(char *str)
+{
+  if ((ft_strchr(str, '>') > 0) || (ft_strchr(str, '<') > 0))
+      return 1;
+  return 0;
+}
 int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 {
-  int i;
-
-  i = 0;
-    if (all_cmd && ft_strchr(all_cmd, '|') != 0)
-      comm.cmd = ft_split(all_cmd, '|');
-    // else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
-    //   comm = ft_redir_single(all_cmd, i );
-    comm = fill_comm(comm, all_cmd);
-    while (comm.cmd[i])
+    char **str;
+    char *cmd_new;
+    int i;
+    cmd_new = malloc(sizeof(char) * 100);
+    cmd_new = split_glitch(all_cmd);
+    printf("after glitch = %s\n", cmd_new);
+    str = ft_split(cmd_new, ' ');
+    cmd_new = parse_quotes(str, a_list, comm);
+    printf("after quote parse  = %s\n", cmd_new);
+    comm = fill_comm(comm, cmd_new);
+    if (ft_error_parse_red(comm.redir) == 0)
     {
-      comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
-      i++;
+      printf("Minishell: syntax error near unexpected token\n");
+      return -1;
     }
     print_comm(comm);
-    return (redir_comm(comm, a_list, b_list));
+    return (0);
+    // if (all_cmd && ft_strchr(all_cmd, '|') != 0)
+    // {  
+    //   comm.cmd = ft_split(all_cmd, '|');
+    //   return (redir_comm(comm, a_list, b_list));
+    // }
+    // str = ft_split(all_cmd, ' ');
+    // cmd_new = parse_quotes(str, a_list, comm);
+    // if(all_cmd && ft_strchr(all_cmd, '|') == 0)
+    //    comm = ft_redir_single(cmd_new);
+    // comm = fill_comm(comm, all_cmd);
+    // return (redir_comm(comm, a_list, b_list));
 }
 
 static void    handle_sigusr1(int s, siginfo_t *siginfo, void *context)

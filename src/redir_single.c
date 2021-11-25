@@ -67,7 +67,7 @@ t_comm	initializing_red_single(t_comm parse_pip, char **tmp_all)
 	return parse_pip;	
 }
 
-t_comm	check_initializing_red_single(t_comm parse_pip, char **tmp_all, char *str)
+t_comm	check_initializing_red_single(t_comm parse_pip, char *str)
 {
 	char *cmd;
 	char **to_parse;
@@ -83,11 +83,11 @@ t_comm	check_initializing_red_single(t_comm parse_pip, char **tmp_all, char *str
 	return parse_pip;	
 }
 
-t_comm   redirection_single(t_comm new, char **tmp_all, char *str)
+t_comm   redirection_single(t_comm new, char *str)
 {
   if (new.redir_input > 0 || new.redir_output > 0 || new.redir_output_A > 0)
 	{
-		new = check_initializing_red_single(new, tmp_all, str);
+		new = check_initializing_red_single(new, str);
 	}
 	else
 	{
@@ -98,7 +98,7 @@ t_comm   redirection_single(t_comm new, char **tmp_all, char *str)
   return new;
 }
 
-t_comm	ft_redir_single(char *str, int i)
+t_comm	ft_redir_single(char *str)
 {
 	t_comm parse_pip;
 	char **tmp_all;
@@ -108,7 +108,7 @@ t_comm	ft_redir_single(char *str, int i)
 	parse_pip.redir_input = ft_redir_strchr(str, '<');
 	parse_pip.redir_output_A = ft_double_strchr(str, '>');
 	parse_pip.redir_input = ft_redir_strchr(str, '<');
-  parse_pip = redirection_single(parse_pip, tmp_all, str);
+  parse_pip = redirection_single(parse_pip, str);
 	parse_pip.path = path(parse_pip.cmd[0]);
   free_str(tmp_all);
 	return (parse_pip);
