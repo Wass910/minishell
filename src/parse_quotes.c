@@ -1,119 +1,296 @@
 #include "../inc/minishell.h"
 
-int no_quotes(char *s)
+int pair_quotes(char *s)
 {
+    int simple;
+    int duble;
     int i;
 
     i = 0;
+    simple = 0;
+    duble = 0;
     while (s[i])
     {
-        if (s[i] == 34 || s[i] == 39)
+        if (s[i] == 34)
+            duble++;
+        else if (s[i] == 39)
+            simple++;
+        i++;
+    }
+    //printf("simple = %d | duble = %d | simple / 2 = %d | duble / 2 == %d\n", simple, duble, (simple / 2), (duble / 2));
+    if (!simple)
+    {
+        if ((duble / 2) % 2 == 0)
+            return (2);
+        else
+            return (0);
+    }
+    if (!duble)
+    {
+        if ((simple / 2) % 2 == 0)
+            return (1);
+        else
+            return (0);
+    }
+    if ((simple / 2) % 2 == 0 && (duble / 2) % 2 == 0)
+        return (3);
+    if ((simple / 2) % 2 != 0 && (duble / 2) % 2 == 0)
+        return (2);
+    if ((simple / 2) % 2 == 0 && (duble / 2) % 2 != 0)
+        return (1);
+    return (0);
+}
+
+int no_cross(char *s)
+{
+    int tab[1000];
+    int i;
+    int j;
+    int mid;
+    int change;
+
+    j = 0;
+    i = 0;
+    change = 0;
+    while (s[i])
+    {
+        if (s[i] == 34)
+            tab[j++] = 0;
+        else if (s[i] == 39)
+            tab[j++] = 1;
+        i++;
+    }
+    i = 0;
+    j--;
+    mid = j / 2;
+    while (i <= mid)
+    {
+        if (tab[i] != tab[j])
             return (0);
         i++;
+        j--;
+        if (tab[i] != tab[i - 1])
+            change++;
+        if (change == 2)
+            return (0);
     }
     return (1);
 }
 
-int closing_quotes(char *s)
+char *app_nocross(char *s, t_list **a_list)
 {
-    int i;
-    int type;
-
-    i = 0;
-    if (s[i] == 39 || s[i] == 34)
-    {
-        if (s[i] == 39)
-            type = 39;
-        if (s[i] == 34)
-            type = 34;
-        i++;
-    }
-    while (s[i] != 39 && s[i] != 34 && s[i])
-        i++;
-    if (s[i] == 39 && type == 39 && !s[i + 1])
-        return (1);
-    if (s[i] == 34 && type == 34 && !s[i + 1])
-        return (1);
-    else
-        return (0);
-}
-
-char *fill_closing(char *s, t_list **a_list)
-{
+    char *str;
+    char *temp;
+    char *temp2;
     int i;
     int j;
-    char *str;
-    int type;
+    int c;
 
     i = 0;
     j = 0;
+    c = 0;
+    temp = NULL;
     str = malloc(sizeof(char) * 1000);
     if (!str)
         return (NULL);
-    if (s[i] == 34)
-        type = 34;
-    else
-        type = 39;
-    i++;
-    while (s[i] != type)
+    while (s[i])
     {
-        str[j] = s[i];
-        i++;
-        j++;
+        if (s[i] && (s[i] == 34 || s[i] == 39))
+            i++;
+        else if (s[i] == '$')
+        {
+            i++;
+            temp = after_env(&s[i]);
+            temp2 = getenv2(temp, a_list);
+            free(temp);
+            if (temp2)
+            {
+                while (temp2[c])
+                {
+                    str[j] = temp2[c];
+                    j++;
+                    c++;
+                }
+                c = 0;
+                free(temp2);
+            }
+            while (char_alphanum(s[i]))
+                i++;
+        }
+        else if (s[i] != 34 && s[i] != 39)
+        {
+            str[j] = s[i];
+            j++;
+            i++;
+        }
     }
     str[j] = '\0';
-    if (type == 34 && check_inenv(&str[1], a_list))
-        str = getenv(&str[1]);
     free(s);
     return (str);
 }
 
-int check_doll(char *s)
-{
-    int i;
-
-    i = 0;
-    while (s[i])
-    {
-        if (s[i] == '$')
-            return (i);
-        i++;
-    }
-    return (-1);
-}
-
-char *parse_quotes(char *s, t_list **a_list)
+char *delete_pair(char *s, t_list **a_list)
 {
     int i;
     int j;
+    int k;
+    int c;
+    int type;
     char *str;
     char *temp;
-    int doll;
+    char *temp2[2];
+
+    j = 0;
+    i = 0;
+    k = 0;
+    c = 0;
+    str = malloc(sizeof(char) * 1000);
+    if (!str)
+        return (NULL);
+    temp = malloc(sizeof(char) * 1000);
+    if (!temp)
+        return (NULL);
+    while (s[i])
+    {
+        k = 0;
+        if (s[i] == 34 || s[i] == 39)
+        {
+            type = s[i];
+            i++;
+            while (s[i] && s[i] != type)
+            {
+                temp[k] = s[i];
+                //printf("s[i] = %c\n", s[k]);
+                k++;
+                i++;
+            }
+            temp[k] = '\0';
+            i++;
+            //printf("temp = %s\n", temp);
+        }
+        else
+            temp[0] = '\0';
+        k = 0;
+        while (temp && temp[k])
+        {
+            if (temp[k] == '$' && temp[k + 1] && char_alphanum(temp[k + 1]) && type == 34)
+            {
+                k++;
+                temp2[0] = after_env(&temp[k]);
+                temp2[1] = getenv2(temp2[0], a_list);
+                free(temp2[0]);
+                if (!temp2[1])
+                {
+                    str[j] = s[i];
+                    i++;
+                    j++;
+                }
+                while (temp2[1] && temp2[1][c])
+                {
+                    str[j] = temp2[1][c];
+                    c++;
+                    j++;
+                }
+                c = 0;
+                if (temp2[1])
+                {
+                    while(temp[k] && char_alphanum(temp[k]))
+                        k++;
+                }
+                free(temp2[1]);
+            }
+            else if (temp[k])
+            {
+                str[j] = temp[k];
+                k++;
+                j++;
+            }
+        }
+        temp[0] = '\0';
+        if (s[i] && s[i] != 34 && s[i] != 39)
+        {
+            if (s[i] == '$' && s[i + 1] && char_alphanum(s[i + 1]))
+            {
+                temp2[0] = after_env(&s[i]);
+                temp2[1] = getenv2(temp2[0], a_list);
+                free(temp2[0]);
+                while (temp2[1][c])
+                {
+                    str[j] = temp2[1][c];
+                    c++;
+                    j++;
+                }
+                c = 0;
+                if (temp2[1])
+                {
+                    i++;
+                    while(s[i] && char_alphanum(s[i]))
+                        i++;
+                }
+                free(temp2[1]);
+            }
+            else
+            {
+                str[j] = s[i];
+                j++;
+                i++;
+            }
+        }
+    }
+    free(temp);
+    free(s);
+    str[j] = '\0';
+    return (str);
+}
+
+char *ft_split_command_quote(char **str)
+{
+	char *cmd;
+	int i;
+	int j;
+	int count;
+
+	j = 0;
+	i = 0;
+	i = 2;
+    if (str[0] && str[1])
+        cmd = ft_strcat_redf(str[0], str[1]);
+    if (str[0] && !str[1])
+        return str[0];
+	while(str[i])
+	{
+		cmd = ft_strcat_redf(cmd, str[i]);
+        i++;
+	}
+	return cmd;
+}
+
+char *parse_quotes(char **s, t_list **a_list, t_comm comm)
+{
+    int i;
+    int j;
+    char *cmd;
 
     i = 0;
     j = 0;
-    if (no_quotes(s))
+    while (s[i])
     {
-        doll = check_doll(s);
-        if (doll >= 0)
+        if (no_quotes(s[i]))
         {
-            temp = malloc(sizeof(char) * 1000);
-            if (!temp)
-                return (NULL);
-            while (s[j] != '$')
-            {
-                temp[j] = s[j];
-                j++;
-            }
-            temp[j] = '\0';
-            printf("%s\n", temp);
-            free(s);
-            free(temp);
-            return (str);
+            if (check_doll(s[i]))
+                s[i] = fill_doll(s[i], a_list);
         }
-        return (s);
+        else
+        {
+            if (unclosed_quotes(s[i]))
+            {
+                printf("Unclosed quotes, check your inport before retrying\n");
+                return (NULL);
+            }
+            s[i] = delete_pair(s[i], a_list);
+        }
+        i++;
     }
-    if (closing_quotes(s))
-        return (fill_closing(s, a_list));
-    return (NULL);
+    cmd = ft_split_command_quote(s);
+    return (cmd);
 }
