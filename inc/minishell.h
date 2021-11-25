@@ -33,7 +33,6 @@ static int retval = 12;
 typedef struct s_list
 {
 	char			*content;
-	struct s_list	*next;
 }					t_list;
 
 
@@ -176,4 +175,11 @@ int	open_file(char *filename);
 int verif_the_builtin(char **str);
 int	ft_double_strchr_file(char *s, int c);
 
+
+int no_quotes(char *s);
+int check_doll(char *s);
+int char_alphanum(char c);
+char *after_env(char *s);
+char *fill_doll(char *s, t_list **a_list);
+int unclosed_quotes(char *s);
 #endif

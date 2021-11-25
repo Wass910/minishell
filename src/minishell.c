@@ -274,15 +274,15 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
   i = 0;
     if (all_cmd && ft_strchr(all_cmd, '|') != 0)
       comm.cmd = ft_split(all_cmd, '|');
-    else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
-      comm = ft_redir_single(all_cmd, i );
+    // else if(all_cmd && ft_strchr(all_cmd, '|') == 0)
+    //   comm = ft_redir_single(all_cmd, i );
     comm = fill_comm(comm, all_cmd);
-    // while (comm.cmd[i])
-    // {
-    //   comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
-    //   i++;
-    // }
-
+    while (comm.cmd[i])
+    {
+      comm.cmd[i] = parse_quotes(comm.cmd[i], a_list);
+      i++;
+    }
+    print_comm(comm);
     return (redir_comm(comm, a_list, b_list));
 }
 

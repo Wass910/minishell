@@ -24,7 +24,7 @@ ECHO = echo
 SRC = builtin.c check_builtin.c exec_cmd2.c exec_cmd.c flstadd_back.c flstadd_front.c flstclear.c flstdelone.c\
 flstiter.c flstlast.c flstmap.c flstnew.c flstsize.c ft_atoi.c ft_split.c ft_strcat.c ft_strchr.c ft_strdup.c\
 ft_strjoin.c ft_strlen.c ft_strncmp.c get_next_line.c get_next_line_utils.c get_path.c lst_ope.c minishell.c\
-parsing_pipe.c pipex.c sort_env.c utils2.c utils.c strcat.c ft_itoa.c parse_quotes.c redir_single.c
+parsing_pipe.c pipex.c sort_env.c utils2.c utils.c strcat.c ft_itoa.c parse_quotes.c redir_single.c quotes_utils.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
