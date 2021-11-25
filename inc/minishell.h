@@ -75,6 +75,7 @@ typedef struct	s_comm
     int redir_output;
     int redir_input;
 	int 	redir_output_A;
+	int 	redir_double_input;
     int single_quote;
     int double_quote;
 	int retclone;

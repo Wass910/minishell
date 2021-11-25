@@ -27,7 +27,7 @@ void	print_comm(t_comm comm)
   	printf("-----------------------------------\n");
   	while (comm.cmd[a] != NULL)
     {
-      printf("| comm.cmd_sep        : %s            \n", comm.cmd[a]);
+      printf("| comm.cmd_sep           : %s            \n", comm.cmd[a]);
       a++;
     }
     a=0;
@@ -35,9 +35,15 @@ void	print_comm(t_comm comm)
     {
       while (comm.redir[a])
         {
-            printf("| comm.redir          : %s            \n", comm.redir[a]);
+            printf("| comm.redir             : %s            \n", comm.redir[a]);
             a++;
         }
+    }
+    int j = 0;
+    while (comm.redir_temp[j])
+    {
+            printf("| comm.redir_temp        : %s\n", comm.redir_temp[j]);
+        j++;
     }
     // printf("| comm.nb_pipe        : %d            \n", comm.nb_pipe);
     // printf("| comm.redir_input    : %d            \n", comm.redir_input);
@@ -45,21 +51,10 @@ void	print_comm(t_comm comm)
     // printf("| comm.single_quote   : %d            \n", comm.single_quote);
     // printf("| comm.double_quote   : %d            \n", comm.double_quote);
     // printf("| comm.error_parse    : %d            \n", comm.error_parse_red);
-    // printf("| comm.redir_output_A : %d            \n", comm.redir_output_A);
+    printf("| comm.redir_double_in   : %d            \n", comm.redir_double_input);
   	printf("-----------------------------------\n");
 }
 
-// void	good_one_cmd(t_comm comm)
-// {
-// 	t_data	data;
-
-// 	data = uniq_path(data, comm);
-// 	//ft_cant_open(data);
-// 	// dup2(data.read_file, STDIN);
-// 	// dup2(data.write_file, STDOUT);
-// 	create_process(data, comm);
-// 	free(data.path1);
-// }
 int r_and_w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
 {
   int k;
@@ -152,10 +147,9 @@ int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
   int i = 0;
   int to_read = -1;
   int to_write = -1;
-  printf("oui\n");
   while (comm.redir[i])
   {
-    if (comm.redir[i] && ft_strchr(comm.redir[i], '>') == 1)
+    if (comm.redir[i] && (ft_strchr(comm.redir[i], '>') == 1 || ft_strchr(comm.redir[i], '>') == 2))
     {
        retnd = open_file2(comm.redir[i]);
        close(retnd);
@@ -163,7 +157,7 @@ int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
         return (retnd);
       to_write = i;
     }
-    if (comm.redir[i] && ft_strchr(comm.redir[i], '<') > 0)
+    if (comm.redir[i] && ft_strchr(comm.redir[i], '<') == 1)
     {
       retnd = open_file(comm.redir[i]);
       if (retnd == -1)
@@ -239,7 +233,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
     //printf("found with path command = %s\n", str);
     if (comm.redir[0])
     {
-      printf("continue the parse\n");
+      //printf("continue the parse\n");
       k = red_uniq_comm(comm, str, a_list, b_list);
       return (k);
     }
@@ -277,6 +271,7 @@ t_comm  ft_double_left_red(t_comm comm)
   int count = 0;
   int count_temp = 2;
   int temp_index = 0;
+  comm.redir_double_input = 0;
   comm.redir_temp = malloc(sizeof(char *) * 150);
   while (comm.redir[i])
   {
@@ -292,6 +287,7 @@ t_comm  ft_double_left_red(t_comm comm)
           temp_index++;
           count_temp++;  
         }
+        comm.redir_double_input++;
         comm.redir_temp[count][temp_index] = '\0';
         count++;
         count_temp = 2 ;
@@ -302,6 +298,25 @@ t_comm  ft_double_left_red(t_comm comm)
   }
   comm.redir_temp[count] = NULL;
   return comm;
+}
+
+void ft_redir_temp(t_comm comm)
+{
+  int i = 0;
+  int ret;
+  char *line;
+
+  ret = get_next_line(0, &line);
+	while (ret > 0 )
+	{
+		if ((ft_strncmp(line, comm.redir_temp[i], ft_strlen(comm.redir_temp[i])) == 0) && ft_strlen(line) == ft_strlen(comm.redir_temp[i]))
+      i++;
+    if (i == comm.redir_double_input)
+      return ;
+		free(line);
+		ret = get_next_line(0, &line);
+	}
+  return ;
 }
 
 int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
@@ -322,6 +337,8 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
       return -1;
     }
     comm = ft_double_left_red(comm);
+    if (comm.redir_temp[0])
+      ft_redir_temp(comm);
     print_comm(comm);
     // if (all_cmd && ft_strchr(all_cmd, '|') != 0)
     // {  
