@@ -17,11 +17,11 @@ int	open_file2(char *filename)
   int i;
   int count = 0;
   char *str;
-  while(filename[count] == '>' || filename[count] == ' ')
+  while(filename[count] == '>')
   {
     count++;
   }
-  if (count == 2)
+  if (count == 1)
 	  i = open(filename+count, O_RDWR | O_CREAT | S_IWOTH | O_TRUNC, 0664);
   else 
     i = open(filename+count, O_RDWR | O_CREAT | S_IWOTH | O_APPEND, 0664);

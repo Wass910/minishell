@@ -28,7 +28,7 @@
 # define OUTFILE 1
 # define ERROR_RED 1
 
-static int retval = 12;
+static int retval = 0;
 
 typedef struct s_list
 {
@@ -78,6 +78,7 @@ typedef struct	s_comm
     int single_quote;
     int double_quote;
 	int retclone;
+	char 	**redir_temp;
 	char	**redir;
 	int		error_parse_red;
 	int 	read_file;

@@ -75,14 +75,16 @@ char *fill_doll(char *s, t_list **a_list)
         return (NULL);
     while (s[i])
     {
-        while (s[i] != '$')
+        while (s[i] && s[i] != '$')
         {
             str[j] = s[i];
             j++;
             i++;
         }
-        if (s[i + 1] && char_alphanum(s[i + 1]))
+        if (s[i + 1] && (char_alphanum(s[i + 1]) || s[i + 1] == '?'))
         {
+            if (s[i + 1] == '?' && !s[i + 2])
+                return (s);
             temp = after_env(&s[i]);
             temp2 = getenv2(temp, a_list);
             free(temp);

@@ -10,7 +10,6 @@ int	open_file(char *filename)
   char *str;
   int i;
   filename++;
-  filename++;
   i = open(filename, O_RDONLY);
 	if (i == -1)
 	{
@@ -153,11 +152,13 @@ int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
   int i = 0;
   int to_read = -1;
   int to_write = -1;
+  printf("oui\n");
   while (comm.redir[i])
   {
-    if (comm.redir[i] && ft_strchr(comm.redir[i], '>') > 0)
+    if (comm.redir[i] && ft_strchr(comm.redir[i], '>') == 1)
     {
        retnd = open_file2(comm.redir[i]);
+       close(retnd);
       if (retnd == -1)
         return (retnd);
       to_write = i;
@@ -194,13 +195,14 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
     char *tmp;
     int write_file ;
     k = 0;
+    //printf("comm = %s\n", comm.cmd[0]);
     if (comm.error_parse_red == 1)
     {
       printf("bash: syntax error near unexpected token\n");
       return 1;
     }
     path = ft_split(getenv2("PATH", a_list), ':');
-    if (if_builtin(comm.cmd) == 0 && !comm.redir)
+    if (if_builtin(comm.cmd) == 0 && !comm.redir[0])
     {
       //printf("builtin to do.\n");
       comm.retclone = retval;
@@ -229,15 +231,17 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
       //printf("%s: No such file or directory\n", comm.cmd[0]);
       return (127);
     }
-    if (access(str, F_OK) != 0)
+    if (access(str, F_OK) != 0 && !comm.redir[0])
 		{
-      //printf("%s: command not found\n", comm.cmd[0]);
+      printf("%s: command not found\n", comm.cmd[0]);
 			return (127);
 		}
     //printf("found with path command = %s\n", str);
-    if (comm.redir)
+    if (comm.redir[0])
     {
+      printf("continue the parse\n");
       k = red_uniq_comm(comm, str, a_list, b_list);
+      return (k);
     }
     else
     { 
@@ -260,19 +264,46 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 {
     //print_comm(comm);
-    if (comm.nb_pipe > 0)
-      parsing_pipes(comm);
-    else
+    // if (comm.nb_pipe > 0)
+    //   parsing_pipes(comm);
+    // else
       return(uniq_cmd(comm, a_list, b_list));
-    return (0);
+    // return (0);
 }
 
-int verif_quote(char *str)
+t_comm  ft_double_left_red(t_comm comm)
 {
-  if ((ft_strchr(str, '>') > 0) || (ft_strchr(str, '<') > 0))
-      return 1;
-  return 0;
+  int i = 0;
+  int count = 0;
+  int count_temp = 2;
+  int temp_index = 0;
+  comm.redir_temp = malloc(sizeof(char *) * 150);
+  while (comm.redir[i])
+  {
+    if(comm.redir[i][0] && comm.redir[i][1] && 
+      (comm.redir[i][0] == '<' && comm.redir[i][1] == '<'))
+    {
+      comm.redir_temp[count] = malloc(sizeof(char) * 150);
+      if (comm.redir[i][count_temp])
+      {
+        while(comm.redir[i][count_temp] != '\0')
+        {
+          comm.redir_temp[count][temp_index] = comm.redir[i][count_temp];
+          temp_index++;
+          count_temp++;  
+        }
+        comm.redir_temp[count][temp_index] = '\0';
+        count++;
+        count_temp = 2 ;
+        temp_index = 0;
+      } 
+    }
+    i++;
+  }
+  comm.redir_temp[count] = NULL;
+  return comm;
 }
+
 int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 {
     char **str;
@@ -290,8 +321,8 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
       printf("Minishell: syntax error near unexpected token\n");
       return -1;
     }
+    comm = ft_double_left_red(comm);
     print_comm(comm);
-    return (0);
     // if (all_cmd && ft_strchr(all_cmd, '|') != 0)
     // {  
     //   comm.cmd = ft_split(all_cmd, '|');
@@ -302,7 +333,7 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
     // if(all_cmd && ft_strchr(all_cmd, '|') == 0)
     //    comm = ft_redir_single(cmd_new);
     // comm = fill_comm(comm, all_cmd);
-    // return (redir_comm(comm, a_list, b_list));
+    return (redir_comm(comm, a_list, b_list));
 }
 
 static void    handle_sigusr1(int s, siginfo_t *siginfo, void *context)
@@ -342,7 +373,7 @@ int main(int argc, char **argv, char **envp)
 			if (line[0])
 			{
 				add_history(line);
-				parcing(line, comm, &a_list, &b_list);
+				retval = parcing(line, comm, &a_list, &b_list);
 			}
 			free(line);
 		}
