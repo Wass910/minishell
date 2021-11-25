@@ -73,7 +73,7 @@ t_comm	check_initializing_red_single(t_comm parse_pip, char **tmp_all, char *str
 	char **to_parse;
 
 	cmd = ft_split_command(str);
-	//wprintf("cmd = %s\n", cmd);
+	printf("cmd = %s\n", cmd);
 	if (error_in_red(str) == ERROR_RED)
 		parse_pip.error_parse_red = 1;
 	else
