@@ -147,9 +147,11 @@ int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
   int i = 0;
   int to_read = -1;
   int to_write = -1;
+  int status;
   while (comm.redir[i])
   {
-    if (comm.redir[i] && (ft_strchr(comm.redir[i], '>') == 1 || ft_strchr(comm.redir[i], '>') == 2))
+    if ((comm.redir[i] && (ft_strchr(comm.redir[i], '>') == 1 || ft_strchr(comm.redir[i], '>') == 2)) 
+      && !comm.redir_temp[0])
     {
        retnd = open_file2(comm.redir[i]);
        close(retnd);
@@ -157,7 +159,7 @@ int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
         return (retnd);
       to_write = i;
     }
-    if (comm.redir[i] && ft_strchr(comm.redir[i], '<') == 1)
+    if (comm.redir[i] && ft_strchr(comm.redir[i], '<') == 1 && !comm.redir_temp[0])
     {
       retnd = open_file(comm.redir[i]);
       if (retnd == -1)
@@ -172,10 +174,24 @@ int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
     comm.write_file = open_file2(comm.redir[to_write]);
   if(to_read >= 0 && to_write >= 0)
     k = r_and_w_redirection(comm, a_list, b_list, str);
-  if(to_read < 0 && to_write >= 0)
+  else if(to_read < 0 && to_write >= 0)
      k = w_redirection(comm, a_list, b_list, str);
-  if(to_read >= 0 && to_write < 0)
+  else if(to_read >= 0 && to_write < 0)
     k = r_redirection(comm, a_list, b_list, str);
+  else
+  { 
+      k = fork();
+      if (k == 0)
+      {
+        exec_cmd(str, comm);
+        exit(0);
+      }
+      else
+      {
+        waitpid(k, &status, 0);
+        k = WEXITSTATUS(status);
+      }
+    }
   return k;
 }
 
@@ -309,7 +325,8 @@ void ft_redir_temp(t_comm comm)
   ret = get_next_line(0, &line);
 	while (ret > 0 )
 	{
-		if ((ft_strncmp(line, comm.redir_temp[i], ft_strlen(comm.redir_temp[i])) == 0) && ft_strlen(line) == ft_strlen(comm.redir_temp[i]))
+		if ((ft_strncmp(line, comm.redir_temp[i], ft_strlen(comm.redir_temp[i])) == 0) &&
+       ft_strlen(line) == ft_strlen(comm.redir_temp[i]))
       i++;
     if (i == comm.redir_double_input)
       return ;
