@@ -75,7 +75,8 @@ typedef struct	s_pipe
 	int		error_parse_red;
 	int 	read_file;
   	int 	write_file;
-	  struct s_pipe *next;
+	int		not_fil_red;
+	struct s_pipe *next;
 }				t_pipe;
 
 typedef struct	s_quot
@@ -221,10 +222,13 @@ int is_red(char c);
 int is_quott(char c);
 int		ft_error_parse_red(char **str);
 int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list);
-//void	print_pipe(t_pipe *parse_pip);
+void	print_pipe(t_pipe *parse_pip);
 t_list *flstnew_comm(t_comm comm);
 void	flstadd_back_comm(t_list **alst, t_list *new);
 t_pipe	*fill_comm_pip(t_pipe *comm ,char *cmd);
 void	print_pipe(t_pipe *parse_pip);
+void pipex_suits(t_pipe *parse_pip);
+t_pipe *fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write);
+t_pipe *open_file_redir(t_pipe *parse_pip);
 
 #endif

@@ -11,6 +11,60 @@
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+t_pipe *fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write)
+{
+    if(to_read >= 0)
+    {
+        parse_pip->file_to_in = ft_strcat_red("", parse_pip->redir[to_read]);
+        parse_pip->read_file = open_file(parse_pip->redir[to_read]);
+    }
+    else
+        parse_pip->file_to_in = NULL;
+    if(to_write >= 0)
+    {
+        parse_pip->file_to_out= ft_strcat_red("", parse_pip->redir[to_write]);
+        parse_pip->write_file = open_file2(parse_pip->redir[to_write]);
+    }
+    else 
+        parse_pip->file_to_out = NULL;
+    return (parse_pip);
+}
+
+t_pipe *open_file_redir(t_pipe *parse_pip)
+{
+    int retnd;
+    int i = 0;
+    t_pip *tmp;
+    int err;
+    int to_read = -1;
+      int to_write = -1;
+    
+    if (parse_pip->redir)
+    {
+        while (parse_pip->redir[i])
+        {
+            if (parse_pip->redir[i] && ft_strchr(parse_pip->redir[i], '>') > 0)
+            {
+                retnd = open_file2(parse_pip->redir[i]);
+                if (retnd == -1)
+                    parse_pip->not_fil_red = 1;
+                if (retnd != -1)
+                    to_write = i;
+            }
+            if (parse_pip->redir[i] && ft_strchr(parse_pip->redir[i], '<') > 0)
+            {
+                retnd = open_file(parse_pip->redir[i]);
+                if (retnd == -1)
+                    parse_pip->not_fil_red = 1;
+                if (retnd != -1)
+                    to_read = i;
+            }
+            i++;
+        }
+    }
+    parse_pip = fill_redir_attribut(parse_pip, to_read, to_write);
+    return parse_pip;
+}
 
 int	open_file2(char *filename)
 {
@@ -52,6 +106,8 @@ void pipex_suits(t_pipe *parse_pip)
   i = fork();
     if (i)
     {
+      close(pipefd[1]);
+      dup2(pipefd[0], STDIN);
       dup2(STDIN, pipefd[0]);
       dup2(STDOUT,pipefd[1]);
       waitpid(i, NULL, 0);
@@ -67,8 +123,6 @@ void	pipex(t_pipe *parse_pip, int nb_cmds)
 	int pipefd[2];
 	pid_t pid1;
 
-    while (nb_cmds > 1)
-    {
       if (pipe(pipefd) == -1)
         exit(EXIT_FAILURE);
       pid1 = fork();
@@ -87,10 +141,6 @@ void	pipex(t_pipe *parse_pip, int nb_cmds)
         execve(parse_pip->path, parse_pip->cmd, NULL);
         return ;
       }
-      parse_pip = parse_pip->next;
-      nb_cmds--;
-    }
-    pipex_suits(parse_pip);
     return; 
 }
 

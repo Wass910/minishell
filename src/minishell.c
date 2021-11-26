@@ -20,6 +20,60 @@ int	open_file(char *filename)
 	return (i);
 }
 
+void	print_pipe(t_pipe *parse_pip)
+{
+  int		i ;
+    while(parse_pip)
+  	{
+          i = 0;
+          printf("-----------------------------------\n");
+    printf("| parse_pip->nb_cmd               : %d            \n", parse_pip->nb_cmd);
+    if (parse_pip->cmd)
+	{
+		while (parse_pip->cmd[i])
+    	{
+			printf("| parse_pip->cmd                  : %s            \n", parse_pip->cmd[i]);
+      	i++;
+    	}
+	}
+	i = 0;
+	if (parse_pip->redir)
+	{
+		while (parse_pip->redir[i])
+    	{
+        		printf("| parse_pip->redir                : %s            \n", parse_pip->redir[i]);
+      		i++;
+    	}
+	}
+	i= 0;
+	if (parse_pip->redir_temp)
+	{
+		while (parse_pip->redir_temp[i])
+    	{
+        		printf("| parse_pip->redir_temp              : %s            \n", parse_pip->redir_temp[i]);
+      		i++;
+    	}
+	}
+    printf("| parse_pip->path                 : %s            \n", parse_pip->path);
+    printf("| parse_pip->read_file            : %d            \n", parse_pip->read_file);
+		printf("| parse_pip->write_File           : %d            \n", parse_pip->write_file);
+		if (parse_pip->file_to_out)
+      printf("| parse_pip->file_out             : %s            \n", parse_pip->file_to_out);
+		if (parse_pip->file_to_in)
+      printf("| parse_pip->file_in              : %s            \n", parse_pip->file_to_in);
+	//printf("| parse_pip->redir_output         : %d            \n", parse_pip->redir_output);
+  //	printf("| parse_pip->redir_input          : %d            \n", parse_pip->redir_input);
+	//printf("| parse_pip->redir_output_A       : %d            \n", parse_pip->redir_output_A);
+  	//printf("| parse_pip->redir_double_input   : %d            \n", parse_pip->redir_double_input);
+	//printf("| parse_pip->single_quote         : %d            \n", parse_pip->single_quote);
+  	//printf("| parse_pip->double_quote         : %d            \n", parse_pip->double_quote);
+	//printf("| parse_pip->error_parse_Red      : %d            \n", parse_pip->error_parse_red);
+	printf("-----------------------------------\n");
+    parse_pip = parse_pip->next;
+    i++;
+    }
+}
+
 void	print_comm(t_comm comm)
 {
 	int a = 0;
@@ -385,6 +439,8 @@ t_pipe   *parcing_comm_pip(char *all_cmd, t_comm comm, t_list **a_list, int i)
 		new->redir_temp[0] = NULL;
 		new->nb_cmd = i;
 		new->path = path(new->cmd[0], a_list);
+    new->read_file = -1;
+    new->write_file = -1;
 		new->next = NULL;
 		return (new);
 }
@@ -407,6 +463,8 @@ t_pipe   *new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe, t_list 
 		new->redir_temp = malloc(sizeof(char *) * 150);
 		new->redir_temp[0] = NULL;
 		new->path = path(new->cmd[0], a_list);
+    new->read_file = -1;
+    new->write_file = -1;
 		new->nb_cmd = i;
 		
 		new->next = pipe;
@@ -456,9 +514,16 @@ int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 	comm_pip = parcing_comm_pip(cmd[i], comm, a_list, i);
 	while(i-- > 0)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list, i);
-	//print_pipe(comm_pip);
-	pipex(comm_pip, nb_cmds);
-	return retclone;
+  //print_pipe(comm_pip);
+  while (comm_pip->next)
+	{
+    //comm_pip = open_file_redir(comm_pip);
+    pipex(comm_pip, comm_pip->nb_cmd);
+    comm_pip = comm_pip->next;
+  }
+  //comm_pip = open_file_redir(comm_pip);
+  pipex_suits(comm_pip);
+  return retclone;
 }
 
 static void    handle_sigusr1(int s, siginfo_t *siginfo, void *context)
