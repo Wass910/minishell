@@ -56,6 +56,7 @@ typedef struct	s_pipe
 {
 	int		nb_cmd;
 	char **env;
+	int		pipefd[2];
 	char **expenv;
 	char **cmd;
 	char	*path;
@@ -172,7 +173,7 @@ void	already_in(t_list **a_list, char *str, int j);
 int		is_alphanum(char *s);
 void	free_str(char **str);
 int		what_path(char **path, char *cmd);
-char	*path(char *command);
+char	*path(char *command, t_list **a_list);
 int		ft_count_str(char *s1, char *s2);
 char	*ft_itoa(int n);
 char	**ft_split(char *s, char c);
@@ -182,7 +183,7 @@ int		ft_strchr(char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strcat_cmd(char *dest, char *src);
 void	free_str(char **str);
-void	pipex(t_pip *data, int i);
+void	pipex(t_pipe *data, int i);
 void	pipex_for_one(t_pip *parse_pip);
 int		get_next_line(int fd, char **line);
 void	*ft_calloc(int count, int size);

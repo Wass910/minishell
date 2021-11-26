@@ -277,10 +277,6 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 
 int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
 {
-		//print_comm(comm);
-		 if (comm.nb_pipe > 0)
-			 parsing_pipes(comm);
-		 else
 			return(uniq_cmd(comm, a_list, b_list));
 		return (0);
 }
@@ -388,6 +384,7 @@ t_pipe   *parcing_comm_pip(char *all_cmd, t_comm comm, t_list **a_list, int i)
 		new->redir_temp = malloc(sizeof(char *) * 150);
 		new->redir_temp[0] = NULL;
 		new->nb_cmd = i;
+		new->path = path(new->cmd[0], a_list);
 		new->next = NULL;
 		return (new);
 }
@@ -397,6 +394,7 @@ t_pipe   *new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe, t_list 
 		char **str;
 		char *cmd_new;
 		t_pipe  *new;
+
 
 		new = malloc(sizeof(*new));
 		if (new == NULL)
@@ -408,7 +406,9 @@ t_pipe   *new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe, t_list 
 		new = fill_comm_pip(new, cmd_new);
 		new->redir_temp = malloc(sizeof(char *) * 150);
 		new->redir_temp[0] = NULL;
+		new->path = path(new->cmd[0], a_list);
 		new->nb_cmd = i;
+		
 		new->next = pipe;
 		return (new);
 }
@@ -440,21 +440,24 @@ int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 	t_pipe *comm_pip;
 	int fd;
 	int retclone;
+	int nb_cmds;
 	red_double = double_in(line, a_list);
-	while	(red_double[j])
+	while	(red_double && red_double[j])
 	{
 		printf("to input = %s\n", red_double[j]);
 			j++;
 	}
-	// if (red_double[0])
-	// 		ft_redir_temp(red_double, j);
+	if (red_double && red_double[0])
+		ft_redir_temp(red_double, j);
 	while (cmd[i])
-    i++;
-  i--;
+    	i++;
+	nb_cmds = i;
+  	i--;
 	comm_pip = parcing_comm_pip(cmd[i], comm, a_list, i);
 	while(i-- > 0)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list, i);
-	print_pipe(comm_pip);
+	//print_pipe(comm_pip);
+	pipex(comm_pip, nb_cmds);
 	return retclone;
 }
 

@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:08 by idhiba            #+#    #+#             */
-/*   Updated: 2021/11/24 21:20:33 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/11/26 15:54:32 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*get_path(char **env)
 }
 
 
-char	*path(char *command)
+char	*path(char *command, t_list **a_list)
 {
 	char	*path;
 	char	**good_path;
@@ -66,8 +66,7 @@ char	*path(char *command)
 	char    *path_to_go;
 
 	//printf("cmd = %s\n", command);
-	path = getenv("PATH");
-	good_path = ft_split(path, ':');
+	good_path = ft_split(getenv2("PATH", a_list), ':');
 	i = what_path(good_path, command);
 	if (i == -1)
 	{
