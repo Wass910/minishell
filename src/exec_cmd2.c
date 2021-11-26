@@ -23,7 +23,6 @@ int is_same(char *s1, char *s2)
 
 int build_unset(t_comm comm, t_list **a_list, t_list **b_list, int type)
 {
-    //test by exporting an env variable and deleting it, check if export n unset work on env
     char *str;
     int i;
     t_list *temp;

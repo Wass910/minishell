@@ -18,6 +18,7 @@ char *split_glitch(char *cmd_all)
 {
     int stock[3];
     char *cmd_tsplit;
+    int pass_space_for_redir;
 
     cmd_tsplit = malloc(sizeof(char) * 100);
     if (!cmd_tsplit)
@@ -38,6 +39,14 @@ char *split_glitch(char *cmd_all)
             cmd_tsplit[stock[1]] = cmd_all[stock[0]];
             stock[0]++;
             stock[1]++;
+            pass_space_for_redir = stock[0];
+            while(cmd_all[pass_space_for_redir] == 32)
+                pass_space_for_redir++;
+            if (is_red(cmd_all[pass_space_for_redir]))
+            {
+                cmd_tsplit[stock[1]] = 24;
+                stock[1]++;
+            }
             while(cmd_all[stock[0]] != stock[2])   
             {
                 if (!(cmd_all[stock[0]] == 32))

@@ -332,7 +332,7 @@ t_pip	*fill_parse_pipe(t_pip *parse_pip, char *str, int i)
 	return new;
 }
 
-void	print_pipe(t_pip *parse_pip)
+void	print_pipe(t_pipe *parse_pip)
 {
   int		i ;
     while(parse_pip)
@@ -357,19 +357,25 @@ void	print_pipe(t_pip *parse_pip)
       		i++;
     	}
 	}
-    printf("| parse_pip->path                 : %s            \n", parse_pip->path);
-	printf("| parse_pip->redir_output         : %d            \n", parse_pip->redir_output);
-  	printf("| parse_pip->redir_input          : %d            \n", parse_pip->redir_input);
-	printf("| parse_pip->file_to_out          : %s            \n", parse_pip->file_to_out);
-  	printf("| parse_pip->file_to_in           : %s            \n", parse_pip->file_to_in);
+	int j = 0;
+	if (parse_pip->redir_temp)
+	{
+			while (parse_pip->redir_temp[j])
+		{
+						printf("| parse_pipe->redir_temp            : %s\n", parse_pip->redir_temp[j]);
+				j++;
+		}
+	}
+	// printf("| parse_pip->file_to_out          : %s            \n", parse_pip->file_to_out);
+  	// printf("| parse_pip->file_to_in           : %s            \n", parse_pip->file_to_in);
 	//printf("| parse_pip->redir_output_A       : %d            \n", parse_pip->redir_output_A);
   	//printf("| parse_pip->redir_double_input   : %d            \n", parse_pip->redir_double_input);
 	//printf("| parse_pip->single_quote         : %d            \n", parse_pip->single_quote);
   	//printf("| parse_pip->double_quote         : %d            \n", parse_pip->double_quote);
-	printf("| parse_pip->error_parse_Red      : %d            \n", parse_pip->error_parse_red);
-	printf("| parse_pip->error_file_Red       : %d            \n", parse_pip->not_fil_red);
-	printf("| parse_pip->read_file            : %d            \n", parse_pip->read_file);
-	printf("| parse_pip->write_file           : %d            \n", parse_pip->write_file);
+	//printf("| parse_pipe->redir_double_in         : %d            \n", parse_pip->redir_double_input);
+	// printf("| parse_pip->error_parse_Red      : %d            \n", parse_pip->error_parse_red);
+	// printf("| parse_pip->read_file            : %d            \n", parse_pip->read_file);
+	// printf("| parse_pip->write_file           : %d            \n", parse_pip->write_file);
 	printf("-----------------------------------\n");
     parse_pip = parse_pip->next;
     i++;
@@ -431,7 +437,6 @@ void    parsing_pipes(t_comm comm)
 		cmd_begin--;
 		nb_cmds--;
 	}
-	print_pipe(parse_pip);
 	if (parse_pip)
 	{
 		if(nb_cmds == 1)

@@ -30,15 +30,6 @@
 
 static int retval = 0;
 
-typedef struct s_list
-{
-	char			*content;
-	struct s_list	*next;
-}					t_list;
-
-
-
-
 typedef struct s_pip{
 	char	**cmd;
 	int		nb_cmd;
@@ -59,6 +50,32 @@ typedef struct s_pip{
 	int		not_fil_red;
 	struct s_pip *next;
 }				t_pip;
+
+
+typedef struct	s_pipe
+{
+	int		nb_cmd;
+	char **env;
+	char **expenv;
+	char **cmd;
+	char	*path;
+    int nb_pipe;
+    int redir_output;
+    int redir_input;
+	int 	redir_output_A;
+	int 	redir_double_input;
+    int single_quote;
+    int double_quote;
+	int retclone;
+	char 	**redir_temp;
+	char	**redir;
+	char 	*file_to_out;
+	char 	*file_to_in;
+	int		error_parse_red;
+	int 	read_file;
+  	int 	write_file;
+	  struct s_pipe *next;
+}				t_pipe;
 
 typedef struct	s_quot
 {
@@ -85,7 +102,15 @@ typedef struct	s_comm
 	int 	read_file;
   	int 	write_file;
 	t_quot	quote;
+	struct s_comm *next;
 }				t_comm;
+
+typedef struct s_list
+{
+	char			*content;
+	struct s_list	*next;
+	t_comm			pipecomm;
+}					t_list;
 
 // PRINT FUNCTION
 void	print_comm(t_comm comm);
@@ -194,5 +219,11 @@ char *split_glitch(char *cmd_all);
 int is_red(char c);
 int is_quott(char c);
 int		ft_error_parse_red(char **str);
+int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list);
+//void	print_pipe(t_pipe *parse_pip);
+t_list *flstnew_comm(t_comm comm);
+void	flstadd_back_comm(t_list **alst, t_list *new);
+t_pipe	*fill_comm_pip(t_pipe *comm ,char *cmd);
+void	print_pipe(t_pipe *parse_pip);
 
 #endif
