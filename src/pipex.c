@@ -144,25 +144,18 @@ void	pipex(t_pipe *comm_pip, int i)
 		if (i == 1)
 		{	
 			close(pipefd[1]);
-      if (comm_pip->read_file >= 0)
-			  dup2(comm_pip->read_file, STDIN);
-			else
-			  dup2(pipefd[0], 0);
+			dup2(pipefd[0], 0);
 		}
 		else
 		{	
       close(pipefd[1]);
-      if (comm_pip->read_file >= 0)
-			  dup2(comm_pip->read_file, 0);
-			else
 			  dup2(1, 0);
 		}
 		if(i == 0)
 		{
 			
-			dup2(0, pipefd[0]);
-			close(pipefd[0]);
-			dup2(1, pipefd[1]);
+			dup(STDIN);
+			dup(STDOUT);
 		}
 		waitpid(pid1, NULL, 0);	
 		//execve(data->next->path, data->next->cmd, NULL);
