@@ -30,7 +30,7 @@ int check_doll(char *s)
 
 int char_alphanum(char c)
 {
-    if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+    if (c >= 31 && c <= 127)
         return (1);
     return (0);
 }
@@ -81,24 +81,31 @@ char *fill_doll(char *s, t_list **a_list)
             j++;
             i++;
         }
-        if (s[i + 1] && (char_alphanum(s[i + 1]) || s[i + 1] == '?'))
+        if (!s[i])
+            break;
+        //printf("%s\n", s);
+        //printf("%d\n", i );
+        //printf("s[i] = %c | s[i + 1] = %c | s[i + 2] = %c\n", s[i], s[i + 1], s[i + 2]);
+        if (s[i + 1] && char_alphanum(s[i + 1]))
         {
             if (s[i + 1] == '?' && !s[i + 2])
                 return (s);
             temp = after_env(&s[i]);
             temp2 = getenv2(temp, a_list);
             free(temp);
-            while (temp2 && temp2[c])
+            while (temp2 != NULL && temp2[c])
             {
                 str[j] = temp2[c];
                 j++;
                 c++;
             }
             i++;
-            while (char_alphanum(s[i]))
+            while (s[i] && char_alphanum(s[i]))
                 i++;
             c = 0;
             free(temp2);
+            if (!s[i])
+                break;
         }
         else{
             str[j] = '$';

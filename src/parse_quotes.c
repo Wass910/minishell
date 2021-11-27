@@ -279,6 +279,8 @@ char *parse_quotes(char **s, t_list **a_list, t_comm comm)
         {
             if (check_doll(s[i]))
                 s[i] = fill_doll(s[i], a_list);
+            if (s[i][0] == '\0')
+                s[i] = NULL;
         }
         else
         {
