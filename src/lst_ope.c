@@ -34,8 +34,13 @@ t_pipe	*fill_comm_pip(t_pipe *comm ,char *cmd)
 		}
 		else if(is_red(cmd[i]))
 		{
-			if ((cmd[i] != '<' && cmd[i + 1] != '<') || (cmd[i] == '<' && cmd[i + 1] == '<' && 
-				cmd[i + 2] == '<') || (cmd[i] == '<' && cmd[i + 1] == '<' && !cmd[i + 2]))
+			if (cmd[i] == '<' && cmd[i + 1] && cmd[i + 1] == '<' && cmd[i + 2] 
+				&& (cmd[i + 2] != '<' && cmd[i + 2] != '>'))
+			{
+				while (cmd[i] && cmd[i] != 32 && cmd[i] != 24)
+					i++;
+			}
+			else
 			{
 				comm->redir[red] = malloc(sizeof(char) * 400);
 				while (cmd[i] && cmd[i] != 32)
@@ -48,11 +53,6 @@ t_pipe	*fill_comm_pip(t_pipe *comm ,char *cmd)
 
 				red++;
 				redindex = 0;
-			}
-			else
-			{
-				while (cmd[i] && cmd[i] != 32 && cmd[i] != 24)
-					i++;
 			}
 		}
 		else if (cmd[i] == 32 && cmd[i + 1] && cmd[i + 1] == 32)

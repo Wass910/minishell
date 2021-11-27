@@ -13,6 +13,7 @@
 #include "../inc/minishell.h"
 t_pipe *fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write)
 {
+  printf("to_read = %d\n", to_read);
     if(to_read >= 0)
     {
         parse_pip->file_to_in = ft_strcat_red("", parse_pip->redir[to_read]);
@@ -143,12 +144,18 @@ void	pipex(t_pipe *comm_pip, int i)
 		if (i == 1)
 		{	
 			close(pipefd[1]);
-			dup2(pipefd[0], 0);
+      if (comm_pip->read_file >= 0)
+			  dup2(comm_pip->read_file, STDIN);
+			else
+			  dup2(pipefd[0], 0);
 		}
 		else
 		{	
-			close(pipefd[1]);
-			dup2(1, 0);
+      close(pipefd[1]);
+      if (comm_pip->read_file >= 0)
+			  dup2(comm_pip->read_file, 0);
+			else
+			  dup2(1, 0);
 		}
 		if(i == 0)
 		{
@@ -164,9 +171,17 @@ void	pipex(t_pipe *comm_pip, int i)
 	{
 		if (i==1)
 		{
-			close(pipefd[0]);
-			dup2(pipefd[1], 1);
+      close(pipefd[0]);
+      if (comm_pip->write_file >= 0)
+			  dup2(comm_pip->write_file, 1);
+			else
+			  dup2(pipefd[1], 1);
 		}
+    else
+    {
+      if (comm_pip->write_file >= 0)
+			  dup2(comm_pip->write_file, 1);
+    }
 		execve(comm_pip->path, comm_pip->cmd, NULL);
 		exit (0);
 	}
