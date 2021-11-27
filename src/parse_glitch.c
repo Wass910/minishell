@@ -14,6 +14,17 @@ int is_red(char c)
     return (0);
 }
 
+int is_echo(char *s)
+{
+    if (!s[0] || !s[1] || !s[2] || !s[3])
+        return (0);
+    if (s[0] == 'e' && s[1] == 'c' && s[2] == 'h' &&
+        s[3] == 'o' && (s[4] == ' ' || s[4] == '\0'))
+        return (1);
+    else
+        return (0);
+}
+
 char *split_glitch(char *cmd_all)
 {
     int stock[3];
@@ -21,6 +32,17 @@ char *split_glitch(char *cmd_all)
     int pass_space_for_redir;
 
     cmd_tsplit = malloc(sizeof(char) * 100);
+    if (is_echo(cmd_all))
+    {
+        stock[0] = 0;
+        while (cmd_all[stock[0]])
+        {
+            cmd_tsplit[stock[0]] = cmd_all[stock[0]];
+            stock[0]++;
+        }
+        cmd_tsplit[stock[0]] = '\0';
+        return (cmd_tsplit);
+    }
     if (!cmd_tsplit)
         return (NULL);
     if (unclosed_quotes(cmd_all))

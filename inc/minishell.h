@@ -230,5 +230,6 @@ void	print_pipe(t_pipe *parse_pip);
 void pipex_suits(t_pipe *parse_pip);
 t_pipe *fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write);
 t_pipe *open_file_redir(t_pipe *parse_pip);
+int find_builtin(char **str);
 
 #endif

@@ -408,6 +408,8 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 		printf("after glitch = %s\n", cmd_new);
 		str = ft_split(cmd_new, ' ');
 		cmd_new = parse_quotes(str, a_list, comm);
+		if (!cmd_new)
+			return(1);
 		printf("after quote parse  = %s\n", cmd_new);
 		comm = fill_comm(comm, cmd_new);
 		if (ft_error_parse_red(comm.redir) == 0)
