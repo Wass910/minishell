@@ -515,14 +515,14 @@ int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 	while(i-- > 0)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list, i);
   //print_pipe(comm_pip);
-  while (comm_pip->next)
+  while(comm_pip->next)
 	{
-    //comm_pip = open_file_redir(comm_pip);
-    pipex(comm_pip, comm_pip->nb_cmd);
-    comm_pip = comm_pip->next;
-  }
-  //comm_pip = open_file_redir(comm_pip);
-  pipex_suits(comm_pip);
+		pipex(comm_pip, 1);
+		comm_pip = comm_pip->next;
+	}
+	pipex(comm_pip, 0);
+	write(1, "lol\n", 4);
+	write(1, "lol1\n", 5);
   return retclone;
 }
 

@@ -98,6 +98,18 @@ int	open_file2(char *filename)
 // 		return (open(filename, O_CREAT | S_IWOTH));
 // 	return (-1);
 // }
+
+
+// int	open_file2(char *filename)
+// {
+//   filename++;
+//   filename++;
+// 	if (access(filename, F_OK) == 0)
+// 		return (open(filename, O_RDWR));
+// 	else
+// 		return (open(filename, O_CREAT | S_IWOTH));
+// 	return (-1);
+// }
 void pipex_suits(t_pipe *parse_pip)
 {
   int i;
@@ -106,8 +118,6 @@ void pipex_suits(t_pipe *parse_pip)
   i = fork();
     if (i)
     {
-      close(pipefd[1]);
-      dup2(pipefd[0], STDIN);
       dup2(STDIN, pipefd[0]);
       dup2(STDOUT,pipefd[1]);
       waitpid(i, NULL, 0);
@@ -118,31 +128,50 @@ void pipex_suits(t_pipe *parse_pip)
   return ;
 }
 
-void	pipex(t_pipe *parse_pip, int nb_cmds)
+void	pipex(t_pipe *comm_pip, int i)
 {
 	int pipefd[2];
 	pid_t pid1;
 
-      if (pipe(pipefd) == -1)
-        exit(EXIT_FAILURE);
-      pid1 = fork();
-      if (pid1 == -1)
-        exit(EXIT_FAILURE);
-      if (pid1)
-      {
-        close(pipefd[1]);
-        dup2(pipefd[0], STDIN);
-        waitpid(pid1, NULL, 0);	
-      }
-      else
-      {
-        close(pipefd[0]);
-        dup2(pipefd[1], STDOUT);
-        execve(parse_pip->path, parse_pip->cmd, NULL);
-        return ;
-      }
-    return; 
+	if (pipe(pipefd) == -1)
+		exit(EXIT_FAILURE);
+	pid1 = fork();
+	if (pid1 == -1)
+		exit(EXIT_FAILURE);
+	if (pid1)
+	{
+		if (i == 1)
+		{	
+			close(pipefd[1]);
+			dup2(pipefd[0], 0);
+		}
+		else
+		{	
+			close(pipefd[1]);
+			dup2(1, 0);
+		}
+		if(i == 0)
+		{
+			
+			dup2(0, pipefd[0]);
+			close(pipefd[0]);
+			dup2(1, pipefd[1]);
+		}
+		waitpid(pid1, NULL, 0);	
+		//execve(data->next->path, data->next->cmd, NULL);
+	}
+	else
+	{
+		if (i==1)
+		{
+			close(pipefd[0]);
+			dup2(pipefd[1], 1);
+		}
+		execve(comm_pip->path, comm_pip->cmd, NULL);
+		exit (0);
+	}
 }
+
 
 void	pipex_for_one(t_pip *parse_pip)
 {
