@@ -281,7 +281,9 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 			//printf("continue the parse\n");
 		//if(access(comm.cmd[0], F_OK) == 0)
 			//printf("command found whithout path\n");
-		if (path)
+		if (access(comm.cmd[0], F_OK) == 0)
+			str = comm.cmd[0];
+		else if (path)
 		{
 			while (path[k])
 			{
@@ -438,7 +440,10 @@ t_pipe   *parcing_comm_pip(char *all_cmd, t_comm comm, t_list **a_list, int i)
 		new->redir_temp = malloc(sizeof(char *) * 150);
 		new->redir_temp[0] = NULL;
 		new->nb_cmd = i;
-		new->path = path(new->cmd[0], a_list);
+		if (access(new->cmd[0], F_OK) == 0)
+			new->path = new->cmd[0];
+		else
+			new->path = path(new->cmd[0], a_list);
     new->read_file = -1;
     new->write_file = -1;
 		new->next = NULL;
@@ -462,9 +467,12 @@ t_pipe   *new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe, t_list 
 		new = fill_comm_pip(new, cmd_new);
 		new->redir_temp = malloc(sizeof(char *) * 150);
 		new->redir_temp[0] = NULL;
-		new->path = path(new->cmd[0], a_list);
-    new->read_file = -1;
-    new->write_file = -1;
+		if (access(new->cmd[0], F_OK) == 0)
+			new->path = new->cmd[0];
+		else
+			new->path = path(new->cmd[0], a_list);
+    	new->read_file = -1;
+    	new->write_file = -1;
 		new->nb_cmd = i;
 		
 		new->next = pipe;
