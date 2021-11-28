@@ -369,6 +369,13 @@ t_comm  ft_double_left_red(t_comm comm)
 		i++;
 	}
 	comm.redir_temp[count] = NULL;
+	int j = 0;
+	while (comm.redir_temp[j])
+	{
+		printf("comm.redir_temp = O%sO\n", comm.redir_temp[j]);
+		j++;
+	}
+	comm.redir_temp[count] = NULL;
 	return comm;
 }
 
@@ -412,11 +419,37 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 			return(1);
 		printf("after quote parse  = %s\n", cmd_new);
 		comm = fill_comm(comm, cmd_new);
+		int j = 0, k = 0;
+		while (comm.cmd[j])
+		{
+			while (comm.cmd[j][k])
+			{
+				if (comm.cmd[j][k] == 25)
+					comm.cmd[j][k] = 32;
+				k++;
+			}
+			k = 0;
+			j++;
+		}
+		j = 0;
+		k = 0;
+		while (comm.redir[j])
+		{
+			while (comm.redir[j][k])
+			{
+				if (comm.redir[j][k] == 25)
+					comm.redir[j][k] = 32;
+				k++;
+			}
+			k = 0;
+			j++;
+		}
 		if (ft_error_parse_red(comm.redir) == 0)
 		{
 			printf("Minishell: syntax error near unexpected token\n");
 			return -1;
 		}
+		j = 0;
 		comm = ft_double_left_red(comm);
 		if (comm.redir_temp[0])
 			ft_redir_temp(comm.redir_temp, comm.redir_double_input);

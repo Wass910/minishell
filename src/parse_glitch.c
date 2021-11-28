@@ -32,22 +32,10 @@ char *split_glitch(char *cmd_all)
     int pass_space_for_redir;
 
     cmd_tsplit = malloc(sizeof(char) * 100);
-    if (is_echo(cmd_all))
-    {
-        stock[0] = 0;
-        while (cmd_all[stock[0]])
-        {
-            cmd_tsplit[stock[0]] = cmd_all[stock[0]];
-            stock[0]++;
-        }
-        cmd_tsplit[stock[0]] = '\0';
-        return (cmd_tsplit);
-    }
     if (!cmd_tsplit)
         return (NULL);
     if (unclosed_quotes(cmd_all))
     {
-        printf("wow\n");
         printf("Unclosed quotes, check your inport before retrying\n");
         return (NULL);
     }
@@ -71,11 +59,11 @@ char *split_glitch(char *cmd_all)
             }
             while(cmd_all[stock[0]] != stock[2])   
             {
-                if (!(cmd_all[stock[0]] == 32))
-                {
+                if (cmd_all[stock[0]] == 32)
+                    cmd_tsplit[stock[1]] = 25;
+                else
                     cmd_tsplit[stock[1]] = cmd_all[stock[0]];
                 stock[1]++;
-                }
                 stock[0]++;
             }
             cmd_tsplit[stock[1]] = cmd_all[stock[0]];
