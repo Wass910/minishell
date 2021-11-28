@@ -579,6 +579,19 @@ static void    handle_sigusr1(int s, siginfo_t *siginfo, void *context)
 		return;
 }
 
+int only_space(char *s)
+{
+	int i;
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] && s[i] != 32 && s[i] != 9)
+			return(0);
+		i++;
+	}
+	return (1);
+}
+
 int main(int argc, char **argv, char **envp)
 {
 		t_comm  comm;
@@ -606,7 +619,8 @@ int main(int argc, char **argv, char **envp)
 			if (line[0])
 			{
 				add_history(line);
-				retval = parcing(line, comm, &a_list, &b_list);
+				if (!only_space(line))
+					retval = parcing(line, comm, &a_list, &b_list);
 			}
 			free(line);
 		}
