@@ -57,6 +57,7 @@ void	print_pipe(t_pipe *parse_pip)
     printf("| parse_pip->path                 : %s            \n", parse_pip->path);
     printf("| parse_pip->read_file            : %d            \n", parse_pip->read_file);
 	printf("| parse_pip->write_File           : %d            \n", parse_pip->write_file);
+	printf("| parse_pip->error_syn_red        : %d            \n", parse_pip->error_syn_red);
 		if (parse_pip->file_to_out)
     		printf("| parse_pip->file_out             : %s            \n", parse_pip->file_to_out);
 		if (parse_pip->file_to_in)
@@ -122,7 +123,7 @@ int r_and_w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str
 		{
 			dup2(comm.write_file,STDOUT);
 			dup2(comm.read_file, STDIN);
-			builtin(comm, a_list, b_list);
+			builtin(comm.cmd, a_list, b_list);
 		}
 		exit(0);
 	}
@@ -149,7 +150,7 @@ int r_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
 		else
 		{
 		dup2(comm.read_file, STDIN);
-		builtin(comm, a_list, b_list);
+		builtin(comm.cmd, a_list, b_list);
 		}
 		exit(0);
 	}
@@ -176,7 +177,7 @@ int w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
 		else
 		{
 			dup2(comm.write_file, STDOUT);
-			builtin(comm, a_list, b_list);
+			builtin(comm.cmd, a_list, b_list);
 		}
 		exit(0);
 	}
@@ -270,7 +271,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 		{
 			//printf("builtin to do.\n");
 			comm.retclone = retval;
-			k = builtin(comm, a_list, b_list);
+			k = builtin(comm.cmd, a_list, b_list);
 			return (k);
 		}
 		//else
@@ -414,6 +415,11 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 			return(1);
 		printf("after quote parse  = %s\n", cmd_new);
 		comm = fill_comm(comm, cmd_new);
+		if (ft_error_parse_red(comm.redir) == 0)
+		{
+			printf("Minishell: syntax error near unexpected token\n");
+			return -1;
+		}
 		int j = 0, k = 0;
 		while (comm.cmd[j])
 		{
@@ -439,12 +445,6 @@ int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 			k = 0;
 			j++;
 		}
-		if (ft_error_parse_red(comm.redir) == 0)
-		{
-			printf("Minishell: syntax error near unexpected token\n");
-			return -1;
-		}
-		j = 0;
 		comm = ft_double_left_red(comm);
 		if (comm.redir_temp[0])
 			ft_redir_temp(comm.redir_temp, comm.redir_double_input);
@@ -477,6 +477,7 @@ t_pipe   *parcing_comm_pip(char *all_cmd, t_comm comm, t_list **a_list, int i)
     new->read_file = -1;
     new->write_file = -1;
 	new = open_file_redir(new);
+	new->error_syn_red = 0;
 		new->next = NULL;
 		return (new);
 }
@@ -505,6 +506,7 @@ t_pipe   *new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe, t_list 
     	new->read_file = -1;
     	new->write_file = -1;
 		new->nb_cmd = i;
+		new->error_syn_red = 0;
 		new = open_file_redir(new);
 		new->next = pipe;
 		return (new);
@@ -554,28 +556,33 @@ int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 	comm_pip = parcing_comm_pip(cmd[i], comm, a_list, i);
 	while(i-- > 0)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list, i);
-    //print_pipe(comm_pip);
+    print_pipe(comm_pip);
     while(comm_pip)
 	{
+		if (ft_error_parse_red(comm_pip->redir) == 0)
+		{	
+			printf("Minishell: syntax error near unexpected token\n");
+			comm_pip->error_syn_red = 1;
+		}
 		if(!comm_pip->next)
 			last_cmd = 0;
 		if (comm_pip->write_file >= 0 && comm_pip->read_file == -1)
 		{	
-			pipex_write(comm_pip, last_cmd);
+			pipex_write(comm_pip, last_cmd, a_list, b_list);
 		}
 		else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
 		{	
-			pipex(comm_pip, last_cmd);
+			pipex(comm_pip, last_cmd, a_list, b_list);
 		}
 		else if (comm_pip->write_file == -1 && comm_pip->read_file >= 0)
 		{	
 			dup2(comm_pip->read_file, 0);
-			pipex_read(comm_pip, last_cmd);
+			pipex_read(comm_pip, last_cmd, a_list, b_list);
 		}
 		else 
 		{	
 			dup2(comm_pip->read_file, 0);
-			pipex_write_read(comm_pip, last_cmd);
+			pipex_write_read(comm_pip, last_cmd, a_list, b_list);
 		}
 		comm_pip = comm_pip->next;
 	}

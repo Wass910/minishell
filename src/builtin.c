@@ -42,24 +42,24 @@ int find_builtin(char **str)
     return (-1);
 }
 
-int    builtin(t_comm comm, t_list **a_list, t_list **b_list)
+int    builtin(char **cmd, t_list **a_list, t_list **b_list)
 {
     int type;
 
-    type = find_builtin(comm.cmd);
+    type = find_builtin(cmd);
     if (type == CD_TYPE)
-        return (build_cd(comm));
+        return (build_cd(cmd));
     else if (type == ECHO_TYPE)
-        return(build_echo(comm, a_list));
+        return(build_echo(cmd, a_list));
     else if (type == PWD_TYPE)
         return(build_pwd());
     else if (type == EXPORT_TYPE)
-        return(build_export(comm, a_list, b_list));
+        return(build_export(cmd, a_list, b_list));
     else if (type == UNSET_TYPE)
-        return(build_unset(comm, a_list, b_list, 0));
+        return(build_unset(cmd, a_list, b_list, 0));
     else if (type == ENV_TYPE)
         return(build_env(a_list));
     else if (type == EXIT_TYPE)
-        return(build_exit(comm));
+        return(build_exit(cmd));
     return (0);
 }

@@ -23,13 +23,13 @@ char *to_print2(char *s)
 	}
 }
 
-void add_line2(t_list **b_list, t_comm comm, int j)
+void add_line2(t_list **b_list, char **cmd, int j)
 {
     int i;
     char *str;
 
     i = 0;
-    str = to_print2(comm.cmd[j]);
+    str = to_print2(cmd[j]);
     if (str)
     {
         if(!is_alphanum(str))

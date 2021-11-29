@@ -75,7 +75,7 @@ typedef struct	s_pipe
 	int		error_parse_red;
 	int 	read_file;
   	int 	write_file;
-	int		not_fil_red;
+	int		error_syn_red;
 	struct s_pipe *next;
 }				t_pipe;
 
@@ -132,14 +132,14 @@ t_pip   *redirection(t_pip *new, char **tmp_all, char *str);
 t_comm	ft_redir_single(char *str);
 
 // BUILD BUILTIN
-int		builtin(t_comm comm, t_list **a_list, t_list **b_list);
-int		build_cd(t_comm comm);
-int		build_echo(t_comm comm, t_list **a_list);
+int		builtin(char **cmd, t_list **a_list, t_list **b_list);
+int		build_cd(char **cmd);
+int		build_echo(char **cmd, t_list **a_list);
 int		build_pwd();
-int		build_export(t_comm comm, t_list **a_list, t_list **b_list);
-int		build_unset(t_comm comm, t_list **a_list, t_list **b_list, int type);
+int		build_export(char **cmd, t_list **a_list, t_list **b_list);
+int		build_unset(char **cmd, t_list **a_list, t_list **b_list, int type);
 int		build_env(t_list **a_list);
-int		build_exit(t_comm comm);
+int		build_exit(char **cmd);
 
 // EXECUTION
 void	exec_cmd(char *s, t_comm comm);
@@ -166,7 +166,7 @@ char	*ft_strcat_w(char *dest, char *src);
 char	*ft_strcat_ns(char *dest, char *src);
 char	*ft_strcat_red_glu2(char *dest, char *src);
      // others
-void	add_line2(t_list **b_list, t_comm comm, int j);
+void	add_line2(t_list **b_list, char **cmd, int j);
 int		ft_atoi(const char *str);
 int		is_same(char *s1, char *s2);
 char	*getenv2(char *s, t_list **a_list);
@@ -184,11 +184,11 @@ int		ft_strchr(char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strcat_cmd(char *dest, char *src);
 void	free_str(char **str);
-void	pipex(t_pipe *data, int i);
+void	pipex(t_pipe *data, int i, t_list **a_list, t_list **b_list);
 void	pipex_for_one(t_pip *parse_pip);
-void	pipex_read(t_pipe *comm_pip, int i);
-void	pipex_write(t_pipe *comm_pip, int i);
-void	pipex_write_read(t_pipe *comm_pip, int i);
+void	pipex_read(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list);
+void	pipex_write(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list);
+void	pipex_write_read(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list);
 int		get_next_line(int fd, char **line);
 void	*ft_calloc(int count, int size);
 char	*ft_strjoin_free(char *s1, char *s2, int f);
@@ -205,7 +205,7 @@ int		check_inenv(char *str, t_list **a_list);
 void	sort_env(t_list **b_list);
 int		check_sorted(t_list **b_list);
 void	add_declare(t_list **b_list);
-void	add_line(t_list **b_list, t_comm comm, int j);
+void	add_line(t_list **b_list, char **cmd, int j);
 char	*ft_strdup(char *s1);
 char	**make_expenv(t_comm comm);
 char *parse_quotes(char **s, t_list **a_list, t_comm comm);
@@ -235,5 +235,6 @@ t_pipe *fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write);
 t_pipe *open_file_redir(t_pipe *parse_pip);
 int find_builtin(char **str);
 int	ft_strlen_glitch(char *s);
+char *remove_glitch(char *s);
 
 #endif

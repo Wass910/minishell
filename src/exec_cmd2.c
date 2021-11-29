@@ -21,7 +21,7 @@ int is_same(char *s1, char *s2)
     return (1);
 }
 
-int build_unset(t_comm comm, t_list **a_list, t_list **b_list, int type)
+int build_unset(char **cmd, t_list **a_list, t_list **b_list, int type)
 {
     char *str;
     int i;
@@ -30,16 +30,16 @@ int build_unset(t_comm comm, t_list **a_list, t_list **b_list, int type)
     char *s;
 
     i = 1;
-    str = comm.cmd[i];
+    str = cmd[i];
     s = malloc(sizeof(char) * 1000);
     if (!s)
         return (1);
-    while (comm.cmd[i])
+    while (cmd[i])
     {
-        if (comm.cmd[i][1] == '=')
-            str = ft_strcat_ns(comm.cmd[i], "=");
+        if (cmd[i][1] == '=')
+            str = ft_strcat_ns(cmd[i], "=");
         else
-            str = comm.cmd[i];
+            str = cmd[i];
         if (type == 0)
             temp = (*b_list);
         else
@@ -52,10 +52,10 @@ int build_unset(t_comm comm, t_list **a_list, t_list **b_list, int type)
         if (is_same(s, str) == 0)
         {
             (*b_list) = (*b_list)->next;
-            if (comm.cmd[i + 1])
+            if (cmd[i + 1])
             {
                 i++;
-                str = comm.cmd[i];
+                str = cmd[i];
             }
             else
                 return (0);
@@ -77,10 +77,10 @@ int build_unset(t_comm comm, t_list **a_list, t_list **b_list, int type)
             temp->next = temp->next->next;
         }
         i++;
-        str = comm.cmd[i];
+        str = cmd[i];
     }
     if (type == 0)
-        build_unset(comm, a_list, b_list, 1);
+        build_unset(cmd, a_list, b_list, 1);
     return (0);
 }
 
@@ -98,16 +98,16 @@ int build_env(t_list **a_list)
     return (0);
 }
 
-int build_exit(t_comm comm)
+int build_exit(char **cmd)
 {
     int i;
 
-    if (comm.cmd[1])
+    if (cmd[1])
     {
-        i = ft_atoi(comm.cmd[1]);
-        if (comm.cmd[1][0] != '0' && i == 0)
+        i = ft_atoi(cmd[1]);
+        if (cmd[1][0] != '0' && i == 0)
         {
-            printf("exit : %s: numeric argument required\n", comm.cmd[1]);
+            printf("exit : %s: numeric argument required\n", cmd[1]);
             exit(2);
         }
         else

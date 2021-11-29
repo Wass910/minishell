@@ -83,13 +83,13 @@ char *to_print(char *s)
     }
 }
 
-void add_line(t_list **b_list, t_comm comm, int j)
+void add_line(t_list **b_list, char **cmd, int j)
 {
     int i;
     char *str;
 
     i = 0;
-    str = to_print(comm.cmd[j]);
+    str = to_print(cmd[j]);
     if(!is_alphanum(str))
     {
         printf("export: '%s': not a valid identifier\n", str);

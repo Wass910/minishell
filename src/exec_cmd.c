@@ -5,32 +5,32 @@ void    exec_cmd(char *s, t_comm comm)
     execve(s, comm.cmd, NULL);
 }
 
-int build_cd(t_comm comm)
+int build_cd(char **cmd)
 {
     int i;
     char *str;
     char *s;
 
-    if (!comm.cmd[1])
+    if (!cmd[1])
     {
         str = getenv("HOME");
         if (!str)
             return (-1);
         i = chdir(str);
     }
-    else if (comm.cmd[1][0] == '-' && comm.cmd[1][1] == '\0')
+    else if (cmd[1][0] == '-' && cmd[1][1] == '\0')
     {
         build_pwd();
         return (0);
     }
-    else if (comm.cmd[1][0] == '~' && comm.cmd[1][1] == '\0')
+    else if (cmd[1][0] == '~' && cmd[1][1] == '\0')
     {
         str = getenv("HOME");
         if (!str)
             return (-1);
         i = chdir(str);
     }
-    else if (comm.cmd[1][0] == '~' && comm.cmd[1][1] == '/')
+    else if (cmd[1][0] == '~' && cmd[1][1] == '/')
     {
         s = malloc(100);
         if (!s)
@@ -39,9 +39,9 @@ int build_cd(t_comm comm)
         if (!str)
             return (-1);
         i = 1;
-        while (comm.cmd[1][i])
+        while (cmd[1][i])
         {
-            s[i - 1] = comm.cmd[1][i];
+            s[i - 1] = cmd[1][i];
             i++;
         }
         s[i - 1] = '\0';
@@ -50,17 +50,17 @@ int build_cd(t_comm comm)
         if (i == -1)
         {
             str = strerror(errno);
-            printf("cd: %s: %s\n", comm.cmd[1], str);
+            printf("cd: %s: %s\n", cmd[1], str);
         }
         free(s);
         return (i);
     }
     else
-        i = chdir(comm.cmd[1]);
+        i = chdir(cmd[1]);
     if (i == -1)
     {
         str = strerror(errno);
-        printf("cd: %s: %s\n", comm.cmd[1], str);
+        printf("cd: %s: %s\n", cmd[1], str);
     }
     return (i);
 }
@@ -75,29 +75,29 @@ int is_returnvalue(char *s)
     return (0);
 }
 
-int build_echo(t_comm comm, t_list **a_list)
+int build_echo(char **cmd, t_list **a_list)
 {
     int i;
     char *str;
 
-    if (!comm.cmd[1])
+    if (!cmd[1])
     {
         printf("\n");
         return (0);
     }
-    if (strncmp(comm.cmd[1], "-n", 2) == 0 && !check_fulln(comm.cmd[1]))
+    if (strncmp(cmd[1], "-n", 2) == 0 && !check_fulln(cmd[1]))
     {
         i = 2;
-        while (comm.cmd[i])
+        while (cmd[i])
         {
-            if (is_returnvalue(comm.cmd[i]))
-            {
-                str = ft_itoa(comm.retclone);
-                write(1, str, ft_strlen(str));
-            }
-            else
-                write(1, comm.cmd[i], ft_strlen(comm.cmd[i]));
-            if (comm.cmd[i + 1])
+            // if (is_returnvalue(cmd[i]))
+            // {
+            //     str = ft_itoa(retclone);
+            //     write(1, str, ft_strlen(str));
+            // }
+            //else
+                write(1, cmd[i], ft_strlen(cmd[i]));
+            if (cmd[i + 1])
                 write(1, " ", 1);
             i++;
         }
@@ -105,16 +105,16 @@ int build_echo(t_comm comm, t_list **a_list)
     else
     {
         i = 1;
-        while (comm.cmd[i])
+        while (cmd[i])
         {
-            if (is_returnvalue(comm.cmd[i]))
-            {
-                str = ft_itoa(comm.retclone);
-                write(1, str, ft_strlen(str));
-            }
-            else
-                write(1, comm.cmd[i], ft_strlen(comm.cmd[i]));
-            if (comm.cmd[i + 1])
+            // if (is_returnvalue(cmd[i]))
+            // {
+            //     str = ft_itoa(retclone);
+            //     write(1, str, ft_strlen(str));
+            // }
+            //else
+                write(1, cmd[i], ft_strlen(cmd[i]));
+            if (cmd[i + 1])
                 write(1, " ", 1);
             i++;
         }
@@ -136,7 +136,7 @@ int build_pwd()
     return (0);
 }
 
-int build_export(t_comm comm, t_list **a_list, t_list **b_list)
+int build_export(char **cmd, t_list **a_list, t_list **b_list)
 {
     static int done = 0;
     int i;
@@ -151,15 +151,15 @@ int build_export(t_comm comm, t_list **a_list, t_list **b_list)
     {
         sort_env(b_list);
     }
-    while (comm.cmd[i])
+    while (cmd[i])
     {
-        already_in(a_list, comm.cmd[i], 0);
-        already_in(b_list, comm.cmd[i], 1);
-        add_line(b_list, comm, i);
-        add_line2(a_list, comm, i);
+        already_in(a_list, cmd[i], 0);
+        already_in(b_list, cmd[i], 1);
+        add_line(b_list, cmd, i);
+        add_line2(a_list, cmd, i);
         i++;
     }
-    if (!comm.cmd[1])
+    if (!cmd[1])
         print_env(b_list);
     return (0);
 }

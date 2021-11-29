@@ -53,16 +53,12 @@ t_pipe *open_file_redir(t_pipe *parse_pip)
             if (parse_pip->redir[i] && ft_strchr(parse_pip->redir[i], '>') > 0)
             {
                 retnd = open_file2(parse_pip->redir[i]);
-                if (retnd == -1)
-                    parse_pip->not_fil_red = 1;
                 if (retnd != -1)
                     to_write = i;
             }
             if (parse_pip->redir[i] && ft_strchr(parse_pip->redir[i], '<') > 0)
             {
                 retnd = open_file(parse_pip->redir[i]);
-                if (retnd == -1)
-                    parse_pip->not_fil_red = 1;
                 if (retnd != -1)
                     to_read = i;
             }
@@ -77,14 +73,20 @@ int	open_file2(char *filename)
 {
   int i;
   int count = 0;
+  int red = 0;
   char *str;
   while(filename[count] == '>')
   {
     count++;
+    red++;
   }
-  if (count == 1)
+  while(filename[count] == 24)
+  {
+    count++;
+  }
+  if (red == 1)
 	  i = open(filename+count, O_RDWR | O_CREAT | S_IWOTH | O_TRUNC, 0664);
-  else 
+  else if (red == 2)
     i = open(filename+count, O_RDWR | O_CREAT | S_IWOTH | O_APPEND, 0664);
   if (i == -1)
   {
@@ -119,7 +121,7 @@ int	open_file2(char *filename)
 // }
 
 
-void	pipex_read(t_pipe *comm_pip, int i)
+void	pipex_read(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list)
 {
 	int pipefd[2];
 	pid_t pid1;
@@ -143,12 +145,15 @@ void	pipex_read(t_pipe *comm_pip, int i)
     close(pipefd[0]);
 		if (i==1)
 			  dup2(pipefd[1], 1);
-		execve(comm_pip->path, comm_pip->cmd, NULL);
+    if (verif_the_builtin(comm_pip->cmd) == 0)
+      builtin(comm_pip->cmd, a_list, b_list);
+    else
+		  execve(comm_pip->path, comm_pip->cmd, NULL);
 		exit (0);
 	}
 }
 
-void	pipex(t_pipe *comm_pip, int i)
+void	pipex(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list)
 {
 	int pipefd[2];
 	pid_t pid1;
@@ -172,12 +177,15 @@ void	pipex(t_pipe *comm_pip, int i)
     close(pipefd[0]);
 		if (i==1)
 			  dup2(pipefd[1], 1);
-		execve(comm_pip->path, comm_pip->cmd, NULL);
+		if (verif_the_builtin(comm_pip->cmd) == 0)
+      builtin(comm_pip->cmd, a_list, b_list);
+    else
+		  execve(comm_pip->path, comm_pip->cmd, NULL);
 		exit (0);
 	}
 }
 
-void	pipex_write_read(t_pipe *comm_pip, int i)
+void	pipex_write_read(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list)
 {
 	int pipefd[2];
 	pid_t pid1;
@@ -198,12 +206,15 @@ void	pipex_write_read(t_pipe *comm_pip, int i)
 	{
     close(pipefd[0]);
 		dup2(comm_pip->write_file, 1);
-		execve(comm_pip->path, comm_pip->cmd, NULL);
+		if (verif_the_builtin(comm_pip->cmd) == 0)
+      builtin(comm_pip->cmd, a_list, b_list);
+    else
+		  execve(comm_pip->path, comm_pip->cmd, NULL);
 		exit (0);
 	}
 }
 
-void	pipex_write(t_pipe *comm_pip, int i)
+void	pipex_write(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list)
 {
 	int pipefd[2];
 	pid_t pid1;
@@ -226,31 +237,34 @@ void	pipex_write(t_pipe *comm_pip, int i)
 	{
     close(pipefd[0]);
 		dup2(comm_pip->write_file, 1);
-		execve(comm_pip->path, comm_pip->cmd, NULL);
+		if (verif_the_builtin(comm_pip->cmd) == 0)
+      builtin(comm_pip->cmd, a_list, b_list);
+    else
+		  execve(comm_pip->path, comm_pip->cmd, NULL);
 		exit (0);
 	}
 }
 
 
-void	pipex_for_one(t_pip *parse_pip)
-{
-	int pipefd[2];
-	pid_t pid1;
-	int i;
+// void	pipex_for_one(t_pip *parse_pip)
+// {
+// 	int pipefd[2];
+// 	pid_t pid1;
+// 	int i;
 
-      if (pipe(parse_pip->pipefd) == -1)
-        exit(EXIT_FAILURE);
-      pid1 = fork();
-      if (pid1 == -1)
-        exit(EXIT_FAILURE);
-      if (pid1)
-      {
-        waitpid(pid1, NULL, 0);	
-      }
-      else
-      {
-        execve(parse_pip->path, parse_pip->cmd, NULL);
-        kill(SIGHUP, 0);
-		    exit(0);
-      }
-}
+//       if (pipe(parse_pip->pipefd) == -1)
+//         exit(EXIT_FAILURE);
+//       pid1 = fork();
+//       if (pid1 == -1)
+//         exit(EXIT_FAILURE);
+//       if (pid1)
+//       {
+//         waitpid(pid1, NULL, 0);	
+//       }
+//       else
+//       {
+// 		    execve(parse_pip->path, comm_pip->cmd, NULL);
+//         kill(SIGHUP, 0);
+// 		    exit(0);
+//       }
+// }
