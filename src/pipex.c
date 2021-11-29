@@ -3,7 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+=======
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+>>>>>>> origin/parsing
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
 /*   Updated: 2021/11/26 17:23:17 by idhiba           ###   ########.fr       */
@@ -13,6 +17,10 @@
 #include "../inc/minishell.h"
 t_pipe *fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write)
 {
+<<<<<<< HEAD
+=======
+  printf("to_read = %d\n", to_read);
+>>>>>>> origin/parsing
     if(to_read >= 0)
     {
         parse_pip->file_to_in = ft_strcat_red("", parse_pip->redir[to_read]);
@@ -147,15 +155,14 @@ void	pipex(t_pipe *comm_pip, int i)
 		}
 		else
 		{	
-			close(pipefd[1]);
-			dup2(1, 0);
+      close(pipefd[1]);
+			  dup2(1, 0);
 		}
 		if(i == 0)
 		{
 			
-			dup2(0, pipefd[0]);
-			close(pipefd[0]);
-			dup2(1, pipefd[1]);
+			dup(STDIN);
+			dup(STDOUT);
 		}
 		waitpid(pid1, NULL, 0);	
 		//execve(data->next->path, data->next->cmd, NULL);
@@ -164,9 +171,17 @@ void	pipex(t_pipe *comm_pip, int i)
 	{
 		if (i==1)
 		{
-			close(pipefd[0]);
-			dup2(pipefd[1], 1);
+      close(pipefd[0]);
+      if (comm_pip->write_file >= 0)
+			  dup2(comm_pip->write_file, 1);
+			else
+			  dup2(pipefd[1], 1);
 		}
+    else
+    {
+      if (comm_pip->write_file >= 0)
+			  dup2(comm_pip->write_file, 1);
+    }
 		execve(comm_pip->path, comm_pip->cmd, NULL);
 		exit (0);
 	}
