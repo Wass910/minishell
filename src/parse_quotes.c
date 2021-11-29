@@ -168,6 +168,8 @@ char *delete_pair(char *s, t_list **a_list)
             i++;
             //printf("temp = %s\n", temp);
         }
+        else
+            temp[0] = '\0';
         k = 0;
         while (temp && temp[k])
         {
@@ -241,33 +243,56 @@ char *delete_pair(char *s, t_list **a_list)
     return (str);
 }
 
-char *parse_quotes(char *s, t_list **a_list)
+char *ft_split_command_quote(char **str)
+{
+	char *cmd;
+	int i;
+	int j;
+	int count;
+
+	j = 0;
+	i = 0;
+	i = 2;
+    if (str[0] && str[1])
+        cmd = ft_strcat_redf(str[0], str[1]);
+    if (str[0] && !str[1])
+        return str[0];
+	while(str[i])
+	{
+		cmd = ft_strcat_redf(cmd, str[i]);
+        i++;
+	}
+	return cmd;
+}
+
+char *parse_quotes(char **s, t_list **a_list, t_comm comm)
 {
     int i;
     int j;
+    char *cmd;
 
     i = 0;
     j = 0;
-    if (no_quotes(s))
+    while (s[i])
     {
-        if (check_doll(s))
-            s = fill_doll(s, a_list);
-        return (s);
-    }
-    else
-    {
-        if (unclosed_quotes(s))
+        if (no_quotes(s[i]))
         {
-            printf("Unclosed quotes, check your inport before retrying\n");
-            return (NULL);
+            if (check_doll(s[i]))
+                s[i] = fill_doll(s[i], a_list);
+            if (s[i][0] == '\0')
+                s[i] = NULL;
         }
-        //j = pair_quotes(s);
-        //if (j == 3)
-        //{
-         //   if (no_cross(s))
-         //       return(app_nocross(s, a_list));
-        //}
-        s = delete_pair(s, a_list);
+        else
+        {
+            if (unclosed_quotes(s[i]))
+            {
+                printf("Unclosed quotes, check your inport before retrying\n");
+                return (NULL);
+            }
+            s[i] = delete_pair(s[i], a_list);
+        }
+        i++;
     }
-    return (s);
+    cmd = ft_split_command_quote(s);
+    return (cmd);
 }

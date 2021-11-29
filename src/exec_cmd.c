@@ -113,7 +113,7 @@ int build_echo(t_comm comm, t_list **a_list)
                 write(1, str, ft_strlen(str));
             }
             else
-                write(1, comm.cmd[1], ft_strlen(comm.cmd[1]));
+                write(1, comm.cmd[i], ft_strlen(comm.cmd[i]));
             if (comm.cmd[i + 1])
                 write(1, " ", 1);
             i++;
