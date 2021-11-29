@@ -65,17 +65,14 @@ char	*path(char *command, t_list **a_list)
 	int		i;
 	char    *path_to_go;
 
-	//printf("cmd = %s\n", command);
 	good_path = ft_split(getenv2("PATH", a_list), ':');
 	i = what_path(good_path, command);
 	if (i == -1)
 	{
 		free_str(good_path);
-		//write(1, "The path binary don't exist.\n", 29);
 		return NULL;
 	}
 	path_to_go = ft_strcat_w(good_path[i], command);
-	//printf("datapath1 = %s, datapath2 = %s", data.path1, data.path2);
 	free_str(good_path);
 	return (path_to_go);
 }

@@ -236,5 +236,21 @@ t_pipe *open_file_redir(t_pipe *parse_pip);
 int find_builtin(char **str);
 int	ft_strlen_glitch(char *s);
 char *remove_glitch(char *s);
+int w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str);
+int r_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str);
+int r_and_w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str);
+int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list);
+int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list);
+t_pipe   *new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe, t_list **a_list, int i);
+t_pipe   *parcing_comm_pip(char *all_cmd, t_comm comm, t_list **a_list, int i);
+int only_space(char *s);
+t_comm  ft_double_left_red(t_comm comm);
+void ft_redir_temp(char **str, int input);
+char   **double_in(char *all_cmd, t_list **a_list);
+int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list);
+int is_echo(char *s);
+int is_red(char c);
+int is_quott(char c);
+t_pipe *open_file_redir_out(t_pipe *parse_pip);
 
 #endif

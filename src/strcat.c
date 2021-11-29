@@ -148,8 +148,6 @@ char	*ft_strcat_red(char *dest, char *src)
 		tmp[i] = dest[i];
 		i++;
 	}
-	//tmp[i] = ' ';
-	//i++;
 	j = 0;
 	while (src[j] != '\0')
 	{

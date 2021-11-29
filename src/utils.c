@@ -71,3 +71,16 @@ int is_alphanum(char *s)
     }
     return (1);
 }
+
+int only_space(char *s)
+{
+	int i;
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] && s[i] != 32 && s[i] != 9)
+			return(0);
+		i++;
+	}
+	return (1);
+}

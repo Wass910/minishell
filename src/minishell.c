@@ -5,20 +5,6 @@ void  prompt(void)
 		write(1, "$>", ft_strlen("$>"));
 }
 
-int	open_file(char *filename)
-{
-	char *str;
-	int i;
-	filename++;
-	i = open(filename, O_RDONLY);
-	if (i == -1)
-	{
-		str = strerror(errno);
-		printf("%s: %s\n", filename, str);
-		return (-1);
-	}
-	return (i);
-}
 
 void	print_pipe(t_pipe *parse_pip)
 {
@@ -106,427 +92,61 @@ void	print_comm(t_comm comm)
 		printf("-----------------------------------\n");
 }
 
-int r_and_w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
+void exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 {
-	int k;
-	int status;
-	k = fork();
-	if (k == 0)
-	{
-		if (verif_the_builtin(comm.cmd))
-		{
-			dup2(comm.write_file,STDOUT);
-			dup2(comm.read_file, STDIN);
-			exec_cmd(str, comm);
-		}
-		else
-		{
-			dup2(comm.write_file,STDOUT);
-			dup2(comm.read_file, STDIN);
-			builtin(comm.cmd, a_list, b_list);
-		}
-		exit(0);
-	}
-	else
-	{
-		waitpid(k, &status, 0);
-		k = WEXITSTATUS(status);
-	}
-	return k;
-}
+	int last_cmd;
 
-int r_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
-{
-	int k;
-	int status;
-	k = fork();
-	if (k == 0)
+	last_cmd = 1;
+	while(comm_pip)
 	{
-		if (verif_the_builtin(comm.cmd))
+		if (comm_pip->error_syn_red == 1 || !comm_pip->path)
 		{
-		dup2(comm.read_file, STDIN);
-		exec_cmd(str, comm);
-		}
-		else
-		{
-		dup2(comm.read_file, STDIN);
-		builtin(comm.cmd, a_list, b_list);
-		}
-		exit(0);
-	}
-	else
-	{
-		waitpid(k, &status, 0);
-		k = WEXITSTATUS(status);
-	}
-	return k;
-}
-
-int w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
-{
-	int k;
-	int status;
-	k = fork();
-	if (k == 0)
-	{
-		if (verif_the_builtin(comm.cmd))
-		{
-			dup2(comm.write_file,STDOUT);
-			exec_cmd(str, comm);
-		}
-		else
-		{
-			dup2(comm.write_file, STDOUT);
-			builtin(comm.cmd, a_list, b_list);
-		}
-		exit(0);
-	}
-	else
-	{
-		waitpid(k, &status, 0);
-		k = WEXITSTATUS(status);
-	}
-	return k;
-}
-
-int red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
-{
-	comm.read_file = -3;
-	comm.write_file = -3;
-	int k;
-	int retnd;
-	int i = 0;
-	int to_read = -1;
-	int to_write = -1;
-	int status;
-	while (comm.redir[i])
-	{
-		if ((comm.redir[i] && (ft_strchr(comm.redir[i], '>') == 1 || ft_strchr(comm.redir[i], '>') == 2)))
-		{
-			 retnd = open_file2(comm.redir[i]);
-			 close(retnd);
-			if (retnd == -1)
-				return (retnd);
-			to_write = i;
-		}
-		if (comm.redir[i] && ft_strchr(comm.redir[i], '<') == 1 )
-		{
-			retnd = open_file(comm.redir[i]);
-			if (retnd == -1)
-				return (retnd);
-			to_read = i;
-		}
-		i++;
-	}
-	if(to_read >= 0)
-		comm.read_file = open_file(comm.redir[to_read]);
-	if(to_write >= 0)
-		comm.write_file = open_file2(comm.redir[to_write]);
-	if(to_read >= 0 && to_write >= 0)
-		k = r_and_w_redirection(comm, a_list, b_list, str);
-	else if(to_read < 0 && to_write >= 0)
-		 k = w_redirection(comm, a_list, b_list, str);
-	else if(to_read >= 0 && to_write < 0)
-		k = r_redirection(comm, a_list, b_list, str);
-	else
-	{
-			if (access(str, F_OK) != 0)
+			while(!comm_pip && (comm_pip->error_syn_red == 1 || !comm_pip->path))
 			{
-				printf("%s: command not found\n", comm.cmd[0]);
-				return (1);
+				comm_pip = comm_pip->next;
+			}	
+		}
+			if(!comm_pip->next)
+				last_cmd = 0;
+			if (comm_pip->write_file >= 0 && comm_pip->read_file == -1)
+				pipex_write(comm_pip, last_cmd, a_list, b_list);
+			else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
+				pipex(comm_pip, last_cmd, a_list, b_list);
+			else if (comm_pip->write_file == -1 && comm_pip->read_file >= 0)
+			{	
+				dup2(comm_pip->read_file, 0);
+				pipex_read(comm_pip, last_cmd, a_list, b_list);
 			}
-			k = fork();
-			if (k == 0)
-			{
-				exec_cmd(str, comm);
-				exit(0);
+			else 
+			{	
+				dup2(comm_pip->read_file, 0);
+				pipex_write_read(comm_pip, last_cmd, a_list, b_list);
 			}
-			else
-			{
-				waitpid(k, &status, 0);
-				k = WEXITSTATUS(status);
-			}
-		}
-	return k;
-}
-
-int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
-{
-		char **path;
-		int k;
-		char *str;
-		int i = 0;
-		int status;
-		char *tmp;
-		int write_file ;
-		k = 0;
-		//printf("comm = %s\n", comm.cmd[0]);
-		if (comm.error_parse_red == 1)
-		{
-			printf("bash: syntax error near unexpected token\n");
-			return 1;
-		}
-		path = ft_split(getenv2("PATH", a_list), ':');
-		if (if_builtin(comm.cmd) == 0 && !comm.redir[0])
-		{
-			//printf("builtin to do.\n");
-			comm.retclone = retval;
-			k = builtin(comm.cmd, a_list, b_list);
-			return (k);
-		}
-		//else
-			//printf("continue the parse\n");
-		//if(access(comm.cmd[0], F_OK) == 0)
-			//printf("command found whithout path\n");
-		if (access(comm.cmd[0], F_OK) == 0)
-			str = comm.cmd[0];
-		else if (path)
-		{
-			while (path[k])
-			{
-				str = ft_strcat_cmd(path[k], comm.cmd[0]);
-				if (access(str, F_OK) == 0)
-					k = 0;
-				if (access(str, F_OK) == 0)
-					break;
-				k++;
-			}
-		}
-		else
-		{
-			free(path);
-			//printf("%s: No such file or directory\n", comm.cmd[0]);
-			return (127);
-		}
-		if (access(str, F_OK) != 0 && !comm.redir[0])
-		{
-			printf("%s: command not found\n", comm.cmd[0]);
-			return (127);
-		}
-		//printf("found with path command = %s\n", str);
-		if (comm.redir[0])
-		{
-			//printf("continue the parse\n");
-			k = red_uniq_comm(comm, str, a_list, b_list);
-			return (k);
-		}
-		else
-		{ 
-			k = fork();
-			if (k == 0)
-			{
-				exec_cmd(str, comm);
-				exit(0);
-			}
-			else
-			{
-				waitpid(k, &status, 0);
-				k = WEXITSTATUS(status);
-			}
-		}
-		free(path);
-		return (k);
-}
-
-int  redir_comm(t_comm comm, t_list **a_list, t_list **b_list)
-{
-			return(uniq_cmd(comm, a_list, b_list));
-		return (0);
-}
-
-t_comm  ft_double_left_red(t_comm comm)
-{
-	int i = 0;
-	int count = 0;
-	int count_temp = 2;
-	int temp_index = 0;
-	comm.redir_double_input = 0;
-	comm.redir_temp = malloc(sizeof(char *) * 150);
-	while (comm.redir[i])
-	{
-		if(comm.redir[i][0] && comm.redir[i][1] && comm.redir[i][2] &&
-			(comm.redir[i][0] == '<' && comm.redir[i][1] == '<' && comm.redir[i][2] != '<'))
-		{
-			comm.redir_temp[count] = malloc(sizeof(char) * 150);
-			if (comm.redir[i][count_temp])
-			{
-				while(comm.redir[i][count_temp] != '\0')
-				{
-					if (comm.redir[i][count_temp] != 24)
-					{
-						comm.redir_temp[count][temp_index] = comm.redir[i][count_temp];
-						temp_index++;
-						count_temp++; 
-					}
-					else
-						count_temp++; 
-				}
-				comm.redir_double_input++;
-				comm.redir_temp[count][temp_index] = '\0';
-				count++;
-				count_temp = 2 ;
-				temp_index = 0;
-			} 
-		}
-		i++;
+		comm_pip = comm_pip->next;
 	}
-	comm.redir_temp[count] = NULL;
-	return comm;
 }
 
-void ft_redir_temp(char **str, int input)
+void	error_synthax_red(t_pipe *comm_pip)
 {
-	int i = 0;
-	int ret;
-	char *line;
-
-	printf("input = %d\n", input);
-	ret = get_next_line(0, &line);
-	while (ret > 0 )
+	while (comm_pip)
 	{
-		if ((ft_strncmp(line, str[i], ft_strlen(str[i])) == 0) &&
-			 ft_strlen(line) == ft_strlen(str[i]))
-			i++;
-		if (i == input)
-			return ;
-		free(line);
-		ret = get_next_line(0, &line);
-	}
-	return ;
-}
-
-int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
-{
-		char **str;
-		char *cmd_new;
-		int i;
-
-		if (ft_strchr(all_cmd, '|') > 0)
-		{
-			pipe_glitch(all_cmd,comm, a_list, b_list);
-			return (1);
-		}
-		cmd_new = malloc(sizeof(char) * 100);
-		cmd_new = split_glitch(all_cmd);
-		printf("after glitch = %s\n", cmd_new);
-		str = ft_split(cmd_new, ' ');
-		cmd_new = parse_quotes(str, a_list, comm);
-		if (!cmd_new)
-			return(1);
-		printf("after quote parse  = %s\n", cmd_new);
-		comm = fill_comm(comm, cmd_new);
-		if (ft_error_parse_red(comm.redir) == 0)
-		{
+		if (ft_error_parse_red(comm_pip->redir) == 0)
+		{	
 			printf("Minishell: syntax error near unexpected token\n");
-			return -1;
+			return;
 		}
-		int j = 0, k = 0;
-		while (comm.cmd[j])
-		{
-			while (comm.cmd[j][k])
-			{
-				if (comm.cmd[j][k] == 25)
-					comm.cmd[j][k] = 32;
-				k++;
-			}
-			k = 0;
-			j++;
-		}
-		j = 0;
-		k = 0;
-		while (comm.redir[j])
-		{
-			while (comm.redir[j][k])
-			{
-				if (comm.redir[j][k] == 25)
-					comm.redir[j][k] = 32;
-				k++;
-			}
-			k = 0;
-			j++;
-		}
-		comm = ft_double_left_red(comm);
-		if (comm.redir_temp[0])
-			ft_redir_temp(comm.redir_temp, comm.redir_double_input);
-		print_comm(comm);
-		return (redir_comm(comm, a_list, b_list));
+		comm_pip = comm_pip->next;
+	}
 }
 
-t_pipe   *parcing_comm_pip(char *all_cmd, t_comm comm, t_list **a_list, int i)
+void	not_valid_comm(t_pipe *comm_pip)
 {
-		char **str;
-		char *cmd_new;
-		t_pipe *new;
-
-		new = malloc(sizeof(*new));
-		if (new == NULL)
-			exit(EXIT_FAILURE);
-
-		cmd_new = malloc(sizeof(char) * 100);
-		cmd_new = split_glitch(all_cmd);
-		str = ft_split(cmd_new, ' ');
-		cmd_new = parse_quotes(str, a_list, comm);
-		new = fill_comm_pip(new, cmd_new);
-		new->redir_temp = malloc(sizeof(char *) * 150);
-		new->redir_temp[0] = NULL;
-		new->nb_cmd = i;
-		if (access(new->cmd[0], F_OK) == 0)
-			new->path = new->cmd[0];
-		else
-			new->path = path(new->cmd[0], a_list);
-    new->read_file = -1;
-    new->write_file = -1;
-	new = open_file_redir(new);
-	new->error_syn_red = 0;
-		new->next = NULL;
-		return (new);
-}
-
-t_pipe   *new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe, t_list **a_list, int i)
-{
-		char **str;
-		char *cmd_new;
-		t_pipe  *new;
-
-
-		new = malloc(sizeof(*new));
-		if (new == NULL)
-			exit(EXIT_FAILURE);
-		cmd_new = malloc(sizeof(char) * 100);
-		cmd_new = split_glitch(all_cmd);
-		str = ft_split(cmd_new, ' ');
-		cmd_new = parse_quotes(str, a_list, comm);
-		new = fill_comm_pip(new, cmd_new);
-		new->redir_temp = malloc(sizeof(char *) * 150);
-		new->redir_temp[0] = NULL;
-		if (access(new->cmd[0], F_OK) == 0)
-			new->path = new->cmd[0];
-		else
-			new->path = path(new->cmd[0], a_list);
-    	new->read_file = -1;
-    	new->write_file = -1;
-		new->nb_cmd = i;
-		new->error_syn_red = 0;
-		new = open_file_redir(new);
-		new->next = pipe;
-		return (new);
-}
-
-char   **double_in(char *all_cmd, t_list **a_list)
-{
-		char **str;
-		char *cmd_new;
-		t_comm comm;
-
-		cmd_new = malloc(sizeof(char) * 100);
-		cmd_new = split_glitch(all_cmd);
-		str = ft_split(cmd_new, ' ');
-		cmd_new = parse_quotes(str, a_list, comm);
-		comm = fill_comm(comm, cmd_new);
-		comm = ft_double_left_red(comm);
-		if (comm.redir_temp[0])
-			return (comm.redir_temp);
-		return (NULL);
+	while (comm_pip)
+	{
+		if (comm_pip->path == NULL)
+			printf("%s: command not found\n", comm_pip->cmd[0]);
+		comm_pip = comm_pip->next;
+	}
 }
 
 int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
@@ -557,35 +177,9 @@ int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 	while(i-- > 0)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list, i);
     print_pipe(comm_pip);
-    while(comm_pip)
-	{
-		if (ft_error_parse_red(comm_pip->redir) == 0)
-		{	
-			printf("Minishell: syntax error near unexpected token\n");
-			comm_pip->error_syn_red = 1;
-		}
-		if(!comm_pip->next)
-			last_cmd = 0;
-		if (comm_pip->write_file >= 0 && comm_pip->read_file == -1)
-		{	
-			pipex_write(comm_pip, last_cmd, a_list, b_list);
-		}
-		else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
-		{	
-			pipex(comm_pip, last_cmd, a_list, b_list);
-		}
-		else if (comm_pip->write_file == -1 && comm_pip->read_file >= 0)
-		{	
-			dup2(comm_pip->read_file, 0);
-			pipex_read(comm_pip, last_cmd, a_list, b_list);
-		}
-		else 
-		{	
-			dup2(comm_pip->read_file, 0);
-			pipex_write_read(comm_pip, last_cmd, a_list, b_list);
-		}
-		comm_pip = comm_pip->next;
-	}
+	error_synthax_red(comm_pip);
+	not_valid_comm(comm_pip);
+    exec_pipe(comm_pip, a_list, b_list);
   return retclone;
 }
 
@@ -599,19 +193,6 @@ static void    handle_sigusr1(int s, siginfo_t *siginfo, void *context)
 		return;
 }
 
-int only_space(char *s)
-{
-	int i;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] && s[i] != 32 && s[i] != 9)
-			return(0);
-		i++;
-	}
-	return (1);
-}
-
 int main(int argc, char **argv, char **envp)
 {
 		t_comm  comm;
@@ -619,8 +200,12 @@ int main(int argc, char **argv, char **envp)
 		t_list *b_list;
 		char *line;
 		struct sigaction sa;
-		(void)argc;
 
+		if (argc != 1)
+		{
+			printf("Too much arguments, usage : './minishell'.\n");
+			exit(EXIT_FAILURE);
+		}
 		sa.sa_sigaction = handle_sigusr1;
 		sa.sa_flags = SA_SIGINFO;
 		comm.env = NULL;
