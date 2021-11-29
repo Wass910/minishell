@@ -3,11 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< HEAD
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
-=======
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
->>>>>>> origin/parsing
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
 /*   Updated: 2021/11/26 17:23:17 by idhiba           ###   ########.fr       */
@@ -17,10 +13,7 @@
 #include "../inc/minishell.h"
 t_pipe *fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write)
 {
-<<<<<<< HEAD
-=======
   printf("to_read = %d\n", to_read);
->>>>>>> origin/parsing
     if(to_read >= 0)
     {
         parse_pip->file_to_in = ft_strcat_red("", parse_pip->redir[to_read]);
