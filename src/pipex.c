@@ -13,21 +13,27 @@
 #include "../inc/minishell.h"
 t_pipe *fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write)
 {
-  printf("to_read = %d\n", to_read);
     if(to_read >= 0)
     {
         parse_pip->file_to_in = ft_strcat_red("", parse_pip->redir[to_read]);
         parse_pip->read_file = open_file(parse_pip->redir[to_read]);
     }
     else
+    {
+      parse_pip->file_to_out = malloc(50);
         parse_pip->file_to_in = NULL;
+    }
     if(to_write >= 0)
     {
         parse_pip->file_to_out= ft_strcat_red("", parse_pip->redir[to_write]);
         parse_pip->write_file = open_file2(parse_pip->redir[to_write]);
     }
-    else 
+    else
+    { 
+        parse_pip->file_to_out = malloc(50);
         parse_pip->file_to_out = NULL;
+    }
+    printf("to_read = %d fichier = %s\n", to_read, parse_pip->file_to_in);
     return (parse_pip);
 }
 
@@ -111,22 +117,35 @@ int	open_file2(char *filename)
 // 		return (open(filename, O_CREAT | S_IWOTH));
 // 	return (-1);
 // }
-void pipex_suits(t_pipe *parse_pip)
+
+
+void	pipex_read(t_pipe *comm_pip, int i)
 {
-  int i;
-  int pipefd[2];
-  
-  i = fork();
-    if (i)
-    {
-      dup2(STDIN, pipefd[0]);
-      dup2(STDOUT,pipefd[1]);
-      waitpid(i, NULL, 0);
-    }
-    else{
-        execve(parse_pip->path, parse_pip->cmd, NULL);
-    }
-  return ;
+	int pipefd[2];
+	pid_t pid1;
+
+	if (pipe(pipefd) == -1)
+		exit(EXIT_FAILURE);
+	pid1 = fork();
+	if (pid1 == -1)
+		exit(EXIT_FAILURE);
+	if (pid1)
+	{
+    close(pipefd[1]);
+		if (i == 1)
+			dup2(pipefd[0], 0);
+		else
+			dup2(1, 0);
+		waitpid(pid1, NULL, 0);	
+	}
+	else
+	{
+    close(pipefd[0]);
+		if (i==1)
+			  dup2(pipefd[1], 1);
+		execve(comm_pip->path, comm_pip->cmd, NULL);
+		exit (0);
+	}
 }
 
 void	pipex(t_pipe *comm_pip, int i)
@@ -141,40 +160,72 @@ void	pipex(t_pipe *comm_pip, int i)
 		exit(EXIT_FAILURE);
 	if (pid1)
 	{
+    close(pipefd[1]);
 		if (i == 1)
-		{	
-			close(pipefd[1]);
 			dup2(pipefd[0], 0);
-		}
-		else
-		{	
-      close(pipefd[1]);
-			  dup2(1, 0);
-		}
 		if(i == 0)
-		{
-			
-			dup(STDIN);
-			dup(STDOUT);
-		}
-		waitpid(pid1, NULL, 0);	
-		//execve(data->next->path, data->next->cmd, NULL);
+      dup2(1, 0);
+		waitpid(pid1, NULL, 0);
 	}
 	else
 	{
+    close(pipefd[0]);
 		if (i==1)
-		{
-      close(pipefd[0]);
-      if (comm_pip->write_file >= 0)
-			  dup2(comm_pip->write_file, 1);
-			else
 			  dup2(pipefd[1], 1);
-		}
-    else
-    {
-      if (comm_pip->write_file >= 0)
-			  dup2(comm_pip->write_file, 1);
-    }
+		execve(comm_pip->path, comm_pip->cmd, NULL);
+		exit (0);
+	}
+}
+
+void	pipex_write_read(t_pipe *comm_pip, int i)
+{
+	int pipefd[2];
+	pid_t pid1;
+
+	if (pipe(pipefd) == -1)
+		exit(EXIT_FAILURE);
+	pid1 = fork();
+	if (pid1 == -1)
+		exit(EXIT_FAILURE);
+	if (pid1)
+	{
+    close(pipefd[1]);
+		if (i == 1)
+			dup2(pipefd[0], 0);
+		waitpid(pid1, NULL, 0);	
+	}
+	else
+	{
+    close(pipefd[0]);
+		dup2(comm_pip->write_file, 1);
+		execve(comm_pip->path, comm_pip->cmd, NULL);
+		exit (0);
+	}
+}
+
+void	pipex_write(t_pipe *comm_pip, int i)
+{
+	int pipefd[2];
+	pid_t pid1;
+
+	if (pipe(pipefd) == -1)
+		exit(EXIT_FAILURE);
+	pid1 = fork();
+	if (pid1 == -1)
+		exit(EXIT_FAILURE);
+	if (pid1)
+	{
+    close(pipefd[1]);
+		if (i == 1)
+			dup2(pipefd[0], 0);
+		else
+			dup2(1, 0);
+		waitpid(pid1, NULL, 0);	
+	}
+	else
+	{
+    close(pipefd[0]);
+		dup2(comm_pip->write_file, 1);
 		execve(comm_pip->path, comm_pip->cmd, NULL);
 		exit (0);
 	}

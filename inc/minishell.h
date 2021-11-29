@@ -186,6 +186,9 @@ char	*ft_strcat_cmd(char *dest, char *src);
 void	free_str(char **str);
 void	pipex(t_pipe *data, int i);
 void	pipex_for_one(t_pip *parse_pip);
+void	pipex_read(t_pipe *comm_pip, int i);
+void	pipex_write(t_pipe *comm_pip, int i);
+void	pipex_write_read(t_pipe *comm_pip, int i);
 int		get_next_line(int fd, char **line);
 void	*ft_calloc(int count, int size);
 char	*ft_strjoin_free(char *s1, char *s2, int f);
@@ -231,5 +234,6 @@ void pipex_suits(t_pipe *parse_pip);
 t_pipe *fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write);
 t_pipe *open_file_redir(t_pipe *parse_pip);
 int find_builtin(char **str);
+int	ft_strlen_glitch(char *s);
 
 #endif

@@ -64,4 +64,4 @@ git:
 
 -include $(OBJ_DIR)/*.d
 
-.PHONY: all clean fclean bonus norminette create_dirs test git re
+.PHONY: all clean fclean norminette create_dirs re

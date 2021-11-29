@@ -58,9 +58,9 @@ void	print_pipe(t_pipe *parse_pip)
     printf("| parse_pip->read_file            : %d            \n", parse_pip->read_file);
 	printf("| parse_pip->write_File           : %d            \n", parse_pip->write_file);
 		if (parse_pip->file_to_out)
-      printf("| parse_pip->file_out             : %s            \n", parse_pip->file_to_out);
+    		printf("| parse_pip->file_out             : %s            \n", parse_pip->file_to_out);
 		if (parse_pip->file_to_in)
-      printf("| parse_pip->file_in              : %s            \n", parse_pip->file_to_in);
+    		printf("| parse_pip->file_in              : %s            \n", parse_pip->file_to_in);
 	//printf("| parse_pip->single_quote         : %d            \n", parse_pip->single_quote);
   	//printf("| parse_pip->double_quote         : %d            \n", parse_pip->double_quote);
 	//printf("| parse_pip->error_parse_Red      : %d            \n", parse_pip->error_parse_red);
@@ -351,9 +351,14 @@ t_comm  ft_double_left_red(t_comm comm)
 			{
 				while(comm.redir[i][count_temp] != '\0')
 				{
-					comm.redir_temp[count][temp_index] = comm.redir[i][count_temp];
-					temp_index++;
-					count_temp++;  
+					if (comm.redir[i][count_temp] != 24)
+					{
+						comm.redir_temp[count][temp_index] = comm.redir[i][count_temp];
+						temp_index++;
+						count_temp++; 
+					}
+					else
+						count_temp++; 
 				}
 				comm.redir_double_input++;
 				comm.redir_temp[count][temp_index] = '\0';
@@ -374,6 +379,7 @@ void ft_redir_temp(char **str, int input)
 	int ret;
 	char *line;
 
+	printf("input = %d\n", input);
 	ret = get_next_line(0, &line);
 	while (ret > 0 )
 	{
@@ -470,6 +476,7 @@ t_pipe   *parcing_comm_pip(char *all_cmd, t_comm comm, t_list **a_list, int i)
 			new->path = path(new->cmd[0], a_list);
     new->read_file = -1;
     new->write_file = -1;
+	new = open_file_redir(new);
 		new->next = NULL;
 		return (new);
 }
@@ -498,7 +505,7 @@ t_pipe   *new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe, t_list 
     	new->read_file = -1;
     	new->write_file = -1;
 		new->nb_cmd = i;
-		
+		new = open_file_redir(new);
 		new->next = pipe;
 		return (new);
 }
@@ -531,6 +538,7 @@ int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 	int fd;
 	int retclone;
 	int nb_cmds;
+	int last_cmd = 1;
 	red_double = double_in(line, a_list);
 	while	(red_double && red_double[j])
 	{
@@ -546,15 +554,31 @@ int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 	comm_pip = parcing_comm_pip(cmd[i], comm, a_list, i);
 	while(i-- > 0)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list, i);
-    print_pipe(comm_pip);
-    while(comm_pip->next)
+    //print_pipe(comm_pip);
+    while(comm_pip)
 	{
-		pipex(comm_pip, 1);
+		if(!comm_pip->next)
+			last_cmd = 0;
+		if (comm_pip->write_file >= 0 && comm_pip->read_file == -1)
+		{	
+			pipex_write(comm_pip, last_cmd);
+		}
+		else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
+		{	
+			pipex(comm_pip, last_cmd);
+		}
+		else if (comm_pip->write_file == -1 && comm_pip->read_file >= 0)
+		{	
+			dup2(comm_pip->read_file, 0);
+			pipex_read(comm_pip, last_cmd);
+		}
+		else 
+		{	
+			dup2(comm_pip->read_file, 0);
+			pipex_write_read(comm_pip, last_cmd);
+		}
 		comm_pip = comm_pip->next;
 	}
-	pipex(comm_pip, 0);
-	write(1, "lol\n", 4);
-	write(1, "lol1\n", 5);
   return retclone;
 }
 
