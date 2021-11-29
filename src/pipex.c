@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
 /*   Updated: 2021/11/26 17:23:17 by idhiba           ###   ########.fr       */
@@ -194,5 +194,4 @@ void	pipex_for_one(t_pip *parse_pip)
         kill(SIGHUP, 0);
 		    exit(0);
       }
-
 }
