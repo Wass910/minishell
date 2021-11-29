@@ -132,7 +132,6 @@ void	pipex(t_pipe *comm_pip, int i)
 {
 	int pipefd[2];
 	pid_t pid1;
-	int i;
 
 	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);
