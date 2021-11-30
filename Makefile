@@ -34,29 +34,29 @@ all: $(NAME)
 
 $(NAME): create_dirs $(OBJ)
 	@$(CC1) $(CFLAGS) -I $(INC) $(OBJ) -o $@
-	@$(ECHO) "$(GREEN)$(BIN) is up to date!$(DEFAULT)"
+	@$(ECHO) "$(GREEN)$(BIN) is up to date!$(GREEN)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(ECHO) "Compiling $(BLUE)$<$(DEFAULT)..."
+	@$(ECHO) "Compiling $(GREEN)$<$(GREEN)..."
 	@$(CC2) $(CFLAGS) -I $(INC) -c $< -o $@
 
 create_dirs:
 	@mkdir -p $(OBJ_DIR)
 
 clean:
-	@$(ECHO) "$(CYAN)Cleaning up object files in $(OBJ_DIR), and $(OBJ_LFT_DIR)...$(DEFAULT)"
+	@$(ECHO) "$(GREEN)Cleaning up object files in $(OBJ_DIR), and $(OBJ_LFT_DIR)...$(GREEN)"
 	@$(RM) -r $(OBJ_DIR)
 
 fclean: clean
 	@$(RM) -r $(BIN)
-	@$(ECHO) "$(CYAN)Removed $(BIN)$(DEFAULT)"
+	@$(ECHO) "$(GREEN)Removed $(BIN)$(GREEN)"
 
 norminette:
-	@$(ECHO) "$(CYAN)\nChecking norm for $(BIN)...$(DEFAULT)"
+	@$(ECHO) "$(GREEN)\nChecking norm for $(BIN)...$(GREEN)"
 	@norminette -R CheckForbiddenSourceHeader $(SRC_DIR) inc/
 
 re: fclean all
-	@$(ECHO) "$(YELLOW)Cleaned and Rebuilt Everything for $(BIN)!$(DEFAULT)"
+	@$(ECHO) "$(GREEN)Cleaned and Rebuilt Everything for $(BIN)!$(GREEN)"
 
 git:
 	git add .

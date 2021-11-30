@@ -86,7 +86,6 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 	path = ft_split(getenv2("PATH", a_list), ':');
 	if (if_builtin(comm.cmd) == 0 && !comm.redir[0])
 	{
-		comm.retclone = retval;
 		k = builtin(comm.cmd, a_list, b_list);
 		return (k);
 	}

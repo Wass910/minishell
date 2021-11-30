@@ -261,7 +261,6 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0])
 		{
 			add_history(line);
-			printf("ret val = %d\n", retval);
 			if (!only_space(line))
 				g_retval = parcing(line, comm, &a_list, &b_list);
 		}
