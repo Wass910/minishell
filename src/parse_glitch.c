@@ -64,8 +64,6 @@ char *split_glitch(char *cmd_all)
                 stock[1]++;
             }
         }
-        // else if(cmd_all[stock[0]] == 32)
-        //     stock[0]++;
         else
         {
             cmd_tsplit[stock[1]] = cmd_all[stock[0]];

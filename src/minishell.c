@@ -149,7 +149,6 @@ void exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 			}
 			else if (comm_pip->write_file == -1 && comm_pip->read_file >= 0)
 			{	
-
 				dup2(comm_pip->read_file, 0);
 				pipex_read(comm_pip, last_cmd, a_list, b_list);
 			}
@@ -268,5 +267,6 @@ int main(int argc, char **argv, char **envp)
 			}
 			free(line);
 		}
+		free_comm(comm);
 		return 0;
 }

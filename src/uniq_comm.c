@@ -100,12 +100,13 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 					k = 0;
 				if (access(str, F_OK) == 0)
 					break;
+				free(str);
 				k++;
 			}
 		}
 		else
 		{
-			free(path);
+			free_str(path);
 			//printf("%s: No such file or directory\n", comm.cmd[0]);
 			return (127);
 		}
@@ -119,6 +120,7 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 		{
 			//printf("continue the parse\n");
 			k = red_uniq_comm(comm, str, a_list, b_list);
+			free_str(path);
 			return (k);
 		}
 		else
@@ -135,6 +137,6 @@ int uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 				k = WEXITSTATUS(status);
 			}
 		}
-		free(path);
+		free_str(path);
 		return (k);
 }

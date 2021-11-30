@@ -183,7 +183,6 @@ int		ft_strlen(char *s);
 int		ft_strchr(char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strcat_cmd(char *dest, char *src);
-void	free_str(char **str);
 void	pipex(t_pipe *data, int i, t_list **a_list, t_list **b_list);
 // void	pipex_for_one(t_pip *parse_pip);
 void	pipex_read(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list);
@@ -252,5 +251,6 @@ int is_echo(char *s);
 int is_red(char c);
 int is_quott(char c);
 t_pipe *open_file_redir_out(t_pipe *parse_pip);
+void	free_comm(t_comm comm);
 
 #endif

@@ -108,19 +108,19 @@ void    already_in(t_list **a_list, char *str, int j)
 
     temp = (*a_list);
     str = make_test(str);
-    if(j == 1)
+    if (j == 1)
         s = &temp->content[11];
     else
         s = temp->content;
     s = make_test(s);
-    if(!is_same(s, str) && j == 1)
+    if (!is_same(s, str) && j == 1)
     {
         temp = (*a_list);
         (*a_list) = (*a_list)->next;
         free(temp);
         return ;
     }
-    if(!is_same(s, str) && is_valid(str))
+    if (!is_same(s, str) && is_valid(str))
     {
         temp = (*a_list);
         (*a_list) = (*a_list)->next;
@@ -129,12 +129,12 @@ void    already_in(t_list **a_list, char *str, int j)
     }
     while (temp->next)
     {
-        if(j == 1)
+        if (j == 1)
             s = &temp->next->content[11];
         else
             s = temp->next->content;
         s = make_test(s);
-        if(!is_same(s, str) || !is_same(str, s))
+        if (!is_same(s, str) || !is_same(str, s))
         {
             break;
         }
