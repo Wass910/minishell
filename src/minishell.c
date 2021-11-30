@@ -92,28 +92,64 @@ void	print_comm(t_comm comm)
 		printf("-----------------------------------\n");
 }
 
+void	pipex_for_one(char *path, char **cmd)
+{
+	int pipefd[2];
+	pid_t pid1;
+
+	if (pipe(pipefd) == -1)
+		exit(EXIT_FAILURE);
+	pid1 = fork();
+	if (pid1 == -1)
+		exit(EXIT_FAILURE);
+	if (pid1)
+	{
+    	close(pipefd[1]);
+		dup2(pipefd[0], 0);
+		waitpid(pid1, NULL, 0);
+	}
+	else
+	{
+    	close(pipefd[0]);
+		dup2(pipefd[1], 1);
+		  	execve(path, cmd, NULL);
+		exit (0);
+	}
+}
+
 void exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 {
 	int last_cmd;
-
+	int error = 0;
 	last_cmd = 1;
+	char **cmd;
+	char str[10]= "ls ef";
+	cmd = ft_split(str, ' ');
 	while(comm_pip)
 	{
 		if (comm_pip->error_syn_red == 1 || !comm_pip->path)
 		{
-			while(!comm_pip && (comm_pip->error_syn_red == 1 || !comm_pip->path))
+			error = 1;
+			while(comm_pip && (comm_pip->error_syn_red == 1 || !comm_pip->path))
 			{
 				comm_pip = comm_pip->next;
 			}	
 		}
+		if (comm_pip)
+		{
 			if(!comm_pip->next)
 				last_cmd = 0;
 			if (comm_pip->write_file >= 0 && comm_pip->read_file == -1)
 				pipex_write(comm_pip, last_cmd, a_list, b_list);
 			else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
+			{
+				if (error != 0)
+					pipex_for_one(NULL, cmd);
 				pipex(comm_pip, last_cmd, a_list, b_list);
+			}
 			else if (comm_pip->write_file == -1 && comm_pip->read_file >= 0)
 			{	
+
 				dup2(comm_pip->read_file, 0);
 				pipex_read(comm_pip, last_cmd, a_list, b_list);
 			}
@@ -122,7 +158,9 @@ void exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 				dup2(comm_pip->read_file, 0);
 				pipex_write_read(comm_pip, last_cmd, a_list, b_list);
 			}
-		comm_pip = comm_pip->next;
+			comm_pip = comm_pip->next;
+		}
+		error = 0;
 	}
 }
 
@@ -224,6 +262,7 @@ int main(int argc, char **argv, char **envp)
 			if (line[0])
 			{
 				add_history(line);
+				printf("ret val = %d\n", retval);
 				if (!only_space(line))
 					retval = parcing(line, comm, &a_list, &b_list);
 			}

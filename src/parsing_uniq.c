@@ -2,10 +2,12 @@
 
 int    parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
 {
+
 		char **str;
 		char *cmd_new;
 		int i;
 
+		printf("ret val p = %d\n", retval);
 		if (ft_strchr(all_cmd, '|') > 0)
 		{
 			pipe_glitch(all_cmd,comm, a_list, b_list);
