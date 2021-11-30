@@ -92,7 +92,7 @@ int	open_file2(char *filename)
 		i = open(filename + count, O_RDWR | O_CREAT | S_IWOTH | O_TRUNC, 0664);
 	else if (red == 2)
 		i = open(filename + count, O_RDWR | O_CREAT | S_IWOTH | O_APPEND, 0664);
-	else 
+	else
 		return (-1);
 	if (i == -1)
 	{

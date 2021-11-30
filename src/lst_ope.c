@@ -1,17 +1,23 @@
 #include "../inc/minishell.h"
 
-t_pipe	*fill_comm_pip(t_pipe *comm ,char *cmd)
+t_pipe	*fill_comm_pip(t_pipe *comm, char *cmd)
 {
-	int i = 0;
-	int red = 0;
-	int redindex = 0;
-	int arg = 0;
-	int argindex = 0;
+	int	i;
+	int	red;
+	int	redindex;
+	int	arg;
+	int	argindex;
+
+	argindex = 0;
+	arg = 0;
+	redindex = 0;
+	red = 0;
+	i = 0;
 	comm->cmd = malloc(sizeof(char *) * 50);
 	comm->redir = malloc(sizeof(char *) * 50);
 	while (cmd[i])
 	{
-		if(cmd[i] == 24)
+		if (cmd[i] == 24)
 		{
 			comm->cmd[arg] = malloc(sizeof(char) * 400);
 			i++;
@@ -32,9 +38,9 @@ t_pipe	*fill_comm_pip(t_pipe *comm ,char *cmd)
 			arg++;
 			i++;
 		}
-		else if(is_red(cmd[i]))
+		else if (is_red(cmd[i]))
 		{
-			if (cmd[i] == '<' && cmd[i + 1] && cmd[i + 1] == '<' && cmd[i + 2] 
+			if (cmd[i] == '<' && cmd[i + 1] && cmd[i + 1] == '<' && cmd[i + 2]
 				&& (cmd[i + 2] != '<' && cmd[i + 2] != '>'))
 			{
 				while (cmd[i] && cmd[i] != 32 && cmd[i] != 24)
@@ -50,7 +56,6 @@ t_pipe	*fill_comm_pip(t_pipe *comm ,char *cmd)
 					redindex++;
 				}
 				comm->redir[red][redindex] = '\0';
-
 				red++;
 				redindex = 0;
 			}
@@ -84,18 +89,23 @@ t_pipe	*fill_comm_pip(t_pipe *comm ,char *cmd)
 	return (comm);
 }
 
-t_comm	fill_comm(t_comm comm ,char *cmd)
+t_comm	fill_comm(t_comm comm, char *cmd)
 {
-	int i = 0;
-	int red = 0;
-	int redindex = 0;
-	int arg = 0;
-	int argindex = 0;
+	int	i;
+	int	red;
+	int	redindex;
+	int	arg;
+	int	argindex ;
+
+	argindex = 0;
+	arg = 0;
+	redindex = 0;
+	red = 0;
 	comm.cmd = malloc(sizeof(char *) * 50);
 	comm.redir = malloc(sizeof(char *) * 50);
 	while (cmd[i])
 	{
-		if(cmd[i] == 24)
+		if (cmd[i] == 24)
 		{
 			comm.cmd[arg] = malloc(sizeof(char) * 400);
 			i++;
@@ -116,7 +126,7 @@ t_comm	fill_comm(t_comm comm ,char *cmd)
 			arg++;
 			i++;
 		}
-		else if(is_red(cmd[i]))
+		else if (is_red(cmd[i]))
 		{
 			comm.redir[red] = malloc(sizeof(char) * 400);
 			while (cmd[i] && cmd[i] != 32)
@@ -158,28 +168,29 @@ t_comm	fill_comm(t_comm comm ,char *cmd)
 	return (comm);
 }
 
-int		ft_error_parse_red(char **str)
+int	ft_error_parse_red(char **str)
 {
-	int i;
-	int count;
-	int red = 0;
+	int	i;
+	int	count;
+	int	red;
 
+	red = 0;
 	count = 0;
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
 		while (is_red(str[i][count]) == 1)
 		{
 			red++;
 			count++;
 		}
-		if(red > 2 || !str[i][count])
-			return 0;
+		if (red > 2 || !str[i][count])
+			return (0);
 		red = 0;
 		count = 0;
-		if (str[i][0] == '>' && str[i][1] && str[i][1] =='<')
-			return 0;
+		if (str[i][0] == '>' && str[i][1] && str[i][1] == '<')
+			return (0);
 		i++;
 	}
-	return 1;
+	return (1);
 }
