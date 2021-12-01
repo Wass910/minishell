@@ -29,7 +29,8 @@ void	reflechir(t_uniq *uniq, char *str, t_comm comm)
 {
 	if (access(str, F_OK) != 0)
 	{
-		printf("%s: command not found\n", comm.cmd[0]);
+		if (comm.cmd[0])
+			printf("%s: command not found\n", comm.cmd[0]);
 		g_retval = 1;
 		return ;
 	}
@@ -83,16 +84,16 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 
 	if (uniqq_setup(&uniqq, comm, a_list, b_list) != 0)
 		return (1);
-	if (access(comm.cmd[0], F_OK) == 0)
+	if (comm.cmd[0] && access(comm.cmd[0], F_OK) == 0)
 		uniqq->str = comm.cmd[0];
-	else if (uniqq->path)
+	else if (comm.cmd[0] && uniqq->path)
 		fill_while(uniqq, comm);
-	else
+	else if(comm.cmd[0])
 	{
 		g_retval = 127;
 		return (127);
 	}
-	if (access(uniqq->str, F_OK) != 0)
+	if (comm.cmd[0] && comm.cmd[0] && access(uniqq->str, F_OK) != 0)
 		return (fill_if(uniqq, comm));
 	if (comm.redir[0])
 		return (fill_ret(uniqq, comm, a_list, b_list));

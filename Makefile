@@ -21,6 +21,8 @@ BIN = minishell
 NAME = minishell
 INC = inc/minishell.h
 ECHO = echo
+ECHON = echo -n
+ECHOE = printf
 
 SRC = builtin.c check_builtin.c exec_cmd2.c exec_cmd.c flstadd_back.c flstadd_front.c flstclear.c flstdelone.c\
 flstiter.c flstlast.c flstmap.c flstnew.c flstsize.c ft_atoi.c ft_split.c ft_strcat.c ft_strchr.c ft_strdup.c\
@@ -36,17 +38,22 @@ all: $(NAME)
 
 $(NAME): create_dirs $(OBJ)
 	@$(CC1) $(CFLAGS) -I $(INC) $(OBJ) -o $@
-	@$(ECHO) "$(YELLOW)$(BIN) is up to date!$(YELLOW)"
+	@$(ECHON) "                                            \r"
+	@$(ECHO) "\rCompilation succed$(GREEN)"
+	@$(ECHO) "$(WHITE)$(BIN) is up to date!$(WHITE)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(ECHO) "Compiling $(GRAY)$<$(GREEN)..."
+	@$(ECHON) "                                            \r"
+	@$(ECHON) "Compiling $(GRAY)$<$(GREEN)\r"
 	@$(CC2) $(CFLAGS) -I $(INC) -c $< -o $@
 
 create_dirs:
 	@mkdir -p $(OBJ_DIR)
 
 clean:
-	@$(ECHO) "$(YELLOW)Cleaning up object files in $(OBJ_DIR), and $(OBJ_LFT_DIR)...$(YELLOW)"
+	@$(ECHON) "$(GREEN)Cleaning up object files in $(OBJ_DIR), and $(OBJ_LFT_DIR)...\r"
+	@$(ECHON) "                                                                     \r"
+	@$(ECHO) "$(GRAY)\rCleaning done"
 	@$(RM) -r $(OBJ_DIR)
 
 fclean: clean
@@ -54,11 +61,10 @@ fclean: clean
 	@$(ECHO) "$(GRAY)Removed $(BIN)$(GREEN)"
 
 norminette:
-	@$(ECHO) "$(GRAY)\nChecking norm for $(BIN)...$(GREEN)"
+	@$(ECHO) "$(GRAY)Checking norm for $(BIN)...$(GREEN)"
 	@norminette -R CheckForbiddenSourceHeader $(SRC_DIR) inc/
 
 re: fclean all
-	@$(ECHO) "$(YELLOW)Cleaned and Rebuilt Everything for $(BIN)!$(YELLOW)"
 
 git:
 	git add .
