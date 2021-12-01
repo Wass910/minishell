@@ -10,7 +10,7 @@ WHITE = \033[0;97m
 
 UNAME = $(shell uname -s)
 
-CFLAGS = -g -fsanitize=address
+CFLAGS = 
 RM = rm -f
 CC1 = clang -lreadline
 CC2 = clang
@@ -25,7 +25,8 @@ SRC = builtin.c check_builtin.c exec_cmd2.c exec_cmd.c flstadd_back.c flstadd_fr
 flstiter.c flstlast.c flstmap.c flstnew.c flstsize.c ft_atoi.c ft_split.c ft_strcat.c ft_strchr.c ft_strdup.c\
 ft_strjoin.c ft_strlen.c ft_strncmp.c get_next_line.c get_next_line_utils.c get_path.c lst_ope.c minishell.c\
 pipex.c sort_env.c utils2.c utils.c strcat.c ft_itoa.c parse_quotes.c quotes_utils.c\
-parse_glitch.c free_stab.c
+parse_glitch.c free_stab.c open_file.c redirection.c uniq_comm.c lst_cmd.c input_red.c\
+parsing_uniq.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
@@ -33,29 +34,29 @@ all: $(NAME)
 
 $(NAME): create_dirs $(OBJ)
 	@$(CC1) $(CFLAGS) -I $(INC) $(OBJ) -o $@
-	@$(ECHO) "$(GREEN)$(BIN) is up to date!$(DEFAULT)"
+	@$(ECHO) "$(GREEN)$(BIN) is up to date!$(GREEN)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(ECHO) "Compiling $(BLUE)$<$(DEFAULT)..."
+	@$(ECHO) "Compiling $(GREEN)$<$(GREEN)..."
 	@$(CC2) $(CFLAGS) -I $(INC) -c $< -o $@
 
 create_dirs:
 	@mkdir -p $(OBJ_DIR)
 
 clean:
-	@$(ECHO) "$(CYAN)Cleaning up object files in $(OBJ_DIR), and $(OBJ_LFT_DIR)...$(DEFAULT)"
+	@$(ECHO) "$(GREEN)Cleaning up object files in $(OBJ_DIR), and $(OBJ_LFT_DIR)...$(GREEN)"
 	@$(RM) -r $(OBJ_DIR)
 
 fclean: clean
 	@$(RM) -r $(BIN)
-	@$(ECHO) "$(CYAN)Removed $(BIN)$(DEFAULT)"
+	@$(ECHO) "$(GREEN)Removed $(BIN)$(GREEN)"
 
 norminette:
-	@$(ECHO) "$(CYAN)\nChecking norm for $(BIN)...$(DEFAULT)"
+	@$(ECHO) "$(GREEN)\nChecking norm for $(BIN)...$(GREEN)"
 	@norminette -R CheckForbiddenSourceHeader $(SRC_DIR) inc/
 
 re: fclean all
-	@$(ECHO) "$(YELLOW)Cleaned and Rebuilt Everything for $(BIN)!$(DEFAULT)"
+	@$(ECHO) "$(GREEN)Cleaned and Rebuilt Everything for $(BIN)!$(GREEN)"
 
 git:
 	git add .
@@ -64,4 +65,4 @@ git:
 
 -include $(OBJ_DIR)/*.d
 
-.PHONY: all clean fclean bonus norminette create_dirs test git re
+.PHONY: all clean fclean norminette create_dirs re
