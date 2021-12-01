@@ -7,10 +7,11 @@ BLUE = \033[0;94m
 MAGENTA = \033[0;95m
 CYAN = \033[0;96m
 WHITE = \033[0;97m
+TESTCOL = \033[1;35m
 
 UNAME = $(shell uname -s)
 
-CFLAGS = 
+CFLAGS = -g3 -fsanitize=address
 RM = rm -f
 CC1 = clang -lreadline
 CC2 = clang
@@ -26,7 +27,8 @@ flstiter.c flstlast.c flstmap.c flstnew.c flstsize.c ft_atoi.c ft_split.c ft_str
 ft_strjoin.c ft_strlen.c ft_strncmp.c get_next_line.c get_next_line_utils.c get_path.c lst_ope.c minishell.c\
 pipex.c sort_env.c utils2.c utils.c strcat.c ft_itoa.c parse_quotes.c quotes_utils.c\
 parse_glitch.c free_stab.c open_file.c redirection.c uniq_comm.c lst_cmd.c input_red.c\
-parsing_uniq.c
+parsing_uniq.c build_echo.c build_pwd.c build_unset.c unset_utils.c is_smtg.c glitch_bin.c\
+glitch_bin2.c parse_bin.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
@@ -34,29 +36,29 @@ all: $(NAME)
 
 $(NAME): create_dirs $(OBJ)
 	@$(CC1) $(CFLAGS) -I $(INC) $(OBJ) -o $@
-	@$(ECHO) "$(GREEN)$(BIN) is up to date!$(GREEN)"
+	@$(ECHO) "$(YELLOW)$(BIN) is up to date!$(YELLOW)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(ECHO) "Compiling $(GREEN)$<$(GREEN)..."
+	@$(ECHO) "Compiling $(GRAY)$<$(GREEN)..."
 	@$(CC2) $(CFLAGS) -I $(INC) -c $< -o $@
 
 create_dirs:
 	@mkdir -p $(OBJ_DIR)
 
 clean:
-	@$(ECHO) "$(GREEN)Cleaning up object files in $(OBJ_DIR), and $(OBJ_LFT_DIR)...$(GREEN)"
+	@$(ECHO) "$(YELLOW)Cleaning up object files in $(OBJ_DIR), and $(OBJ_LFT_DIR)...$(YELLOW)"
 	@$(RM) -r $(OBJ_DIR)
 
 fclean: clean
 	@$(RM) -r $(BIN)
-	@$(ECHO) "$(GREEN)Removed $(BIN)$(GREEN)"
+	@$(ECHO) "$(GRAY)Removed $(BIN)$(GREEN)"
 
 norminette:
-	@$(ECHO) "$(GREEN)\nChecking norm for $(BIN)...$(GREEN)"
+	@$(ECHO) "$(GRAY)\nChecking norm for $(BIN)...$(GREEN)"
 	@norminette -R CheckForbiddenSourceHeader $(SRC_DIR) inc/
 
 re: fclean all
-	@$(ECHO) "$(GREEN)Cleaned and Rebuilt Everything for $(BIN)!$(GREEN)"
+	@$(ECHO) "$(YELLOW)Cleaned and Rebuilt Everything for $(BIN)!$(YELLOW)"
 
 git:
 	git add .

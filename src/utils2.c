@@ -52,14 +52,14 @@ char	*getenv2(char *s, t_list **a_list)
 	{
 		if (!is_same(temp->content, s))
 		{
-			str = ft_strcat_ns(&temp->content[ft_strlen(s)], NULL);
+			str = ft_strcat_ns(&temp->content[ft_strlen(s) + 1], NULL);
 			return (str);
 		}
 		temp = temp->next;
 	}
 	if (!is_same(temp->content, s))
 	{
-		str = ft_strcat_ns(&temp->content[ft_strlen(s)], NULL);
+		str = ft_strcat_ns(&temp->content[ft_strlen(s) + 1], NULL);
 		return (str);
 	}
 	return (NULL);

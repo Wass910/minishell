@@ -28,31 +28,10 @@
 # define OUTFILE 1
 # define ERROR_RED 1
 
-static int	g_retval = 0;
-
-typedef struct s_pip{
-	char			**cmd;
-	int				nb_cmd;
-	int				pipefd[2];
-	char			*path;
-	int				read_file;
-	int				write_file;
-	int				redir_output;
-	int				redir_input;
-	int				redir_double_input;
-	int				single_quote;
-	int				double_quote;
-	char			**redir;
-	char			*file_to_out;
-	char			*file_to_in;
-	int				error_parse_red;
-	int				not_fil_red;
-	struct s_pip	*next;
-}				t_pip;
+extern int	g_retval;
 
 typedef struct s_pipe
 {
-	int				nb_cmd;
 	char			**env;
 	int				pipefd[2];
 	char			**expenv;
@@ -76,11 +55,6 @@ typedef struct s_pipe
 	struct s_pipe	*next;
 }				t_pipe;
 
-typedef struct s_quot
-{
-	int	*tab;
-}				t_quot;
-
 typedef struct s_comm
 {
 	char			**env;
@@ -99,7 +73,6 @@ typedef struct s_comm
 	int				error_parse_red;
 	int				read_file;
 	int				write_file;
-	t_quot			quote;
 	struct s_comm	*next;
 }				t_comm;
 
@@ -110,6 +83,61 @@ typedef struct s_list
 	t_comm			pipecomm;
 }					t_list;
 
+typedef struct s_unset
+{
+	char	*str;
+	char	*s;
+	int		i;
+	int		type;
+	t_list	*temp;
+	t_list	*del;
+}				t_unset;
+
+typedef struct s_cat
+{
+	unsigned int	i;
+	unsigned int	j;
+	unsigned int	k;
+	char			*tmp;
+}				t_cat;
+
+typedef struct s_red
+{
+	int	i;
+	int	count;
+	int	count_temp;
+	int	temp_index;
+}				t_lred;
+
+typedef struct s_doll
+{
+	char	*str;
+	char	*temp;
+	char	*temp2;
+	int		i;
+	int		j;
+	int		c;
+}				t_doll;
+
+typedef struct s_pars
+{
+	int		i;
+	int		j;
+	int		c;
+	char	*cmd_tsplit;
+	int		pass_space_for_redir;
+}				t_pars;
+
+typedef struct s_uniq
+{
+	int	k;
+	int	retnd;
+	int	i;
+	int	to_read;
+	int	to_write;
+	int	status;
+}				t_uniq;
+
 // PRINT FUNCTION
 void	print_comm(t_comm comm);
 void	print_env(t_list **b_list);
@@ -119,12 +147,8 @@ void	parsing_pipes(t_comm comm);
 int		where_redir(char **str);
 int		if_builtin(char **str);
 t_comm	fill_comm(t_comm comm, char *cmd);
-t_pip	*initializing_red(t_pip *parse_pip, char **tmp_all);
-t_pip	*check_initializing_red(t_pip *parse_pip, char **tmp_all, char *str);
-t_pip	*initializing_cmd(t_pip *parse_pip, char **tmp_all);
 char	*ft_split_command(char *str);
 int		error_in_red(char *str);
-t_pip	*redirection(t_pip *new, char **tmp_all, char *str);
 t_comm	ft_redir_single(char *str);
 
 // BUILD BUILTIN
@@ -191,7 +215,6 @@ void	*ft_calloc(int count, int size);
 char	*ft_strjoin_free(char *s1, char *s2, int f);
 char	*ft_substr(char *s, int start, int len);
 char	*ft_strchr_gnl(char *s, int c);
-t_pip	*ft_lstnew_pip(char *str, int i);
 void	ft_lstadd_front(t_comm **alst, t_comm *new);
 t_comm	*ft_add_back(t_comm **alst, t_comm *new);
 int		ft_double_strchr(char *s, int c);
@@ -235,12 +258,12 @@ int		ft_strlen_glitch(char *s);
 char	*remove_glitch(char *s);
 int		w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str);
 int		r_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str);
-int		r_and_w_redirection(t_comm comm, t_list **a_list, t_list **b_list,
+int		rw_redirection(t_comm comm, t_list **a_list, t_list **b_list,
 			char *str);
 int		red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list);
 int		uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list);
 t_pipe	*new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe,
-			t_list **a_list, int i);
+			t_list **a_list);
 t_pipe	*parcing_comm_pip(char *all_cmd, t_comm comm, t_list **a_list, int i);
 int		only_space(char *s);
 t_comm	ft_double_left_red(t_comm comm);
@@ -252,5 +275,17 @@ int		is_red(char c);
 int		is_quott(char c);
 t_pipe	*open_file_redir_out(t_pipe *parse_pip);
 void	free_comm(t_comm comm);
+char	*unset_str(char *cmd);
+t_list	*unset_tlist(t_list **a_list, t_list **b_list, int type);
+char	*unset_s(t_list *temp, int type);
+t_lred	*fill_dred(t_lred *dred);
+t_lred	*dred_setup(t_lred *dred, int i);
+t_doll	*doll_cut(t_doll *doll, char *str, char *s, t_list **a_list);
+int		char_alphanum2(char c);
+t_doll	*incr_doll(t_doll *doll);
+t_doll	*doll_setup(t_doll *doll);
+t_doll	*incr_doll2(t_doll *doll, char *s);
+t_pars	*cut_pglitch(t_pars *glitch, char *cmd_all);
+t_pars	*cut_pglitch2(t_pars *glitch, char *cmd_all);
 
 #endif

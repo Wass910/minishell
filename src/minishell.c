@@ -1,5 +1,7 @@
 #include "../inc/minishell.h"
 
+int g_retval = 0;
+
 void	print_pipe(t_pipe *parse_pip)
 {
   	int	i;
@@ -7,7 +9,6 @@ void	print_pipe(t_pipe *parse_pip)
   	{
 		  i = 0;
 		  printf("-----------------------------------\n");
-	printf("| parse_pip->nb_cmd               : %d            \n", parse_pip->nb_cmd);
 	if (parse_pip->cmd)
 	{
 		while (parse_pip->cmd[i])
@@ -213,7 +214,7 @@ int	pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 	i--;
 	comm_pip = parcing_comm_pip(cmd[i], comm, a_list, i);
 	while (i-- > 0)
-		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list, i);
+		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list);
 	print_pipe(comm_pip);
 	error_synthax_red(comm_pip);
 	not_valid_comm(comm_pip);
@@ -262,7 +263,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			if (!only_space(line))
-				g_retval = parcing(line, comm, &a_list, &b_list);
+				parcing(line, comm, &a_list, &b_list);
 		}
 		free(line);
 	}

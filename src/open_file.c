@@ -29,7 +29,6 @@ t_pipe	*open_file_redir(t_pipe *parse_pip)
 {
 	int		retnd;
 	int		i;
-	t_pip	*tmp;
 	int		to_read;
 	int		to_write;
 

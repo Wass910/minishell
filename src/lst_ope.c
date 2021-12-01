@@ -101,6 +101,7 @@ t_comm	fill_comm(t_comm comm, char *cmd)
 	arg = 0;
 	redindex = 0;
 	red = 0;
+	i = 0;
 	comm.cmd = malloc(sizeof(char *) * 50);
 	comm.redir = malloc(sizeof(char *) * 50);
 	while (cmd[i])
