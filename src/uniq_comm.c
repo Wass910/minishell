@@ -79,94 +79,26 @@ int	red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
 
 int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 {
-	char	**path;
-	int		k;
-	char	*str;
-	int		i;
-	int		j;
-	int		ret;
-	int		status;
-	char	*tmp;
-	int		write_file ;
+	t_uniqq	*uniqq;
 
-	i = 0;
-	k = 0;
-	j = 0;
-	ret = 0;
-	if (comm.error_parse_red == 1)
-	{
-		printf("bash: syntax error near unexpected token\n");
+	if (uniqq_setup(&uniqq, comm, a_list, b_list) != 0)
 		return (1);
-	}
-	path = ft_split(getenv2("PATH", a_list), ':');
-	if (if_builtin(comm.cmd) == 0 && !comm.redir[0])
-	{
-		k = builtin(comm.cmd, a_list, b_list);
-		g_retval = k;
-		return (k);
-	}
 	if (access(comm.cmd[0], F_OK) == 0)
-		str = comm.cmd[0];
-	else if (path)
-	{
-		while (path[k])
-		{
-			str = ft_strcat_cmd(path[k], comm.cmd[0]);
-			if (access(str, F_OK) == 0)
-				k = 0;
-			if (access(str, F_OK) == 0)
-				break ;
-			free(str);
-			k++;
-		}
-	}
+		uniqq->str = comm.cmd[0];
+	else if (uniqq->path)
+		fill_while(uniqq, comm);
 	else
 	{
 		g_retval = 127;
 		return (127);
 	}
-	if (access(str, F_OK) != 0)
-	{
-		while (comm.redir[j])
-		{
-			if (ft_strchr(comm.redir[j], '>') > 0)
-				open_file2(comm.redir[j]);
-			if (ft_strchr(comm.redir[j], '<') > 0)
-			{
-				if (open_file(comm.redir[j]) == -1)
-				{
-					g_retval = 1;
-					return (-1);
-				}
-			}
-			j++;
-		}
-		printf("%s: command not found\n", comm.cmd[0]);
-		g_retval = 127;
-		return (127);
-	}
+	if (access(uniqq->str, F_OK) != 0)
+		return (fill_if(uniqq, comm));
 	if (comm.redir[0])
-	{
-		k = red_uniq_comm(comm, str, a_list, b_list);
-		free_str(path);
-		g_retval = k;
-		return (k);
-	}
+		return (fill_ret(uniqq, comm, a_list, b_list));
 	else
-	{
-		k = fork();
-		if (k == 0)
-		{
-			exec_cmd(str, comm);
-			exit(0);
-		}
-		else
-		{
-			waitpid(k, &status, 0);
-			k = WEXITSTATUS(status);
-		}
-	}
-	free_str(path);
-	g_retval = k;
-	return (k);
+		uniqq_exec(uniqq, comm);
+	free_str(uniqq->path);
+	g_retval = uniqq->k;
+	return (uniqq->k);
 }

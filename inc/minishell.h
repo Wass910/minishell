@@ -138,6 +138,19 @@ typedef struct s_uniq
 	int	status;
 }				t_uniq;
 
+typedef struct s_uniqq
+{
+	char	**path;
+	int		k;
+	char	*str;
+	int		i;
+	int		j;
+	int		ret;
+	int		status;
+	char	*tmp;
+	int		write_file ;
+}				t_uniqq;
+
 // PRINT FUNCTION
 void	print_comm(t_comm comm);
 void	print_env(t_list **b_list);
@@ -287,5 +300,12 @@ t_doll	*doll_setup(t_doll *doll);
 t_doll	*incr_doll2(t_doll *doll, char *s);
 t_pars	*cut_pglitch(t_pars *glitch, char *cmd_all);
 t_pars	*cut_pglitch2(t_pars *glitch, char *cmd_all);
+int		fill_if(t_uniqq *uniqq, t_comm comm);
+void	fill_while(t_uniqq *uniqq, t_comm comm);
+int		uniqq_setup(t_uniqq **uniqq, t_comm comm, t_list **a_list,
+			t_list **b_list);
+int		fill_ret(t_uniqq *uniqq, t_comm comm, t_list **a_list,
+			t_list **b_list);
+void	uniqq_exec(t_uniqq *uniqq, t_comm comm);
 
 #endif

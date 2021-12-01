@@ -28,7 +28,7 @@ ft_strjoin.c ft_strlen.c ft_strncmp.c get_next_line.c get_next_line_utils.c get_
 pipex.c sort_env.c utils2.c utils.c strcat.c ft_itoa.c parse_quotes.c quotes_utils.c\
 parse_glitch.c free_stab.c open_file.c redirection.c uniq_comm.c lst_cmd.c input_red.c\
 parsing_uniq.c build_echo.c build_pwd.c build_unset.c unset_utils.c is_smtg.c glitch_bin.c\
-glitch_bin2.c parse_bin.c
+glitch_bin2.c parse_bin.c uniq_bin.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 

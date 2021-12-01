@@ -232,6 +232,34 @@ static void	handle_sigusr1(int s, siginfo_t *siginfo, void *context)
 		return ;
 }
 
+int	unclosed_quotes2(char *s)
+{
+	int	i;
+	int	j;
+	int	type;
+
+	i = 0;
+	j = 0;
+	type = 0;
+	while (s[i])
+	{
+		if (s[i] == 34 || s[i] == 39)
+		{
+			type = s[i];
+			i++;
+			while (s[i] && s[i] != type)
+				i++;
+			if (!s[i])
+			{
+				printf("Unclosed quotes, check your inport before retrying\n");
+				return (1);
+			}
+		}
+		i++;
+	}
+	return (0);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_comm				comm;
@@ -262,7 +290,7 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0])
 		{
 			add_history(line);
-			if (!only_space(line))
+			if (!only_space(line) && !unclosed_quotes2(line))
 				parcing(line, comm, &a_list, &b_list);
 		}
 		free(line);
