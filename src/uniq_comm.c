@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   uniq_comm.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:05 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:06 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/03 00:03:00 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 	else
 		uniqq_exec(uniqq, comm);
 	free_str(uniqq->path);
-	g_retval = uniqq->k;
+	if (g_retval != 200)
+		g_retval = uniqq->k;
 	return (uniqq->k);
 }

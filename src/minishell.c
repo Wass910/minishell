@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 17:36:26 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/03 00:03:19 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,10 +178,10 @@ int	unclosed_quotes2(char *s)
 
 void  inthandler(int sig)
 {
-	g_retval = 100;
 	printf("\n");
 	rl_on_new_line();
-	rl_replace_line("", 1);
+	rl_replace_line("\0", 0);
+	rl_redisplay();
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -190,6 +190,7 @@ int	main(int argc, char **argv, char **envp)
 	t_list				*a_list;
 	t_list				*b_list;
 	char				*line;
+	int					i;
 
 	argv = NULL;
 	if (argc != 1)
@@ -200,17 +201,18 @@ int	main(int argc, char **argv, char **envp)
 	comm.env = NULL;
 	make_list(&a_list, envp);
 	make_list(&b_list, envp);
-	signal(SIGINT, inthandler);
 	signal(SIGQUIT, inthandler);
+	signal(SIGINT, inthandler);
 	while (1)
 	{
-		if (g_retval != 100)
+		if (line)
+			free(line);
+		if (g_retval != 200)
+			line = readline("$> ");
+		if(g_retval == 200)
 		{
-			if (!line[0])
-				line = readline("");
-			else 
-				line = readline("$> ");
-			
+			line = readline("");
+			g_retval = 1;
 		}
 		if (line == NULL)
 		{
@@ -221,10 +223,8 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			if (!only_space(line) && !unclosed_quotes2(line))
-				parcing(line, comm, &a_list, &b_list);
+				i = parcing(line, comm, &a_list, &b_list);
 		}
-		free(line);
-		g_retval = 0;
 	}
 	free_comm(comm);
 	return (0);
