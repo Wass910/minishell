@@ -88,14 +88,14 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 		uniqq->str = comm.cmd[0];
 	else if (comm.cmd[0] && uniqq->path)
 		fill_while(uniqq, comm);
-	else if(comm.cmd[0])
+	else if (comm.cmd[0])
 	{
 		g_retval = 127;
 		return (127);
 	}
-	if (comm.cmd[0] && comm.cmd[0] && access(uniqq->str, F_OK) != 0)
+	if (access(uniqq->str, F_OK) != 0)
 		return (fill_if(uniqq, comm));
-	if (comm.redir[0])
+	if (comm.cmd[0] && comm.redir[0])
 		return (fill_ret(uniqq, comm, a_list, b_list));
 	else
 		uniqq_exec(uniqq, comm);

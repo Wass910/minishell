@@ -44,6 +44,8 @@ int	build_cd(char **cmd)
 	int		i;
 	char	*str;
 
+	i = 0;
+	str = NULL;
 	if (!cmd[1] || (cmd[1][0] == '~' && cmd[1][1] == '\0'))
 	{
 		str = getenv("HOME");

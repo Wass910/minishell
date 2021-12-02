@@ -62,6 +62,7 @@ char	*fill_doll(char *s, t_list **a_list)
 {
 	t_doll	*doll;
 
+	doll = NULL;
 	doll = doll_setup(doll);
 	while (s[doll->i])
 	{
@@ -73,7 +74,7 @@ char	*fill_doll(char *s, t_list **a_list)
 		{
 			if (s[doll->i + 1] == '?' && !s[doll->i + 2])
 				return (s);
-			doll = doll_cut(doll, doll->str, s, a_list);
+			doll = doll_cut(doll, s, a_list);
 			if (!s[doll->i])
 				break ;
 		}

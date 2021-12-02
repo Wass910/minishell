@@ -17,6 +17,7 @@ char	*split_glitch(char *cmd_all)
 {
 	t_pars	*glitch;
 
+	glitch = NULL;
 	glitch = glitch_setup(glitch);
 	if (unclosed_quotes(cmd_all))
 	{

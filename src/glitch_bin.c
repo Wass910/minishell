@@ -1,7 +1,9 @@
 #include "../inc/minishell.h"
 
-t_lred	*fill_dred(t_lred *dred)
+t_lred	*fill_dred(void)
 {
+	t_lred	*dred;
+
 	dred = malloc(sizeof(t_lred) * 1);
 	if (!dred)
 		exit(EXIT_FAILURE);
@@ -9,7 +11,7 @@ t_lred	*fill_dred(t_lred *dred)
 	return (dred);
 }
 
-t_doll	*doll_cut(t_doll *doll, char *str, char *s, t_list **a_list)
+t_doll	*doll_cut(t_doll *doll, char *s, t_list **a_list)
 {
 	doll->temp = after_env(&s[doll->i]);
 	doll->temp2 = getenv2(doll->temp, a_list);

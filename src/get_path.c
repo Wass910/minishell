@@ -46,11 +46,12 @@ char	*get_path(char **env)
 
 char	*path(char *command, t_list **a_list)
 {
-	char	*path;
 	char	**good_path;
 	int		i;
 	char	*path_to_go;
 
+	if (command == NULL)
+		return (NULL);
 	good_path = ft_split(getenv2("PATH", a_list), ':');
 	i = what_path(good_path, command);
 	if (i == -1)

@@ -39,7 +39,7 @@ t_comm	ft_double_left_red(t_comm comm)
 {
 	t_lred	*dred;
 
-	dred = fill_dred(dred);
+	dred = fill_dred();
 	comm.redir_double_input = 0;
 	comm.redir_temp = malloc(sizeof(char *) * 150);
 	while (comm.redir[dred->i])
@@ -71,6 +71,7 @@ void	ft_redir_temp(char **str, int input)
 	char	*line;
 
 	i = 0;
+	write(1, "> ", 2);
 	ret = get_next_line(0, &line);
 	while (ret > 0)
 	{
@@ -79,6 +80,7 @@ void	ft_redir_temp(char **str, int input)
 			i++;
 		if (i == input)
 			return ;
+		write(1, "> ", 2);
 		free(line);
 		ret = get_next_line(0, &line);
 	}
@@ -94,8 +96,8 @@ char	**double_in(char *all_cmd, t_list **a_list)
 	cmd_new = malloc(sizeof(char) * 100);
 	cmd_new = split_glitch(all_cmd);
 	str = ft_split(cmd_new, ' ');
-	cmd_new = parse_quotes(str, a_list, comm);
-	comm = fill_comm(comm, cmd_new);
+	cmd_new = parse_quotes(str, a_list);
+	comm = fill_comm(cmd_new);
 	comm = ft_double_left_red(comm);
 	if (comm.redir_temp[0])
 		return (comm.redir_temp);

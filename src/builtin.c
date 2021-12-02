@@ -27,7 +27,7 @@ int	builtin(char **cmd, t_list **a_list, t_list **b_list)
 	if (type == CD_TYPE)
 		type = build_cd(cmd);
 	else if (type == ECHO_TYPE)
-		type = build_echo(cmd, a_list);
+		type = build_echo(cmd);
 	else if (type == PWD_TYPE)
 		type = build_pwd();
 	else if (type == EXPORT_TYPE)

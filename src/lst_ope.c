@@ -2,170 +2,59 @@
 
 t_pipe	*fill_comm_pip(t_pipe *comm, char *cmd)
 {
-	int	i;
-	int	red;
-	int	redindex;
-	int	arg;
-	int	argindex;
+	t_fill	*fill;
 
-	argindex = 0;
-	arg = 0;
-	redindex = 0;
-	red = 0;
-	i = 0;
+	fill = fill_setup();
 	comm->cmd = malloc(sizeof(char *) * 50);
 	comm->redir = malloc(sizeof(char *) * 50);
-	while (cmd[i])
+	while (cmd[fill->i])
 	{
-		if (cmd[i] == 24)
-		{
-			comm->cmd[arg] = malloc(sizeof(char) * 400);
-			i++;
-			while (cmd[i] && cmd[i] != 32)
-			{
-				comm->cmd[arg][argindex] = cmd[i];
-				i++;
-				argindex++;
-			}
-			comm->cmd[arg][argindex] = '\0';
-			arg++;
-			argindex = 0;
-		}
-		else if (i == 0 && cmd[i] == 32)
-		{
-			comm->cmd[arg] = malloc(sizeof(char) * 2);
-			comm->cmd[arg][argindex] = '\0';
-			arg++;
-			i++;
-		}
-		else if (is_red(cmd[i]))
-		{
-			if (cmd[i] == '<' && cmd[i + 1] && cmd[i + 1] == '<' && cmd[i + 2]
-				&& (cmd[i + 2] != '<' && cmd[i + 2] != '>'))
-			{
-				while (cmd[i] && cmd[i] != 32 && cmd[i] != 24)
-					i++;
-			}
-			else
-			{
-				comm->redir[red] = malloc(sizeof(char) * 400);
-				while (cmd[i] && cmd[i] != 32)
-				{
-					comm->redir[red][redindex] = cmd[i];
-					i++;
-					redindex++;
-				}
-				comm->redir[red][redindex] = '\0';
-				red++;
-				redindex = 0;
-			}
-		}
-		else if (cmd[i] == 32 && cmd[i + 1] && cmd[i + 1] == 32)
-		{
-			comm->cmd[arg] = malloc(sizeof(char) * 5);
-			comm->cmd[arg][argindex] = '\0';
-			argindex = 0;
-			arg++;
-			i += 2;
-		}
-		else if (cmd[i] == 32 && cmd[i + 1] && cmd[i + 1] != 32)
-			i++;
+		if (cmd[fill->i] == 24)
+			fill_if1pip(comm, fill, cmd);
+		else if (fill->i == 0 && cmd[fill->i] == 32)
+			fill_elsepip1(comm, fill, cmd);
+		else if (is_red(cmd[fill->i]))
+			fill_elsepip2(comm, fill, cmd);
+		else if (cmd[fill->i] == 32 && cmd[fill->i + 1]
+			&& cmd[fill->i + 1] == 32)
+			fill_elsepip3(comm, fill);
+		else if (cmd[fill->i] == 32 && cmd[fill->i + 1]
+			&& cmd[fill->i + 1] != 32)
+			fill->i++;
 		else
-		{
-			comm->cmd[arg] = malloc(sizeof(char) * 400);
-			while (cmd[i] && cmd[i] != 32)
-			{
-				comm->cmd[arg][argindex] = cmd[i];
-				i++;
-				argindex++;
-			}
-			comm->cmd[arg][argindex] = '\0';
-			argindex = 0;
-			arg++;
-		}
+			fill_elsepip4(comm, fill, cmd);
 	}
-	comm->cmd[arg] = NULL;
-	comm->redir[red] = NULL;
+	comm->cmd[fill->arg] = NULL;
+	comm->redir[fill->red] = NULL;
 	return (comm);
 }
 
-t_comm	fill_comm(t_comm comm, char *cmd)
+t_comm	fill_comm(char *cmd)
 {
-	int	i;
-	int	red;
-	int	redindex;
-	int	arg;
-	int	argindex ;
+	t_comm	comm;
+	t_fill	*fill;
 
-	argindex = 0;
-	arg = 0;
-	redindex = 0;
-	red = 0;
-	i = 0;
-	comm.cmd = malloc(sizeof(char *) * 50);
-	comm.redir = malloc(sizeof(char *) * 50);
-	while (cmd[i])
+	fill = fill_setup();
+	comm.redir = NULL;
+	comm = setup_cmd(comm, 1, 0, 0);
+	while (cmd[fill->i])
 	{
-		if (cmd[i] == 24)
-		{
-			comm.cmd[arg] = malloc(sizeof(char) * 400);
-			i++;
-			while (cmd[i] && cmd[i] != 32)
-			{
-				comm.cmd[arg][argindex] = cmd[i];
-				i++;
-				argindex++;
-			}
-			comm.cmd[arg][argindex] = '\0';
-			arg++;
-			argindex = 0;
-		}
-		else if (i == 0 && cmd[i] == 32)
-		{
-			comm.cmd[arg] = malloc(sizeof(char) * 2);
-			comm.cmd[arg][argindex] = '\0';
-			arg++;
-			i++;
-		}
-		else if (is_red(cmd[i]))
-		{
-			comm.redir[red] = malloc(sizeof(char) * 400);
-			while (cmd[i] && cmd[i] != 32)
-			{
-				comm.redir[red][redindex] = cmd[i];
-				i++;
-				redindex++;
-			}
-			comm.redir[red][redindex] = '\0';
-			red++;
-			redindex = 0;
-		}
-		else if (cmd[i] == 32 && cmd[i + 1] && cmd[i + 1] == 32)
-		{
-			comm.cmd[arg] = malloc(sizeof(char) * 5);
-			comm.cmd[arg][argindex] = '\0';
-			argindex = 0;
-			arg++;
-			i += 2;
-		}
-		else if (cmd[i] == 32 && cmd[i + 1] && cmd[i + 1] != 32)
-			i++;
+		if (cmd[fill->i] == 24)
+			fill_if1(comm, fill, cmd);
+		else if (fill->i == 0 && cmd[fill->i] == 32)
+			fill_else4(comm, fill);
+		else if (is_red(cmd[fill->i]))
+			fill_else1(comm, fill, cmd);
+		else if (cmd[fill->i] == 32 && cmd[fill->i + 1]
+			&& cmd[fill->i + 1] == 32)
+			fill_else2(comm, fill);
+		else if (cmd[fill->i] == 32 && cmd[fill->i + 1]
+			&& cmd[fill->i + 1] != 32)
+			fill->i++;
 		else
-		{
-			comm.cmd[arg] = malloc(sizeof(char) * 400);
-			while (cmd[i] && cmd[i] != 32)
-			{
-				comm.cmd[arg][argindex] = cmd[i];
-				i++;
-				argindex++;
-			}
-			comm.cmd[arg][argindex] = '\0';
-			argindex = 0;
-			arg++;
-		}
+			fill_else3(comm, fill, cmd);
 	}
-	comm.cmd[arg] = NULL;
-	comm.redir[red] = NULL;
+	comm = setup_cmd(comm, 0, fill->arg, fill->red);
 	return (comm);
 }
 

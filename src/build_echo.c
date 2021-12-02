@@ -45,10 +45,11 @@ void	cut_echo2(char **cmd, int i, char *str)
 	write(1, "\n", 1);
 }
 
-int	build_echo(char **cmd, t_list **a_list)
+int	build_echo(char **cmd)
 {
 	char	*str;
 
+	str = NULL;
 	if (!cmd[1])
 	{
 		printf("\n");

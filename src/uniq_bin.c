@@ -78,7 +78,8 @@ int	fill_if(t_uniqq *uniqq, t_comm comm)
 		}
 		uniqq->j++;
 	}
-	printf("%s: command not found\n", comm.cmd[0]);
+	if (comm.cmd[0])
+		printf("%s: command not found\n", comm.cmd[0]);
 	g_retval = 127;
 	return (127);
 }

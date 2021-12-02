@@ -151,6 +151,35 @@ typedef struct s_uniqq
 	int		write_file ;
 }				t_uniqq;
 
+typedef struct s_open
+{
+	int	retnd;
+	int	i;
+	int	to_read;
+	int	to_write;
+}				t_open;
+
+typedef struct s_fill
+{
+	int	i;
+	int	red;
+	int	redindex;
+	int	arg;
+	int	argindex;
+}				t_fill;
+
+typedef struct s_del
+{
+	int		i;
+	int		j;
+	int		k;
+	int		c;
+	int		type;
+	char	*str;
+	char	*temp;
+	char	*temp2[2];
+}				t_del;
+
 // PRINT FUNCTION
 void	print_comm(t_comm comm);
 void	print_env(t_list **b_list);
@@ -159,7 +188,7 @@ void	print_env(t_list **b_list);
 void	parsing_pipes(t_comm comm);
 int		where_redir(char **str);
 int		if_builtin(char **str);
-t_comm	fill_comm(t_comm comm, char *cmd);
+t_comm	fill_comm(char *cmd);
 char	*ft_split_command(char *str);
 int		error_in_red(char *str);
 t_comm	ft_redir_single(char *str);
@@ -167,7 +196,7 @@ t_comm	ft_redir_single(char *str);
 // BUILD BUILTIN
 int		builtin(char **cmd, t_list **a_list, t_list **b_list);
 int		build_cd(char **cmd);
-int		build_echo(char **cmd, t_list **a_list);
+int		build_echo(char **cmd);
 int		build_pwd(void);
 int		build_export(char **cmd, t_list **a_list, t_list **b_list);
 int		build_unset(char **cmd, t_list **a_list, t_list **b_list, int type);
@@ -241,8 +270,8 @@ void	add_declare(t_list **b_list);
 void	add_line(t_list **b_list, char **cmd, int j);
 char	*ft_strdup(char *s1);
 char	**make_expenv(t_comm comm);
-char	*parse_quotes(char **s, t_list **a_list, t_comm comm);
-int		open_file2(char *filename);
+char	*parse_quotes(char **s, t_list **a_list);
+int		open_file2(char *file);
 int		open_file(char *filename);
 int		verif_the_builtin(char **str);
 int		ft_double_strchr_file(char *s, int c);
@@ -257,7 +286,7 @@ char	*split_glitch(char *cmd_all);
 int		is_red(char c);
 int		is_quott(char c);
 int		ft_error_parse_red(char **str);
-int		pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list);
+int		pipe_glitch(char *line, t_list **a_list, t_list **b_list);
 void	print_pipe(t_pipe *parse_pip);
 t_list	*flstnew_comm(t_comm comm);
 void	flstadd_back_comm(t_list **alst, t_list *new);
@@ -275,9 +304,9 @@ int		rw_redirection(t_comm comm, t_list **a_list, t_list **b_list,
 			char *str);
 int		red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list);
 int		uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list);
-t_pipe	*new_parcing_comm_pip(char *all_cmd, t_comm comm, t_pipe *pipe,
+t_pipe	*new_parcing_comm_pip(char *all_cmd, t_pipe *pipe,
 			t_list **a_list);
-t_pipe	*parcing_comm_pip(char *all_cmd, t_comm comm, t_list **a_list, int i);
+t_pipe	*parcing_comm_pip(char *all_cmd, t_list **a_list);
 int		only_space(char *s);
 t_comm	ft_double_left_red(t_comm comm);
 void	ft_redir_temp(char **str, int input);
@@ -291,9 +320,9 @@ void	free_comm(t_comm comm);
 char	*unset_str(char *cmd);
 t_list	*unset_tlist(t_list **a_list, t_list **b_list, int type);
 char	*unset_s(t_list *temp, int type);
-t_lred	*fill_dred(t_lred *dred);
+t_lred	*fill_dred(void);
 t_lred	*dred_setup(t_lred *dred, int i);
-t_doll	*doll_cut(t_doll *doll, char *str, char *s, t_list **a_list);
+t_doll	*doll_cut(t_doll *doll, char *s, t_list **a_list);
 int		char_alphanum2(char c);
 t_doll	*incr_doll(t_doll *doll);
 t_doll	*doll_setup(t_doll *doll);
@@ -307,5 +336,37 @@ int		uniqq_setup(t_uniqq **uniqq, t_comm comm, t_list **a_list,
 int		fill_ret(t_uniqq *uniqq, t_comm comm, t_list **a_list,
 			t_list **b_list);
 void	uniqq_exec(t_uniqq *uniqq, t_comm comm);
+char	*make_test(char *s);
+int		is_valid(char *s);
+t_open	open_setup(t_open open);
+void	dup_read(t_pipe *comm_pip, t_list **a_list,
+			t_list **b_list);
+void	dup_read_norme(int i, int *pipefd);
+void	dup_write(t_pipe *comm_pip, t_list **a_list,
+			t_list **b_list, int *pipefd);
+t_comm	replace_space(t_comm comm);
+t_comm	replace_space2(t_comm comm);
+char	*build_sret(char *sret, char *s);
+t_comm	setup_cmd(t_comm comm, int i, int arg, int red);
+void	fill_else4(t_comm comm, t_fill *fill);
+void	fill_else3(t_comm comm, t_fill *fill, char *cmd);
+void	fill_else2(t_comm comm, t_fill *fill);
+void	fill_else1(t_comm comm, t_fill *fill, char *cmd);
+void	fill_if1(t_comm comm, t_fill *fill, char *cmd);
+t_fill	*fill_setup(void);
+void	fill_if1pip(t_pipe *comm, t_fill *fill, char *cmd);
+void	fill_elsepip1(t_pipe *comm, t_fill *fill, char *cmd);
+void	fill_elsepip3(t_pipe *comm, t_fill *fill);
+void	fill_elsepip4(t_pipe *comm, t_fill *fill, char *cmd);
+void	fill_elsepip2(t_pipe *comm, t_fill *fill, char *cmd);
+t_del	*setup_del(void);
+void	del_if1(t_del *del, char *s);
+void	del_if2(t_del *del, char *s, t_list **a_list);
+void	del_if3(t_del *del, char *s, t_list **a_list);
+void	del_else(t_del *del);
+void	del_else2(t_del *del, char *s);
+void	del_free(t_del *del, char *s);
+int		ret_racks(int simple, int duble);
+void	del_if4(t_del *del, char *s, t_list **a_list);
 
 #endif

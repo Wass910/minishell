@@ -72,41 +72,46 @@ char	*ft_strcat_ns(char *dest, char *src)
 	return (tmp);
 }
 
-t_cat	cat_setup(t_cat scat, char *dest, char *src)
+t_cat	*cat_setup(char *dest, char *src)
 {
-	scat.i = 0;
-	scat.k = 0;
-	scat.j = 0;
-	scat.tmp = malloc(sizeof(char) * (ft_count_str(dest, src) + 3));
-	if (!scat.tmp)
+	t_cat	*scat;
+
+	scat = malloc(sizeof(t_cat) * 1);
+	if (!scat)
+		exit(EXIT_FAILURE);
+	scat->i = 0;
+	scat->k = 0;
+	scat->j = 0;
+	scat->tmp = malloc(sizeof(char) * (ft_count_str(dest, src) + 3));
+	if (!scat->tmp)
 		exit(EXIT_FAILURE);
 	return (scat);
 }
 
 char	*ft_strcat_cote(char *dest, char *src)
 {
-	t_cat	scat;
+	t_cat	*scat;
 
-	scat = cat_setup(scat, dest, src);
-	while (dest && dest[scat.k] != '\0')
+	scat = cat_setup(dest, src);
+	while (dest && dest[scat->k] != '\0')
 	{
-		if (scat.k >= 1 && dest[scat.k - 1] == '=')
+		if (scat->k >= 1 && dest[scat->k - 1] == '=')
 		{
-			scat.tmp[scat.i] = '"';
-			scat.i++;
+			scat->tmp[scat->i] = '"';
+			scat->i++;
 		}
-		scat.tmp[scat.i] = dest[scat.k];
-		scat.i++;
-		scat.k++;
+		scat->tmp[scat->i] = dest[scat->k];
+		scat->i++;
+		scat->k++;
 	}
-	scat.tmp[scat.i] = '"';
-	scat.i++;
-	while (src && src[scat.j] != '\0')
+	scat->tmp[scat->i] = '"';
+	scat->i++;
+	while (src && src[scat->j] != '\0')
 	{
-		scat.tmp[scat.i] = src[scat.j];
-		scat.i++;
-		scat.j++;
+		scat->tmp[scat->i] = src[scat->j];
+		scat->i++;
+		scat->j++;
 	}
-	scat.tmp[scat.i] = '\0';
-	return (scat.tmp);
+	scat->tmp[scat->i] = '\0';
+	return (scat->tmp);
 }

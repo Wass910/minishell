@@ -3,7 +3,6 @@
 char	*to_print2(char *s)
 {
 	int		i;
-	char	*sret;
 	char	*temp;
 
 	i = 0;
@@ -98,61 +97,4 @@ char	*make_test(char *s)
 	}
 	str[i] = '\0';
 	return (str);
-}
-
-void	already_in(t_list **a_list, char *str, int j)
-{
-	t_list	*temp;
-	t_list	*del;
-	char	*s;
-
-	temp = (*a_list);
-	str = make_test(str);
-	if (j == 1)
-		s = &temp->content[11];
-	else
-		s = temp->content;
-	s = make_test(s);
-	if (!is_same(s, str) && j == 1)
-	{
-		temp = (*a_list);
-		(*a_list) = (*a_list)->next;
-		free(temp);
-		return ;
-	}
-	if (!is_same(s, str) && is_valid(str))
-	{
-		temp = (*a_list);
-		(*a_list) = (*a_list)->next;
-		free(temp);
-		return ;
-	}
-	while (temp->next)
-	{
-		if (j == 1)
-			s = &temp->next->content[11];
-		else
-			s = temp->next->content;
-		s = make_test(s);
-		if (!is_same(s, str) || !is_same(str, s))
-			break ;
-		temp = temp->next;
-	}
-	if ((!is_same(s, str) || !is_same(str, s)) && j == 1)
-	{
-		del = temp->next;
-		temp->next = temp->next->next;
-		free(del);
-		free(s);
-		return ;
-	}
-	if ((!is_same(s, str) || !is_same(str, s)) && is_valid(str))
-	{
-		del = temp->next;
-		temp->next = temp->next->next;
-		free(del);
-		free(s);
-		return ;
-	}
-	free(s);
 }

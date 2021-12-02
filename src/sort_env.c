@@ -53,32 +53,18 @@ char	*to_print(char *s)
 {
 	int		i;
 	char	*sret;
-	char	*temp;
 
 	i = 0;
-	temp = malloc(sizeof(char) * 1000);
-	if (!temp)
-		return (NULL);
+	sret = NULL;
 	while (s[i] != '=' && s[i])
 		i++;
 	if (s[i] == '\0')
-	{
-		free(temp);
 		return (s);
-	}
 	if (s[i] == '=' && s[i + 1] == '\0')
-	{
-		temp[0] = '"';
-		temp[1] = '"';
-		temp[2] = '\0';
-		sret = ft_strcat_ns(s, temp);
-		free(temp);
-		return (sret);
-	}
+		return (build_sret(sret, s));
 	else
 	{
 		sret = ft_strcat_cote(s, "\0");
-		free(temp);
 		return (sret);
 	}
 }
