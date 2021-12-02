@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/02 17:36:26 by glaverdu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 int	g_retval = 0;
@@ -136,16 +148,6 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 	return (retclone);
 }
 
-// static void	handle_sigusr1(int s, siginfo_t *siginfo, void *context)
-// {
-// 	if (s == 2)
-// 		printf("\n$> ");
-// 	if (s == 3)
-// 		return ;
-// 	if (s == 1)
-// 		return ;
-// }
-
 int	unclosed_quotes2(char *s)
 {
 	int	i;
@@ -174,13 +176,20 @@ int	unclosed_quotes2(char *s)
 	return (0);
 }
 
+void  inthandler(int sig)
+{
+	g_retval = 100;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 1);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_comm				comm;
 	t_list				*a_list;
 	t_list				*b_list;
 	char				*line;
-	// struct sigaction	sa;
 
 	argv = NULL;
 	if (argc != 1)
@@ -188,20 +197,26 @@ int	main(int argc, char **argv, char **envp)
 		printf("Too much arguments, usage : './minishell'.\n");
 		exit(EXIT_FAILURE);
 	}
-	// sa.sa_sigaction = handle_sigusr1;
-	// sa.sa_flags = SA_SIGINFO;
 	comm.env = NULL;
 	make_list(&a_list, envp);
 	make_list(&b_list, envp);
-	// sigaction(SIGINT, &sa, NULL);
-	// sigaction(SIGQUIT, &sa, NULL);
-	// sigaction(SIGHUP, &sa, NULL);
-	// kill(SIGINT, 0);
-	// kill(SIGQUIT, 0);
-	// kill(SIGHUP, 0);
+	signal(SIGINT, inthandler);
+	signal(SIGQUIT, inthandler);
 	while (1)
 	{
-		line = readline("$> ");
+		if (g_retval != 100)
+		{
+			if (!line[0])
+				line = readline("");
+			else 
+				line = readline("$> ");
+			
+		}
+		if (line == NULL)
+		{
+			printf("exit\n");
+			return (0);
+		}
 		if (line[0])
 		{
 			add_history(line);
@@ -209,6 +224,7 @@ int	main(int argc, char **argv, char **envp)
 				parcing(line, comm, &a_list, &b_list);
 		}
 		free(line);
+		g_retval = 0;
 	}
 	free_comm(comm);
 	return (0);
