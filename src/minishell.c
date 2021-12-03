@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 16:44:24 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/03 16:54:47 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 			while (comm_pip && (comm_pip->error_syn_red == 1
 					|| !comm_pip->path))
 			{
-				printf("oui\n");
 				comm_pip = comm_pip->next;
 			}	
 		}
@@ -85,11 +84,6 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 			}
 			comm_pip = comm_pip->next;
 		}
-		else
-		{
-			dup(STDIN);
-			dup(STDOUT);
-		}
 		error = 0;
 	}
 }
@@ -115,6 +109,15 @@ void	not_valid_comm(t_pipe *comm_pip)
 			printf("%s: command not found\n", comm_pip->cmd[0]);
 		comm_pip = comm_pip->next;
 	}
+}
+
+int	end_comm(t_pipe *parse_pip)
+{
+	while (parse_pip->next)
+		parse_pip = parse_pip->next;
+	if (!parse_pip->path)
+		return (1);
+	return (0);	
 }
 
 int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
@@ -164,7 +167,8 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
 	error_synthax_red(comm_pip);
 	not_valid_comm(comm_pip);
-	exec_pipe(comm_pip, a_list, b_list);
+	if (end_comm(comm_pip) == 0)
+		exec_pipe(comm_pip, a_list, b_list);
 	return (0);
 }
 
