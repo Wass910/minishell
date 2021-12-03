@@ -68,7 +68,7 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 				pipex_write(comm_pip, last_cmd, a_list, b_list);
 			else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
 			{
-				if (error != 0 && last_cmd != 0)
+				if (error != 0)
 					pipex_for_one(NULL, cmd);
 				pipex(comm_pip, last_cmd, a_list, b_list);
 			}
@@ -167,8 +167,7 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
 	error_synthax_red(comm_pip);
 	not_valid_comm(comm_pip);
-	if (end_comm(comm_pip) == 0)
-		exec_pipe(comm_pip, a_list, b_list);
+	exec_pipe(comm_pip, a_list, b_list);
 	return (0);
 }
 
