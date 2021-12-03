@@ -1,90 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/03 09:56:47 by idhiba           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
-void	print_pipe(t_pipe *parse_pip)
-{
-  	int	i;
-	while(parse_pip)
-  	{
-		  i = 0;
-		  printf("-----------------------------------\n");
-	printf("| parse_pip->nb_cmd               : %d            \n", parse_pip->nb_cmd);
-	if (parse_pip->cmd)
-	{
-		while (parse_pip->cmd[i])
-		{
-			printf("| parse_pip->cmd                  : %s            \n", parse_pip->cmd[i]);
-	  	i++;
-		}
-	}
-	i = 0;
-	if (parse_pip->redir)
-	{
-		while (parse_pip->redir[i])
-		{
-				printf("| parse_pip->redir                : %s            \n", parse_pip->redir[i]);
-	  		i++;
-		}
-	}
-	i= 0;
-	if (parse_pip->redir_temp)
-	{
-		while (parse_pip->redir_temp[i])
-		{
-				printf("| parse_pip->redir_temp              : %s            \n", parse_pip->redir_temp[i]);
-	  		i++;
-		}
-	}
-	printf("| parse_pip->path                 : %s            \n", parse_pip->path);
-	printf("| parse_pip->read_file            : %d            \n", parse_pip->read_file);
-	printf("| parse_pip->write_File           : %d            \n", parse_pip->write_file);
-	printf("| parse_pip->error_syn_red        : %d            \n", parse_pip->error_syn_red);
-		if (parse_pip->file_to_out)
-			printf("| parse_pip->file_out             : %s            \n", parse_pip->file_to_out);
-		if (parse_pip->file_to_in)
-			printf("| parse_pip->file_in              : %s            \n", parse_pip->file_to_in);
-	//printf("| parse_pip->single_quote         : %d            \n", parse_pip->single_quote);
-  	//printf("| parse_pip->double_quote         : %d            \n", parse_pip->double_quote);
-	//printf("| parse_pip->error_parse_Red      : %d            \n", parse_pip->error_parse_red);
-	printf("-----------------------------------\n");
-	parse_pip = parse_pip->next;
-	i++;
-	}
-}
-
-void	print_comm(t_comm comm)
-{
-	int a = 0;
-
-		printf("-----------------------------------\n");
-		while (comm.cmd[a] != NULL)
-		{
-			printf("| comm.cmd_sep           : %s            \n", comm.cmd[a]);
-			a++;
-		}
-		a=0;
-		if (comm.redir)
-		{
-			while (comm.redir[a])
-				{
-						printf("| comm.redir             : %s            \n", comm.redir[a]);
-						a++;
-				}
-		}
-		int j = 0;
-		while (comm.redir_temp[j])
-		{
-						printf("| comm.redir_temp        : %s\n", comm.redir_temp[j]);
-				j++;
-		}
-		// printf("| comm.nb_pipe        : %d            \n", comm.nb_pipe);
-		// printf("| comm.redir_input    : %d            \n", comm.redir_input);
-		// printf("| comm.redir_output   : %d            \n", comm.redir_output);
-		// printf("| comm.single_quote   : %d            \n", comm.single_quote);
-		// printf("| comm.double_quote   : %d            \n", comm.double_quote);
-		// printf("| comm.error_parse    : %d            \n", comm.error_parse_red);
-		printf("| comm.redir_double_in   : %d            \n", comm.redir_double_input);
-		printf("-----------------------------------\n");
-}
+int	g_retval = 0;
 
 void	pipex_for_one(char *path, char **cmd)
 {
@@ -177,20 +105,19 @@ void	not_valid_comm(t_pipe *comm_pip)
 {
 	while (comm_pip)
 	{
-		if (comm_pip->path == NULL)
+		if (comm_pip->path == NULL && comm_pip->cmd[0])
 			printf("%s: command not found\n", comm_pip->cmd[0]);
 		comm_pip = comm_pip->next;
 	}
 }
 
-int	pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
+int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 {
 	char	**cmd;
 	char	**red_double;
 	int		j;
 	int		i;
 	t_pipe	*comm_pip;
-	int		fd;
 	int		retclone;
 	int		nb_cmds;
 	int		last_cmd;
@@ -198,6 +125,7 @@ int	pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 	j = 0;
 	last_cmd = 1;
 	i = 0;
+	retclone = 0;
 	cmd = ft_split(line, '|');
 	red_double = double_in(line, a_list);
 	while (red_double && red_double[j])
@@ -211,24 +139,49 @@ int	pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
 		i++;
 	nb_cmds = i;
 	i--;
-	comm_pip = parcing_comm_pip(cmd[i], comm, a_list, i);
+	comm_pip = parcing_comm_pip(cmd[i], a_list);
 	while (i-- > 0)
-		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list, i);
-	print_pipe(comm_pip);
+		comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
 	error_synthax_red(comm_pip);
 	not_valid_comm(comm_pip);
 	exec_pipe(comm_pip, a_list, b_list);
 	return (retclone);
 }
 
-static void	handle_sigusr1(int s, siginfo_t *siginfo, void *context)
+int	unclosed_quotes2(char *s)
 {
-	if (s == 2)
-		printf("\n$> ");
-	if (s == 3)
-		return ;
-	if (s == 1)
-		return ;
+	int	i;
+	int	j;
+	int	type;
+
+	i = 0;
+	j = 0;
+	type = 0;
+	while (s[i])
+	{
+		if (s[i] == 34 || s[i] == 39)
+		{
+			type = s[i];
+			i++;
+			while (s[i] && s[i] != type)
+				i++;
+			if (!s[i])
+			{
+				printf("Unclosed quotes, check your inport before retrying\n");
+				return (1);
+			}
+		}
+		i++;
+	}
+	return (0);
+}
+
+void  inthandler(int sig)
+{
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("\0", 0);
+	rl_redisplay();
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -237,34 +190,41 @@ int	main(int argc, char **argv, char **envp)
 	t_list				*a_list;
 	t_list				*b_list;
 	char				*line;
-	struct sigaction	sa;
+	int					i;
 
+	argv = NULL;
 	if (argc != 1)
 	{
 		printf("Too much arguments, usage : './minishell'.\n");
 		exit(EXIT_FAILURE);
 	}
-	sa.sa_sigaction = handle_sigusr1;
-	sa.sa_flags = SA_SIGINFO;
 	comm.env = NULL;
 	make_list(&a_list, envp);
 	make_list(&b_list, envp);
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
-	sigaction(SIGHUP, &sa, NULL);
-	kill(SIGINT, 0);
-	kill(SIGQUIT, 0);
-	kill(SIGHUP, 0);
+	signal(SIGQUIT, inthandler);
+	signal(SIGINT, inthandler);
 	while (1)
 	{
-		line = readline("$> ");
+		if (g_retval != 200)
+			line = readline("$> ");
+		if(g_retval == 200)
+		{
+			line = readline("");
+			g_retval = 1;
+		}
+		if (line == NULL)
+		{
+			printf("exit\n");
+			return (0);
+		}
 		if (line[0])
 		{
 			add_history(line);
-			if (!only_space(line))
-				g_retval = parcing(line, comm, &a_list, &b_list);
+			if (!only_space(line) && !unclosed_quotes2(line))
+				i = parcing(line, comm, &a_list, &b_list);
 		}
-		free(line);
+		if (line)
+			free(line);
 	}
 	free_comm(comm);
 	return (0);

@@ -1,26 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   delete_bin2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/02 14:06:31 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:32 by glaverdu         ###   ########.fr       */
+/*   Created: 2021/12/02 14:04:42 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/02 14:04:43 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	ft_strncmp(char *s1, char *s2, int n)
+void	del_else2(t_del *del, char *s)
 {
-	if (n <= 0)
-		return (0);
-	while (n > 1 && (*s1 != '\0' && *s2 != '\0') && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-		n--;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
+	del->str[del->j] = s[del->i];
+	del->j++;
+	del->i++;
+}
+
+void	del_if4(t_del *del, char *s, t_list **a_list)
+{
+	if (s[del->i] == '$' && s[del->i + 1] && char_alphanum(s[del->i + 1]))
+		del_if3(del, s, a_list);
+	else
+		del_else2(del, s);
+}
+
+void	del_free(t_del *del, char *s)
+{
+	free(del->temp);
+	free(s);
 }

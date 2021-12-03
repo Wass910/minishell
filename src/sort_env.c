@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort_env.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/02 14:07:02 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/02 14:07:03 by glaverdu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 void	sort_env(t_list **b_list)
@@ -53,32 +65,18 @@ char	*to_print(char *s)
 {
 	int		i;
 	char	*sret;
-	char	*temp;
 
 	i = 0;
-	temp = malloc(sizeof(char) * 1000);
-	if (!temp)
-		return (NULL);
+	sret = NULL;
 	while (s[i] != '=' && s[i])
 		i++;
 	if (s[i] == '\0')
-	{
-		free(temp);
 		return (s);
-	}
 	if (s[i] == '=' && s[i + 1] == '\0')
-	{
-		temp[0] = '"';
-		temp[1] = '"';
-		temp[2] = '\0';
-		sret = ft_strcat_ns(s, temp);
-		free(temp);
-		return (sret);
-	}
+		return (build_sret(sret, s));
 	else
 	{
 		sret = ft_strcat_cote(s, "\0");
-		free(temp);
 		return (sret);
 	}
 }

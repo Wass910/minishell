@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/02 14:06:58 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/02 14:06:59 by glaverdu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 int	no_quotes(char *s)
@@ -48,7 +60,7 @@ char	*after_env(char *s)
 		return (NULL);
 	if (s[i] == '$')
 		i++;
-	while (char_alphanum(s[i]))
+	while (char_alphanum2(s[i]))
 	{
 		temp[c] = s[i];
 		i++;
@@ -60,83 +72,28 @@ char	*after_env(char *s)
 
 char	*fill_doll(char *s, t_list **a_list)
 {
-	char	*str;
-	char	*temp;
-	char	*temp2;
-	int		i;
-	int		c;
-	int		j;
+	t_doll	*doll;
 
-	i = 0;
-	c = 0;
-	j = 0;
-	str = malloc(sizeof(char) * 1000);
-	if (!str)
-		return (NULL);
-	while (s[i])
+	doll = NULL;
+	doll = doll_setup(doll);
+	while (s[doll->i])
 	{
-		while (s[i] && s[i] != '$')
-		{
-			str[j] = s[i];
-			j++;
-			i++;
-		}
-		if (!s[i])
+		while (s[doll->i] && s[doll->i] != '$')
+			doll = incr_doll2(doll, s);
+		if (!s[doll->i])
 			break ;
-		if (s[i + 1] && char_alphanum(s[i + 1]))
+		if (s[doll->i + 1] && char_alphanum2(s[doll->i + 1]))
 		{
-			if (s[i + 1] == '?' && !s[i + 2])
+			if (s[doll->i + 1] == '?' && !s[doll->i + 2])
 				return (s);
-			temp = after_env(&s[i]);
-			temp2 = getenv2(temp, a_list);
-			free(temp);
-			while (temp2 != NULL && temp2[c])
-			{
-				str[j] = temp2[c];
-				j++;
-				c++;
-			}
-			i++;
-			while (s[i] && char_alphanum(s[i]))
-				i++;
-			c = 0;
-			free(temp2);
-			if (!s[i])
+			doll = doll_cut(doll, s, a_list);
+			if (!s[doll->i])
 				break ;
 		}
 		else
-		{
-			str[j] = '$';
-			j++;
-			i++;
-		}
+			doll = incr_doll(doll);
 	}
-	str[j] = '\0';
+	doll->str[doll->j] = '\0';
 	free(s);
-	return (str);
-}
-
-int	unclosed_quotes(char *s)
-{
-	int	i;
-	int	j;
-	int	type;
-
-	i = 0;
-	j = 0;
-	type = 0;
-	while (s[i])
-	{
-		if (s[i] == 34 || s[i] == 39)
-		{
-			type = s[i];
-			i++;
-			while (s[i] && s[i] != type)
-				i++;
-			if (!s[i])
-				return (1);
-		}
-		i++;
-	}
-	return (0);
+	return (doll->str);
 }

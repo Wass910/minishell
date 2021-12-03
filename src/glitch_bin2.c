@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   glitch_bin2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/02 14:06:31 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:32 by glaverdu         ###   ########.fr       */
+/*   Created: 2021/12/02 14:06:42 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/02 14:06:43 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	ft_strncmp(char *s1, char *s2, int n)
+t_doll	*incr_doll(t_doll *doll)
 {
-	if (n <= 0)
-		return (0);
-	while (n > 1 && (*s1 != '\0' && *s2 != '\0') && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-		n--;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
+	doll->str[doll->j] = '$';
+	doll->j++;
+	doll->i++;
+	return (doll);
+}
+
+t_doll	*incr_doll2(t_doll *doll, char *s)
+{
+	doll->str[doll->j] = s[doll->i];
+	doll->j++;
+	doll->i++;
+	return (doll);
 }

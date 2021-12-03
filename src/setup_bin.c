@@ -1,26 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   setup_bin.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/02 14:06:31 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:32 by glaverdu         ###   ########.fr       */
+/*   Created: 2021/12/02 14:07:00 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/02 14:07:01 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	ft_strncmp(char *s1, char *s2, int n)
+t_open	open_setup(t_open open)
 {
-	if (n <= 0)
-		return (0);
-	while (n > 1 && (*s1 != '\0' && *s2 != '\0') && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-		n--;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
+	open.to_write = -1;
+	open.to_read = -1;
+	return (open);
+}
+
+char	*build_sret(char *sret, char *s)
+{
+	char	*temp;
+
+	temp = malloc(sizeof(char) * 300);
+	if (!temp)
+		return (NULL);
+	temp[0] = '"';
+	temp[1] = '"';
+	temp[2] = '\0';
+	sret = ft_strcat_ns(s, temp);
+	free(temp);
+	return (sret);
 }

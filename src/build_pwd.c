@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   build_pwd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/02 14:06:31 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:32 by glaverdu         ###   ########.fr       */
+/*   Created: 2021/12/02 14:04:59 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/02 14:05:00 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	ft_strncmp(char *s1, char *s2, int n)
+int	build_pwd(void)
 {
-	if (n <= 0)
-		return (0);
-	while (n > 1 && (*s1 != '\0' && *s2 != '\0') && *s1 == *s2)
-	{
-		s1++;
-		s2++;
-		n--;
-	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
+	char	*str;
+	char	s[100];
+
+	str = getcwd(s, 100);
+	write(1, str, ft_strlen(str));
+	write(1, "\n", 1);
+	if (str == NULL)
+		return (1);
+	return (0);
 }

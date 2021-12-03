@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/02 14:05:02 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/02 14:05:07 by glaverdu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 int	find_builtin(char **str)
@@ -25,18 +37,24 @@ int	builtin(char **cmd, t_list **a_list, t_list **b_list)
 
 	type = find_builtin(cmd);
 	if (type == CD_TYPE)
-		return (build_cd(cmd));
+		type = build_cd(cmd);
 	else if (type == ECHO_TYPE)
-		return (build_echo(cmd, a_list));
+		type = build_echo(cmd);
 	else if (type == PWD_TYPE)
-		return (build_pwd());
+		type = build_pwd();
 	else if (type == EXPORT_TYPE)
-		return (build_export(cmd, a_list, b_list));
+		type = build_export(cmd, a_list, b_list);
 	else if (type == UNSET_TYPE)
-		return (build_unset(cmd, a_list, b_list, 0));
+		type = build_unset(cmd, a_list, b_list, 0);
 	else if (type == ENV_TYPE)
-		return (build_env(a_list));
+		type = build_env(a_list);
 	else if (type == EXIT_TYPE)
-		return (build_exit(cmd));
+		type = build_exit(cmd);
+	if (type)
+	{
+		g_retval = type;
+		return (type);
+	}
+	g_retval = 0;
 	return (0);
 }

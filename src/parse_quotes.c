@@ -1,244 +1,44 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_quotes.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/02 14:06:54 by glaverdu          #+#    #+#             */
+/*   Updated: 2021/12/02 14:06:55 by glaverdu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
-
-int	pair_quotes(char *s)
-{
-	int	simple;
-	int	duble;
-	int	i;
-
-	i = 0;
-	simple = 0;
-	duble = 0;
-	while (s[i])
-	{
-		if (s[i] == 34)
-			duble++;
-		else if (s[i] == 39)
-			simple++;
-		i++;
-	}
-	if (!simple)
-	{
-		if ((duble / 2) % 2 == 0)
-			return (2);
-		else
-			return (0);
-	}
-	if (!duble)
-	{
-		if ((simple / 2) % 2 == 0)
-			return (1);
-		else
-			return (0);
-	}
-	if ((simple / 2) % 2 == 0 && (duble / 2) % 2 == 0)
-		return (3);
-	if ((simple / 2) % 2 != 0 && (duble / 2) % 2 == 0)
-		return (2);
-	if ((simple / 2) % 2 == 0 && (duble / 2) % 2 != 0)
-		return (1);
-	return (0);
-}
-
-int	no_cross(char *s)
-{
-	int	tab[1000];
-	int	i;
-	int	j;
-	int	mid;
-	int	change;
-
-	j = 0;
-	i = 0;
-	change = 0;
-	while (s[i])
-	{
-		if (s[i] == 34)
-			tab[j++] = 0;
-		else if (s[i] == 39)
-			tab[j++] = 1;
-		i++;
-	}
-	i = 0;
-	j--;
-	mid = j / 2;
-	while (i <= mid)
-	{
-		if (tab[i] != tab[j])
-			return (0);
-		i++;
-		j--;
-		if (tab[i] != tab[i - 1])
-			change++;
-		if (change == 2)
-			return (0);
-	}
-	return (1);
-}
-
-char	*app_nocross(char *s, t_list **a_list)
-{
-	char	*str;
-	char	*temp;
-	char	*temp2;
-	int		i;
-	int		j;
-	int		c;
-
-	i = 0;
-	j = 0;
-	c = 0;
-	temp = NULL;
-	str = malloc(sizeof(char) * 1000);
-	if (!str)
-		return (NULL);
-	while (s[i])
-	{
-		if (s[i] && (s[i] == 34 || s[i] == 39))
-			i++;
-		else if (s[i] == '$')
-		{
-			i++;
-			temp = after_env(&s[i]);
-			temp2 = getenv2(temp, a_list);
-			free(temp);
-			if (temp2)
-			{
-				while (temp2[c])
-				{
-					str[j] = temp2[c];
-					j++;
-					c++;
-				}
-				c = 0;
-				free(temp2);
-			}
-			while (char_alphanum(s[i]))
-				i++;
-		}
-		else if (s[i] != 34 && s[i] != 39)
-		{
-			str[j] = s[i];
-			j++;
-			i++;
-		}
-	}
-	str[j] = '\0';
-	free(s);
-	return (str);
-}
 
 char	*delete_pair(char *s, t_list **a_list)
 {
-	int		i;
-	int		j;
-	int		k;
-	int		c;
-	int		type;
-	char	*str;
-	char	*temp;
-	char	*temp2[2];
+	t_del	*del;
 
-	j = 0;
-	i = 0;
-	k = 0;
-	c = 0;
-	str = malloc(sizeof(char) * 1000);
-	if (!str)
-		return (NULL);
-	temp = malloc(sizeof(char) * 1000);
-	if (!temp)
-		return (NULL);
-	while (s[i])
+	del = setup_del();
+	while (s[del->i])
 	{
-		k = 0;
-		if (s[i] == 34 || s[i] == 39)
-		{
-			type = s[i];
-			i++;
-			while (s[i] && s[i] != type)
-			{
-				temp[k] = s[i];
-				k++;
-				i++;
-			}
-			temp[k] = '\0';
-			i++;
-		}
+		del->k = 0;
+		if (s[del->i] == 34 || s[del->i] == 39)
+			del_if1(del, s);
 		else
-			temp[0] = '\0';
-		k = 0;
-		while (temp && temp[k])
+			del->temp[0] = '\0';
+		while (del->temp && del->temp[del->k])
 		{
-			if (temp[k] == '$' && temp[k + 1] && char_alphanum(temp[k + 1])
-				&& type == 34)
-			{
-				k++;
-				temp2[0] = after_env(&temp[k]);
-				temp2[1] = getenv2(temp2[0], a_list);
-				free(temp2[0]);
-				if (!temp2[1])
-				{
-					str[j] = s[i];
-					i++;
-					j++;
-				}
-				while (temp2[1] && temp2[1][c])
-				{
-					str[j] = temp2[1][c];
-					c++;
-					j++;
-				}
-				c = 0;
-				if (temp2[1])
-				{
-					while (temp[k] && char_alphanum(temp[k]))
-						k++;
-				}
-				free(temp2[1]);
-			}
-			else if (temp[k])
-			{
-				str[j] = temp[k];
-				k++;
-				j++;
-			}
+			if (del->temp[del->k] == '$' && del->temp[del->k + 1]
+				&& char_alphanum(del->temp[del->k + 1]) && del->type == 34)
+				del_if2(del, s, a_list);
+			else if (del->temp[del->k])
+				del_else(del);
 		}
-		temp[0] = '\0';
-		if (s[i] && s[i] != 34 && s[i] != 39)
-		{
-			if (s[i] == '$' && s[i + 1] && char_alphanum(s[i + 1]))
-			{
-				temp2[0] = after_env(&s[i]);
-				temp2[1] = getenv2(temp2[0], a_list);
-				free(temp2[0]);
-				while (temp2[1][c])
-				{
-					str[j] = temp2[1][c];
-					c++;
-					j++;
-				}
-				c = 0;
-				if (temp2[1])
-				{
-					i++;
-					while (s[i] && char_alphanum(s[i]))
-						i++;
-				}
-				free(temp2[1]);
-			}
-			else
-			{
-				str[j] = s[i];
-				j++;
-				i++;
-			}
-		}
+		del->temp[0] = '\0';
+		if (s[del->i] && s[del->i] != 34 && s[del->i] != 39)
+			del_if3(del, s, a_list);
 	}
-	free(temp);
-	free(s);
-	str[j] = '\0';
-	return (str);
+	del_free(del, s);
+	del->str[del->j] = '\0';
+	return (del->str);
 }
 
 char	*ft_split_command_quote(char **str)
@@ -246,7 +46,6 @@ char	*ft_split_command_quote(char **str)
 	char	*cmd;
 	int		i;
 	int		j;
-	int		count;
 
 	j = 0;
 	i = 0;
@@ -263,7 +62,15 @@ char	*ft_split_command_quote(char **str)
 	return (cmd);
 }
 
-char	*parse_quotes(char **s, t_list **a_list, t_comm comm)
+void	quote_if(int i, char **s, t_list **a_list)
+{
+	if (check_doll(s[i]))
+		s[i] = fill_doll(s[i], a_list);
+	if (s[i][0] == '\0')
+		s[i] = NULL;
+}
+
+char	*parse_quotes(char **s, t_list **a_list)
 {
 	int		i;
 	int		j;
@@ -274,12 +81,7 @@ char	*parse_quotes(char **s, t_list **a_list, t_comm comm)
 	while (s[i])
 	{
 		if (no_quotes(s[i]))
-		{
-			if (check_doll(s[i]))
-				s[i] = fill_doll(s[i], a_list);
-			if (s[i][0] == '\0')
-				s[i] = NULL;
-		}
+			quote_if(i, s, a_list);
 		else
 		{
 			if (unclosed_quotes(s[i]))

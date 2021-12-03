@@ -21,15 +21,13 @@ static void	itoa_isnegative(int *n, int *negative)
 	}
 }
 
-char		*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	int		tmpn;
 	int		len;
 	int		negative;
 	char	*str;
 
-	if (n == -2147483648)
-		return (ft_strdup("-2147483648"));
 	tmpn = n;
 	len = 2;
 	negative = 0;
@@ -37,7 +35,8 @@ char		*ft_itoa(int n)
 	while (tmpn / 10)
 		len++;
 	len = len + negative;
-	if (!(str = (char*)malloc(sizeof(char) * len)))
+	str = (char *)malloc(sizeof(char) * len);
+	if (!str)
 		return (NULL);
 	str[--len] = '\0';
 	while (len--)

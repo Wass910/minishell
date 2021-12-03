@@ -1,60 +1,52 @@
 # minishell
 
-void exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
+void  inthandler(int sig)
 {
-	int last_cmd;
-
-	last_cmd = 1;
-	while(comm_pip)
-	{
-		if (ft_error_parse_red(comm_pip->redir) == 0)
-		{	
-			printf("Minishell: syntax error near unexpected token\n");
-			comm_pip->error_syn_red = 1;
-		}
-		if(!comm_pip->next)
-			last_cmd = 0;
-		if (comm_pip->write_file >= 0 && comm_pip->read_file == -1)
-			pipex_write(comm_pip, last_cmd, a_list, b_list);
-		else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
-			pipex(comm_pip, last_cmd, a_list, b_list);
-		else if (comm_pip->write_file == -1 && comm_pip->read_file >= 0)
-		{	
-			dup2(comm_pip->read_file, 0);
-			pipex_read(comm_pip, last_cmd, a_list, b_list);
-		}
-		else 
-		{	
-			dup2(comm_pip->read_file, 0);
-			pipex_write_read(comm_pip, last_cmd, a_list, b_list);
-		}
-		comm_pip = comm_pip->next;
+    signal(sig, SIG_IGN);
+	if (sig == SIGINT)
+	{ 	
+		printf("\n");
+		rl_on_new_line();
+   		rl_redisplay();
+		printf("$> ");
 	}
+
 }
 
-int pipe_glitch(char *line, t_comm comm, t_list **a_list, t_list **b_list)
+int	main(int argc, char **argv, char **envp)
 {
-	char **cmd;
-	char	**red_double;
-	int j = 0;
-	int i = 0;
-	t_pipe *comm_pip;
-	int nb_cmds;
+	t_comm				comm;
+	t_list				*a_list;
+	t_list				*b_list;
+	char				*line;
 
-	cmd = ft_split(line, '|');
-	red_double = double_in(line, a_list);
-	while	(red_double && red_double[j])
-			j++;
-	if (red_double && red_double[0])
-		ft_redir_temp(red_double, j);
-	while (cmd[i])
-    	i++;
-	nb_cmds = i;
-  	i--;
-	comm_pip = parcing_comm_pip(cmd[i], comm, a_list, i);
-	while(i-- > 0)
-		comm_pip = new_parcing_comm_pip(cmd[i], comm, comm_pip, a_list, i);
-    print_pipe(comm_pip);
-    exec_pipe(comm_pip, a_list, b_list);
-  	return 0;
+	argv = NULL;
+	if (argc != 1)
+	{
+		printf("Too much arguments, usage : './minishell'.\n");
+		exit(EXIT_FAILURE);
+	}
+	comm.env = NULL;
+	make_list(&a_list, envp);
+	make_list(&b_list, envp);
+	while (1)
+	{
+		signal(SIGINT, inthandler);
+		signal(SIGQUIT, inthandler);
+		line = readline("$> ");
+		if (line == NULL)
+		{
+			printf("exit\n");
+			return (0);
+		}
+		if (line[0])
+		{
+			add_history(line);
+			if (!only_space(line) && !unclosed_quotes2(line))
+				parcing(line, comm, &a_list, &b_list);
+		}
+		free(line);
+	}
+	free_comm(comm);
+	return (0);
 }
