@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 16:27:28 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/03 17:16:08 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ typedef struct s_del
 	int		type;
 	char	*str;
 	char	*temp;
-	char	*temp2[2];
+	char	**temp2;
 }				t_del;
 
 // PRINT FUNCTION

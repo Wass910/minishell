@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:54 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:55 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/03 17:28:46 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char	*delete_pair(char *s, t_list **a_list)
 		del->temp[0] = '\0';
 		if (s[del->i] && s[del->i] != 34 && s[del->i] != 39)
 			del_if3(del, s, a_list);
+		del->i++;
 	}
 	del_free(del, s);
 	del->str[del->j] = '\0';
