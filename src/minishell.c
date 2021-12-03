@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 09:56:47 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/03 12:32:49 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,25 +127,39 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 	i = 0;
 	retclone = 0;
 	cmd = ft_split(line, '|');
-	red_double = double_in(line, a_list);
-	while (red_double && red_double[j])
-	{
-		printf("to input = %s\n", red_double[j]);
-			j++;
-	}
-	if (red_double && red_double[0])
-		ft_redir_temp(red_double, j);
-	while (cmd[i])
-		i++;
-	nb_cmds = i;
-	i--;
-	comm_pip = parcing_comm_pip(cmd[i], a_list);
-	while (i-- > 0)
-		comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
-	error_synthax_red(comm_pip);
-	not_valid_comm(comm_pip);
-	exec_pipe(comm_pip, a_list, b_list);
-	return (retclone);
+	i = 0;
+    while (cmd[i])
+    {
+        while (cmd[i][j])
+        {
+            if (cmd[i][j] == 23)
+                cmd[i][j] = '|';
+            j++;
+        }
+        i++;
+        j = 0;
+    }
+    i = 0;
+    j = 0;
+	// red_double = double_in(line, a_list);
+	// while (red_double && red_double[j])
+	// {
+	// 	printf("to input = %s\n", red_double[j]);
+	// 		j++;
+	// }
+	// if (red_double && red_double[0])
+	// 	ft_redir_temp(red_double, j);
+	// while (cmd[i])
+	// 	i++;
+	// nb_cmds = i;
+	// i--;
+	// comm_pip = parcing_comm_pip(cmd[i], a_list);
+	// while (i-- > 0)
+	// 	comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
+	// error_synthax_red(comm_pip);
+	// not_valid_comm(comm_pip);
+	// exec_pipe(comm_pip, a_list, b_list);
+	return (0);
 }
 
 int	unclosed_quotes2(char *s)
