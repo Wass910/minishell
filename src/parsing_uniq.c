@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_uniq.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:55 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 12:15:53 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/03 16:03:17 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,12 @@ char    *being_back(char *all_cmd)
     return (all_cmd);
 }
 
-int	parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list)
+int	parcing(char *all_cmd, t_list **a_list, t_list **b_list)
 {
 	char	*cmd_new;
+	t_comm	comm;
 
+	comm.env = NULL;
 	if (go_pipe(all_cmd, a_list, b_list) == 1)
 		return (1);
 	all_cmd = being_back(all_cmd);

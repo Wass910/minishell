@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:45 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:05:46 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/03 15:46:12 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,17 @@ void	fill_else2(t_comm comm, t_fill *fill)
 void	fill_else3(t_comm comm, t_fill *fill, char *cmd)
 {
 	comm.cmd[fill->arg] = malloc(sizeof(char) * 400);
-	while (cmd[fill->i] && cmd[fill->i] != 32)
+	if (cmd[fill->i] != 32)
 	{
-		comm.cmd[fill->arg][fill->argindex] = cmd[fill->i];
-		fill->i++;
-		fill->argindex++;
+		while (cmd[fill->i] && cmd[fill->i] != 32)
+		{
+			comm.cmd[fill->arg][fill->argindex] = cmd[fill->i];
+			fill->i++;
+			fill->argindex++;
+		}
 	}
+	else
+		fill->i++;
 	comm.cmd[fill->arg][fill->argindex] = '\0';
 	fill->argindex = 0;
 	fill->arg++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_ope.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:48 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 12:54:35 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/03 15:46:53 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_comm	fill_comm(char *cmd)
 	fill = fill_setup();
 	comm.redir = NULL;
 	comm = setup_cmd(comm, 1, 0, 0);
-	while (cmd[fill->i])
+	while (cmd && cmd[fill->i])
 	{
 		if (cmd[fill->i] == 24)
 			fill_if1(comm, fill, cmd);
@@ -69,7 +69,6 @@ t_comm	fill_comm(char *cmd)
 		else
 		{
 			fill_else3(comm, fill, cmd);
-			fill->i++;
 		}
 	}
 	comm = setup_cmd(comm, 0, fill->arg, fill->red);

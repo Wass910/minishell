@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:31 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/03 16:27:28 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -323,7 +323,7 @@ int		only_space(char *s);
 t_comm	ft_double_left_red(t_comm comm);
 void	ft_redir_temp(char **str, int input);
 char	**double_in(char *all_cmd, t_list **a_list);
-int		parcing(char *all_cmd, t_comm comm, t_list **a_list, t_list **b_list);
+int		parcing(char *all_cmd, t_list **a_list, t_list **b_list);
 int		is_echo(char *s);
 int		is_red(char c);
 int		is_quott(char c);
@@ -380,5 +380,6 @@ void	del_else2(t_del *del, char *s);
 void	del_free(t_del *del, char *s);
 int		ret_racks(int simple, int duble);
 void	del_if4(t_del *del, char *s, t_list **a_list);
+void	free_uniqq(t_uniqq *uniqq);
 
 #endif

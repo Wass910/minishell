@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 12:59:45 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/03 16:44:24 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 			while (comm_pip && (comm_pip->error_syn_red == 1
 					|| !comm_pip->path))
 			{
+				printf("oui\n");
 				comm_pip = comm_pip->next;
 			}	
 		}
@@ -68,7 +69,7 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 				pipex_write(comm_pip, last_cmd, a_list, b_list);
 			else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
 			{
-				if (error != 0)
+				if (error != 0 && last_cmd != 0)
 					pipex_for_one(NULL, cmd);
 				pipex(comm_pip, last_cmd, a_list, b_list);
 			}
@@ -83,6 +84,11 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 				pipex_write_read(comm_pip, last_cmd, a_list, b_list);
 			}
 			comm_pip = comm_pip->next;
+		}
+		else
+		{
+			dup(STDIN);
+			dup(STDOUT);
 		}
 		error = 0;
 	}
@@ -200,7 +206,6 @@ void  inthandler(int sig)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_comm				comm;
 	t_list				*a_list;
 	t_list				*b_list;
 	char				*line;
@@ -212,7 +217,6 @@ int	main(int argc, char **argv, char **envp)
 		printf("Too much arguments, usage : './minishell'.\n");
 		exit(EXIT_FAILURE);
 	}
-	comm.env = NULL;
 	make_list(&a_list, envp);
 	make_list(&b_list, envp);
 	signal(SIGQUIT, inthandler);
@@ -220,7 +224,10 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		if (g_retval != 200)
+		{
+			rl_replace_line("", 0);
 			line = readline("$> ");
+		}
 		if(g_retval == 200)
 		{
 			rl_replace_line("", 0);
@@ -236,11 +243,10 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			if (!only_space(line) && !unclosed_quotes2(line))
-				i = parcing(line, comm, &a_list, &b_list);
+				i = parcing(line, &a_list, &b_list);
 		}
 		if (line)
 			free(line);
 	}
-	free_comm(comm);
 	return (0);
 }

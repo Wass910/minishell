@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   uniq_comm.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:05 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 00:03:00 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/03 16:02:19 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int	red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
 int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 {
 	t_uniqq	*uniqq;
+	int		j;
 
 	if (uniqq_setup(&uniqq, comm, a_list, b_list) != 0)
 		return (1);
@@ -102,6 +103,7 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 		fill_while(uniqq, comm);
 	else if (comm.cmd[0])
 	{
+		free(uniqq);
 		g_retval = 127;
 		return (127);
 	}
@@ -114,5 +116,7 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 	free_str(uniqq->path);
 	if (g_retval != 200)
 		g_retval = uniqq->k;
-	return (uniqq->k);
+	j = uniqq->k;
+	free(uniqq);
+	return (j);
 }

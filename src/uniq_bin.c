@@ -3,30 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   uniq_bin.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:04 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 00:03:43 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/03 16:20:35 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	uniqq_exec(t_uniqq *uniqq, t_comm comm)
+char    *is_loop(char *cmd)
 {
-	if (uniqq->str[9] == 'w' && uniqq->str[10] == 'c' && uniqq->str[11] == '\0')
-		g_retval = 200;
-	uniqq->k = fork();
-	if (uniqq->k == 0)
-	{
-		exec_cmd(uniqq->str, comm);
-		exit(0);
-	}
-	else
-	{
-		waitpid(uniqq->k, &uniqq->status, 0);
-		uniqq->k = WEXITSTATUS(uniqq->status);
-	}
+    int i;
+
+    i = 0;
+    if (strchr(cmd, '/'))
+    {
+        while (cmd[i])
+            i++;
+        i--;
+        while(cmd[i] != '/')
+            i--;
+        i++;    
+    }
+    while (i > 0)
+    {
+        cmd++;
+        i--;
+    }
+    return (cmd);
+}
+
+void    uniqq_exec(t_uniqq *uniqq, t_comm comm)
+{
+    char *l;
+    l = is_loop(comm.cmd[0]);
+    if ((!comm.cmd[1] && ((l[0] == 'w' && l[1] == 'c' && !l[2]) || (l[0] == 'c' && l[1] == 'a' && l[2] == 't' && !l[3])))
+        || (comm.cmd[1] && l[0] == 'g' && l[1] == 'r' && l[2] == 'e' && l[3] == 'p' && !l[4]))
+         g_retval = 200;
+    uniqq->k = fork();
+    if (uniqq->k == 0)
+    {
+        exec_cmd(uniqq->str, comm);
+        exit(0);
+    }
+    else
+    {
+        waitpid(uniqq->k, &uniqq->status, 0);
+        uniqq->k = WEXITSTATUS(uniqq->status);
+    }
 }
 
 int	fill_ret(t_uniqq *uniqq, t_comm comm, t_list **a_list, t_list **b_list)
