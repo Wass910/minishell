@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:48 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 12:10:59 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/03 12:54:35 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ t_pipe	*fill_comm_pip(t_pipe *comm, char *cmd)
 			&& cmd[fill->i + 1] != 32)
 			fill->i++;
 		else
+		{	
 			fill_elsepip4(comm, fill, cmd);
+		}
+		
 	}
 	comm->cmd[fill->arg] = NULL;
 	comm->redir[fill->red] = NULL;

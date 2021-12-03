@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 12:32:49 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/03 12:59:45 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,24 +141,24 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
     }
     i = 0;
     j = 0;
-	// red_double = double_in(line, a_list);
-	// while (red_double && red_double[j])
-	// {
-	// 	printf("to input = %s\n", red_double[j]);
-	// 		j++;
-	// }
-	// if (red_double && red_double[0])
-	// 	ft_redir_temp(red_double, j);
-	// while (cmd[i])
-	// 	i++;
-	// nb_cmds = i;
-	// i--;
-	// comm_pip = parcing_comm_pip(cmd[i], a_list);
-	// while (i-- > 0)
-	// 	comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
-	// error_synthax_red(comm_pip);
-	// not_valid_comm(comm_pip);
-	// exec_pipe(comm_pip, a_list, b_list);
+	red_double = double_in(line, a_list);
+	while (red_double && red_double[j])
+	{
+		printf("to input = %s\n", red_double[j]);
+			j++;
+	}
+	if (red_double && red_double[0])
+		ft_redir_temp(red_double, j);
+	while (cmd[i])
+		i++;
+	nb_cmds = i;
+	i--;
+	comm_pip = parcing_comm_pip(cmd[i], a_list);
+	while (i-- > 0)
+		comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
+	error_synthax_red(comm_pip);
+	not_valid_comm(comm_pip);
+	exec_pipe(comm_pip, a_list, b_list);
 	return (0);
 }
 
@@ -223,6 +223,7 @@ int	main(int argc, char **argv, char **envp)
 			line = readline("$> ");
 		if(g_retval == 200)
 		{
+			rl_replace_line("", 0);
 			line = readline("");
 			g_retval = 1;
 		}
