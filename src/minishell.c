@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 00:03:19 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/03 10:03:12 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,10 +178,13 @@ int	unclosed_quotes2(char *s)
 
 void  inthandler(int sig)
 {
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("\0", 0);
-	rl_redisplay();
+	if(sig == 2)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("\0", 0);
+		rl_redisplay();
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -205,15 +208,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGINT, inthandler);
 	while (1)
 	{
-		if (line)
-			free(line);
-		if (g_retval != 200)
-			line = readline("$> ");
-		if(g_retval == 200)
-		{
-			line = readline("");
-			g_retval = 1;
-		}
+		line = readline("$> ");
 		if (line == NULL)
 		{
 			printf("exit\n");
@@ -225,6 +220,8 @@ int	main(int argc, char **argv, char **envp)
 			if (!only_space(line) && !unclosed_quotes2(line))
 				i = parcing(line, comm, &a_list, &b_list);
 		}
+		if (line)
+			free(line);
 	}
 	free_comm(comm);
 	return (0);

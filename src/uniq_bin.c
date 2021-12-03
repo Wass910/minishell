@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   uniq_bin.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:04 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 00:03:43 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/03 10:02:02 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void	uniqq_exec(t_uniqq *uniqq, t_comm comm)
 {
-	if (uniqq->str[9] == 'w' && uniqq->str[10] == 'c' && uniqq->str[11] == '\0')
-		g_retval = 200;
 	uniqq->k = fork();
 	if (uniqq->k == 0)
 	{
