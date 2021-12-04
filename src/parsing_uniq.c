@@ -113,6 +113,20 @@ char    *being_back(char *all_cmd)
     return (all_cmd);
 }
 
+void	open_with_no_comm(t_comm comm)
+{
+	int i;
+
+	i = 0;
+	while(comm.redir[i])
+	{
+		if (comm.redir[i][0] == '>' && comm.redir[i][1] != '<')
+			open_file2(comm.redir[i]);
+		if (comm.redir[i][0] == '<' && (comm.redir[i][1] != '<' && comm.redir[i][1] != '>'))
+			open_file(comm.redir[i]);
+		i++;
+	}
+}
 int	parcing(char *all_cmd, t_list **a_list, t_list **b_list)
 {
 	char	*cmd_new;
@@ -135,6 +149,10 @@ int	parcing(char *all_cmd, t_list **a_list, t_list **b_list)
 	comm = setup_comm(comm);
 	if (comm.redir_temp[0])
 		ft_redir_temp(comm.redir_temp, comm.redir_double_input);
-	uniq_cmd(comm, a_list, b_list);
+	if (comm.cmd[0] != NULL)
+		uniq_cmd(comm, a_list, b_list);
+	else if (comm.redir)
+		open_with_no_comm(comm);
+
 	return (1);
 }
