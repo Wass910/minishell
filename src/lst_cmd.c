@@ -90,8 +90,8 @@ t_pipe	*parcing_comm_pip(char *all_cmd, t_list **a_list)
 		new->error_syn_red = 1;
 	else
 		new->error_syn_red = 0;
-	if (new->error_syn_red == 0)
-		new = open_file_redir(new);
+	//if (new->error_syn_red == 0)
+	//	new = open_file_redir(new);
 	new = replace_tab_pipe(new);
 	new->next = NULL;
 	return (new);
@@ -116,8 +116,8 @@ t_pipe	*new_parcing_comm_pip(char *all_cmd,
 		new->error_syn_red = 1;
 	else
 		new->error_syn_red = 0;
-	if (new->error_syn_red == 0)
-		new = open_file_redir(new);
+	//if (new->error_syn_red == 0)
+	//	new = open_file_redir(new);
 	new = replace_tab_pipe(new);
 	new->next = pipe;
 	return (new);

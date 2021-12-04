@@ -39,6 +39,29 @@ void	pipex_for_one(char *path, char **cmd)
 	}
 }
 
+void	pipex_last(t_pipe *comm_pip, int i)
+{
+	int		pipefd[2];
+	pid_t	pid1;
+	int		status;
+
+	if (pipe(pipefd) == -1)
+		exit(EXIT_FAILURE);
+	pid1 = fork();
+	if (pid1 == -1)
+		exit(EXIT_FAILURE);
+	if (pid1)
+	{
+		close(pipefd[1]);
+		dup2(pipefd[0], 0);
+		if (i == 0)
+			dup2(1, 0);
+		waitpid(pid1, &status, 0);
+	}
+	else
+		dup2(pipefd[1], 1);
+}
+
 void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 {
 	int		last_cmd;
@@ -59,6 +82,8 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 			{
 				comm_pip = comm_pip->next;
 			}	
+			if (!comm_pip)
+				pipex_last(comm_pip, 0);
 		}
 		if (comm_pip)
 		{
@@ -88,17 +113,18 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 	}
 }
 
-void	error_synthax_red(t_pipe *comm_pip)
+int	error_synthax_red(t_pipe *comm_pip)
 {
 	while (comm_pip)
 	{
 		if (ft_error_parse_red(comm_pip->redir) == 0)
 		{	
 			printf("Minishell: syntax error near unexpected token\n");
-			return ;
+			return 1;
 		}
 		comm_pip = comm_pip->next;
 	}
+	return 0;
 }
 
 void	not_valid_comm(t_pipe *comm_pip)
@@ -118,6 +144,32 @@ int	end_comm(t_pipe *parse_pip)
 	if (!parse_pip->path)
 		return (1);
 	return (0);	
+}
+
+void	all_good_red(t_pipe *comm_pip)
+{
+	t_pipe	*temp;
+	t_pipe	*temp2;
+	int		i;
+
+	i = 0;
+	temp2 = comm_pip;
+	temp = comm_pip;
+	while (temp)
+	{
+		if (temp->error_syn_red == 1)
+			i++;
+		temp = temp->next;
+	}
+	if  (i == 0)
+	{
+		while (comm_pip)
+		{
+			comm_pip = open_file_redir(comm_pip);
+			comm_pip = comm_pip->next;
+		}
+
+	}
 }
 
 int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
@@ -165,9 +217,12 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 	comm_pip = parcing_comm_pip(cmd[i], a_list);
 	while (i-- > 0)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
-	error_synthax_red(comm_pip);
-	not_valid_comm(comm_pip);
-	exec_pipe(comm_pip, a_list, b_list);
+	all_good_red(comm_pip);
+	if (error_synthax_red(comm_pip) == 0)
+	{
+		not_valid_comm(comm_pip);
+		exec_pipe(comm_pip, a_list, b_list);
+	}
 	return (0);
 }
 
