@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:09 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:10 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 13:38:23 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,22 @@ void	free_comm(t_comm comm)
 		free_str(comm.redir);
 	if (comm.redir_temp)
 		free_str(comm.redir_temp);
+}
+
+void	free_pipe(t_pipe *comm)
+{
+	while(comm)
+	{
+		if (comm->cmd)
+			free_str(comm->cmd);
+		if (comm->path)
+			free(comm->path);
+		if (comm->redir)
+			free_str(comm->redir);
+		if (comm->file_to_in)
+			free(comm->file_to_in);
+		if (comm->file_to_out)
+			free(comm->file_to_out);
+		comm = comm->next;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:04 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 16:20:35 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 11:10:26 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ char    *is_loop(char *cmd)
 void    uniqq_exec(t_uniqq *uniqq, t_comm comm)
 {
     char *l;
+	free_str(uniqq->path);
     l = is_loop(comm.cmd[0]);
     if ((!comm.cmd[1] && ((l[0] == 'w' && l[1] == 'c' && !l[2]) || (l[0] == 'c' && l[1] == 'a' && l[2] == 't' && !l[3])))
         || (comm.cmd[1] && l[0] == 'g' && l[1] == 'r' && l[2] == 'e' && l[3] == 'p' && !l[4]))
@@ -56,10 +57,14 @@ void    uniqq_exec(t_uniqq *uniqq, t_comm comm)
 
 int	fill_ret(t_uniqq *uniqq, t_comm comm, t_list **a_list, t_list **b_list)
 {
+	int j;
+
 	uniqq->k = red_uniq_comm(comm, uniqq->str, a_list, b_list);
-	free_str(uniqq->path);
 	g_retval = uniqq->k;
-	return (uniqq->k);
+	free_str(uniqq->path);
+	uniqq->k = j;
+	free(uniqq);
+	return (j);
 }
 
 int	uniqq_setup(t_uniqq **uniqq, t_comm comm, t_list **a_list, t_list **b_list)
@@ -77,13 +82,13 @@ int	uniqq_setup(t_uniqq **uniqq, t_comm comm, t_list **a_list, t_list **b_list)
 		g_retval = 1;
 		return (1);
 	}
-	(*uniqq)->path = ft_split(getenv2("PATH", a_list), ':');
 	if (!comm.redir[0] && comm.cmd[0] && if_builtin(comm.cmd) == 0)
 	{
-		(*uniqq)->k = builtin(comm.cmd, a_list, b_list);
-		g_retval = (*uniqq)->k;
+		free(*uniqq);
+		g_retval = builtin(comm.cmd, a_list, b_list);
 		return (1);
 	}
+	(*uniqq)->path = ft_split(getenv2("PATH", a_list), ':');
 	return (0);
 }
 
@@ -112,6 +117,8 @@ int	fill_if(t_uniqq *uniqq, t_comm comm)
 			if (open_file(comm.redir[uniqq->j]) == -1)
 			{
 				g_retval = 1;
+				free_str(uniqq->path);
+				free(uniqq);
 				return (-1);
 			}
 		}
@@ -120,5 +127,7 @@ int	fill_if(t_uniqq *uniqq, t_comm comm)
 	if (comm.cmd[0])
 		printf("%s: command not found\n", comm.cmd[0]);
 	g_retval = 127;
+	free_str(uniqq->path);
+	free(uniqq);
 	return (127);
 }

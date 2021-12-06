@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:20 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 15:42:04 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 11:40:42 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,30 @@ static char	*assign_word(char *s, char c)
 	return (ret);
 }
 
+char	**ft_split_no_free(char *s, char c)
+{
+	unsigned int	nb;
+	unsigned int	i;
+	char			**ret;
+	char			*ptr;
+
+	if (!s)
+		return (0);
+	ptr = (char *)s;
+	nb = count_words(ptr, c);
+	ret = (char **)malloc(sizeof(char *) * (nb + 1));
+	if (!(ret))
+		return (0);
+	i = 0;
+	while (i < nb)
+	{
+		ret[i] = assign_word(ptr + pos_word(ptr, c, i), c);
+		i++;
+	}
+	ret[i] = 0;
+	return (ret);
+}
+
 char	**ft_split(char *s, char c)
 {
 	unsigned int	nb;
@@ -96,5 +120,6 @@ char	**ft_split(char *s, char c)
 		i++;
 	}
 	ret[i] = 0;
+	free(s);
 	return (ret);
 }

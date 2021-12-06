@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 17:16:08 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 13:38:14 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ typedef struct s_pipe
 {
 	char			**env;
 	int				pipefd[2];
-	char			**expenv;
 	char			**cmd;
 	char			*path;
 	int				nb_pipe;
@@ -56,7 +55,6 @@ typedef struct s_pipe
 	int				single_quote;
 	int				double_quote;
 	int				retclone;
-	char			**redir_temp;
 	char			**redir;
 	char			*file_to_out;
 	char			*file_to_in;
@@ -70,7 +68,6 @@ typedef struct s_pipe
 typedef struct s_comm
 {
 	char			**env;
-	char			**expenv;
 	char			**cmd;
 	char			*path;
 	int				nb_pipe;
@@ -254,6 +251,7 @@ char	*ft_itoa(int n);
 char	**ft_split(char *s, char c);
 int		ft_strncmp( char *s1, char *s2, int n);
 int		ft_strlen(char *s);
+char	*ft_strdup_free(char *s1);
 int		ft_strchr(char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strcat_cmd(char *dest, char *src);
@@ -381,5 +379,7 @@ void	del_free(t_del *del, char *s);
 int		ret_racks(int simple, int duble);
 void	del_if4(t_del *del, char *s, t_list **a_list);
 void	free_uniqq(t_uniqq *uniqq);
+char	**ft_split_no_free(char *s, char c);
+void	free_pipe(t_pipe *comm);
 
 #endif

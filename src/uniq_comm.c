@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:05 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 16:02:19 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 10:54:55 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 		fill_while(uniqq, comm);
 	else if (comm.cmd[0])
 	{
+		free_str(uniqq->path);
 		free(uniqq);
 		g_retval = 127;
 		return (127);
@@ -113,10 +114,10 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 		return (fill_ret(uniqq, comm, a_list, b_list));
 	else
 		uniqq_exec(uniqq, comm);
-	free_str(uniqq->path);
 	if (g_retval != 200)
 		g_retval = uniqq->k;
 	j = uniqq->k;
+	free(uniqq->str);
 	free(uniqq);
 	return (j);
 }

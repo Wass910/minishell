@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:48 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 15:46:53 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 10:51:57 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ t_comm	fill_comm(char *cmd)
 		}
 	}
 	comm = setup_cmd(comm, 0, fill->arg, fill->red);
+	free(fill);
 	return (comm);
 }
 

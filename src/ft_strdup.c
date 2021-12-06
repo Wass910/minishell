@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:57:17 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/11/30 16:18:38 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/06 11:15:36 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,26 @@ char	*ft_strdup(char *s1)
 		i++;
 	}
 	cpy[i] = '\0';
+	return (cpy);
+}
+
+char	*ft_strdup_free(char *s1)
+{
+	char	*cpy;
+	int		i;
+
+	i = ft_strlen((char *)s1);
+	cpy = malloc(sizeof(char) * (i + 1));
+	if (!(cpy))
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		cpy[i] = s1[i];
+		i++;
+	}
+	cpy[i] = '\0';
+	free(s1);
 	return (cpy);
 }
 

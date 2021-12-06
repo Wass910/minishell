@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 16:54:47 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 13:28:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,46 +68,48 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 	int		error;
 	char	**cmd;
 	char	str[10] = "ls ef";
-
+	t_pipe	*temp;
+	
+	temp = comm_pip;
 	last_cmd = 1;
 	error = 0;
-	cmd = ft_split(str, ' ');
-	while (comm_pip)
+	cmd = ft_split_no_free(str, ' ');
+	while (temp)
 	{
-		if (comm_pip->error_syn_red == 1 || !comm_pip->path)
+		if (temp->error_syn_red == 1 || !temp->path)
 		{
 			error = 1;
-			while (comm_pip && (comm_pip->error_syn_red == 1
-					|| !comm_pip->path))
+			while (temp && (temp->error_syn_red == 1
+					|| !temp->path))
 			{
-				comm_pip = comm_pip->next;
+				temp = temp->next;
 			}	
-			if (!comm_pip)
-				pipex_last(comm_pip, 0);
+			if (!temp)
+				pipex_last(temp, 0);
 		}
-		if (comm_pip)
+		if (temp)
 		{
-			if (!comm_pip->next)
+			if (!temp->next)
 				last_cmd = 0;
-			if (comm_pip->write_file >= 0 && comm_pip->read_file == -1)
-				pipex_write(comm_pip, last_cmd, a_list, b_list);
-			else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
+			if (temp->write_file >= 0 && temp->read_file == -1)
+				pipex_write(temp, last_cmd, a_list, b_list);
+			else if (temp->write_file == -1 && temp->read_file == -1)
 			{
 				if (error != 0)
 					pipex_for_one(NULL, cmd);
-				pipex(comm_pip, last_cmd, a_list, b_list);
+				pipex(temp, last_cmd, a_list, b_list);
 			}
-			else if (comm_pip->write_file == -1 && comm_pip->read_file >= 0)
+			else if (temp->write_file == -1 && temp->read_file >= 0)
 			{	
-				dup2(comm_pip->read_file, 0);
-				pipex_read(comm_pip, last_cmd, a_list, b_list);
+				dup2(temp->read_file, 0);
+				pipex_read(temp, last_cmd, a_list, b_list);
 			}
 			else
 			{	
-				dup2(comm_pip->read_file, 0);
-				pipex_write_read(comm_pip, last_cmd, a_list, b_list);
+				dup2(temp->read_file, 0);
+				pipex_write_read(temp, last_cmd, a_list, b_list);
 			}
-			comm_pip = comm_pip->next;
+			temp = temp->next;
 		}
 		error = 0;
 	}
@@ -163,10 +165,10 @@ void	all_good_red(t_pipe *comm_pip)
 	}
 	if  (i == 0)
 	{
-		while (comm_pip)
+		while (temp2)
 		{
-			comm_pip = open_file_redir(comm_pip);
-			comm_pip = comm_pip->next;
+			temp2 = open_file_redir(temp2);
+			temp2 = temp2->next;
 		}
 
 	}
@@ -187,7 +189,7 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 	last_cmd = 1;
 	i = 0;
 	retclone = 0;
-	cmd = ft_split(line, '|');
+	cmd = ft_split_no_free(line, '|');
 	i = 0;
     while (cmd[i])
     {
@@ -217,12 +219,14 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 	comm_pip = parcing_comm_pip(cmd[i], a_list);
 	while (i-- > 0)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
+	printf("oui\n");
 	all_good_red(comm_pip);
 	if (error_synthax_red(comm_pip) == 0)
 	{
 		not_valid_comm(comm_pip);
 		exec_pipe(comm_pip, a_list, b_list);
 	}
+	free_pipe(comm_pip);
 	return (0);
 }
 
@@ -256,10 +260,13 @@ int	unclosed_quotes2(char *s)
 
 void  inthandler(int sig)
 {
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("\0", 0);
-	rl_redisplay();
+	if (sig == 2)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("\0", 0);
+		rl_redisplay();
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
