@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:04:35 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:04:36 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/03 17:28:25 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_del	*setup_del(void)
 	del->i = 0;
 	del->k = 0;
 	del->c = 0;
+	del->temp2 = malloc(sizeof(char *) * 3);
 	del->str = malloc(sizeof(char) * 1000);
 	if (!del->str)
 		exit(EXIT_FAILURE);
@@ -76,23 +77,26 @@ void	del_if2(t_del *del, char *s, t_list **a_list)
 
 void	del_if3(t_del *del, char *s, t_list **a_list)
 {
-	del->temp2[0] = after_env(&s[del->i]);
-	del->temp2[1] = getenv2(del->temp2[0], a_list);
-	free(del->temp2[0]);
-	while (del->temp2[1][del->c])
+	char	*temp;
+	char	*temp2;
+	int		j;
+	temp = after_env(&s[del->i]);
+	temp2 = getenv2(temp, a_list);
+	while (temp2 && temp2[del->c])
 	{
-		del->str[del->j] = del->temp2[1][del->c];
+		del->str[del->j] = temp2[del->c];
 		del->c++;
 		del->j++;
 	}
 	del->c = 0;
-	if (del->temp2[1])
+	if (temp2 && temp2[1])
 	{
 		del->i++;
 		while (s[del->i] && char_alphanum(s[del->i]))
 			del->i++;
 	}
-	free(del->temp2[1]);
+	if (temp2)
+		free(temp2);
 }
 
 void	del_else(t_del *del)

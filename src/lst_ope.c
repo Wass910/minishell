@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:48 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:49 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 14:44:17 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,15 @@ t_pipe	*fill_comm_pip(t_pipe *comm, char *cmd)
 			&& cmd[fill->i + 1] != 32)
 			fill->i++;
 		else
+		{	
 			fill_elsepip4(comm, fill, cmd);
+		}
+		
 	}
 	comm->cmd[fill->arg] = NULL;
 	comm->redir[fill->red] = NULL;
+	free(cmd);
+	free(fill);
 	return (comm);
 }
 
@@ -49,7 +54,7 @@ t_comm	fill_comm(char *cmd)
 	fill = fill_setup();
 	comm.redir = NULL;
 	comm = setup_cmd(comm, 1, 0, 0);
-	while (cmd[fill->i])
+	while (cmd && cmd[fill->i])
 	{
 		if (cmd[fill->i] == 24)
 			fill_if1(comm, fill, cmd);
@@ -64,9 +69,12 @@ t_comm	fill_comm(char *cmd)
 			&& cmd[fill->i + 1] != 32)
 			fill->i++;
 		else
+		{
 			fill_else3(comm, fill, cmd);
+		}
 	}
 	comm = setup_cmd(comm, 0, fill->arg, fill->red);
+	free(fill);
 	return (comm);
 }
 

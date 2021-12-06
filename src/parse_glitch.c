@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:53 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:54 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 10:50:46 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_pars	*glitch_setup(t_pars *glitch)
 char	*split_glitch(char *cmd_all)
 {
 	t_pars	*glitch;
+	char *copy;
 
 	glitch = NULL;
 	glitch = glitch_setup(glitch);
@@ -50,5 +51,8 @@ char	*split_glitch(char *cmd_all)
 		}
 	}
 	glitch->cmd_tsplit[glitch->j] = '\0';
-	return (glitch->cmd_tsplit);
+	copy = ft_strdup(glitch->cmd_tsplit);
+	free(glitch->cmd_tsplit);
+	free(glitch);
+	return (copy);
 }

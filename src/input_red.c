@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:43 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:44 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 14:33:02 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_comm	ft_double_left_red(t_comm comm)
 
 	dred = fill_dred();
 	comm.redir_double_input = 0;
-	comm.redir_temp = malloc(sizeof(char *) * 150);
+	comm.redir_temp = malloc(sizeof(char *) * 50);
 	while (comm.redir[dred->i])
 	{
 		if (comm.redir[dred->i][0] && comm.redir[dred->i][1]
@@ -73,6 +73,7 @@ t_comm	ft_double_left_red(t_comm comm)
 		dred->i++;
 	}
 	comm.redir_temp[dred->count] = NULL;
+	free(dred);
 	return (comm);
 }
 
@@ -96,6 +97,7 @@ void	ft_redir_temp(char **str, int input)
 		free(line);
 		ret = get_next_line(0, &line);
 	}
+	free_str(str);
 	return ;
 }
 
@@ -105,13 +107,16 @@ char	**double_in(char *all_cmd, t_list **a_list)
 	char	*cmd_new;
 	t_comm	comm;
 
-	cmd_new = malloc(sizeof(char) * 100);
 	cmd_new = split_glitch(all_cmd);
 	str = ft_split(cmd_new, ' ');
 	cmd_new = parse_quotes(str, a_list);
 	comm = fill_comm(cmd_new);
 	comm = ft_double_left_red(comm);
+	free(cmd_new);
+	free_str(comm.cmd);
+	free_str(comm.redir);
 	if (comm.redir_temp[0])
 		return (comm.redir_temp);
+	free_str(comm.redir_temp);
 	return (NULL);
 }

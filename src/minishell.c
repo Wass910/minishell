@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 10:03:12 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 14:18:28 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,66 +39,95 @@ void	pipex_for_one(char *path, char **cmd)
 	}
 }
 
+void	pipex_last(t_pipe *comm_pip, int i)
+{
+	int		pipefd[2];
+	pid_t	pid1;
+	int		status;
+
+	if (pipe(pipefd) == -1)
+		exit(EXIT_FAILURE);
+	pid1 = fork();
+	if (pid1 == -1)
+		exit(EXIT_FAILURE);
+	if (pid1)
+	{
+		close(pipefd[1]);
+		dup2(pipefd[0], 0);
+		if (i == 0)
+			dup2(1, 0);
+		waitpid(pid1, &status, 0);
+	}
+	else
+		dup2(pipefd[1], 1);
+}
+
 void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 {
 	int		last_cmd;
 	int		error;
 	char	**cmd;
 	char	str[10] = "ls ef";
-
+	t_pipe	*temp;
+	
+	temp = comm_pip;
 	last_cmd = 1;
 	error = 0;
-	cmd = ft_split(str, ' ');
-	while (comm_pip)
+	cmd = ft_split_no_free(str, ' ');
+	while (temp)
 	{
-		if (comm_pip->error_syn_red == 1 || !comm_pip->path)
+		if (temp->error_syn_red == 1 || !temp->path)
 		{
 			error = 1;
-			while (comm_pip && (comm_pip->error_syn_red == 1
-					|| !comm_pip->path))
+			while (temp && (temp->error_syn_red == 1
+					|| !temp->path))
 			{
-				comm_pip = comm_pip->next;
+				temp = temp->next;
 			}	
+			if (!temp)
+				pipex_last(temp, 0);
 		}
-		if (comm_pip)
+		if (temp)
 		{
-			if (!comm_pip->next)
+			if (!temp->next)
 				last_cmd = 0;
-			if (comm_pip->write_file >= 0 && comm_pip->read_file == -1)
-				pipex_write(comm_pip, last_cmd, a_list, b_list);
-			else if (comm_pip->write_file == -1 && comm_pip->read_file == -1)
+			if (temp->write_file >= 0 && temp->read_file == -1)
+				pipex_write(temp, last_cmd, a_list, b_list);
+			else if (temp->write_file == -1 && temp->read_file == -1)
 			{
 				if (error != 0)
 					pipex_for_one(NULL, cmd);
-				pipex(comm_pip, last_cmd, a_list, b_list);
+				pipex(temp, last_cmd, a_list, b_list);
 			}
-			else if (comm_pip->write_file == -1 && comm_pip->read_file >= 0)
+			else if (temp->write_file == -1 && temp->read_file >= 0)
 			{	
-				dup2(comm_pip->read_file, 0);
-				pipex_read(comm_pip, last_cmd, a_list, b_list);
+				dup2(temp->read_file, 0);
+				pipex_read(temp, last_cmd, a_list, b_list);
 			}
 			else
 			{	
-				dup2(comm_pip->read_file, 0);
-				pipex_write_read(comm_pip, last_cmd, a_list, b_list);
+				dup2(temp->read_file, 0);
+				pipex_write_read(temp, last_cmd, a_list, b_list);
 			}
-			comm_pip = comm_pip->next;
+			temp = temp->next;
 		}
 		error = 0;
 	}
+	free_str(cmd);
 }
 
-void	error_synthax_red(t_pipe *comm_pip)
+int	error_synthax_red(t_pipe *comm_pip)
 {
 	while (comm_pip)
 	{
 		if (ft_error_parse_red(comm_pip->redir) == 0)
 		{	
 			printf("Minishell: syntax error near unexpected token\n");
-			return ;
+			return 1;
 		}
 		comm_pip = comm_pip->next;
 	}
+	return 0;
 }
 
 void	not_valid_comm(t_pipe *comm_pip)
@@ -108,6 +137,41 @@ void	not_valid_comm(t_pipe *comm_pip)
 		if (comm_pip->path == NULL && comm_pip->cmd[0])
 			printf("%s: command not found\n", comm_pip->cmd[0]);
 		comm_pip = comm_pip->next;
+	}
+}
+
+int	end_comm(t_pipe *parse_pip)
+{
+	while (parse_pip->next)
+		parse_pip = parse_pip->next;
+	if (!parse_pip->path)
+		return (1);
+	return (0);	
+}
+
+void	all_good_red(t_pipe *comm_pip)
+{
+	t_pipe	*temp;
+	t_pipe	*temp2;
+	int		i;
+
+	i = 0;
+	temp2 = comm_pip;
+	temp = comm_pip;
+	while (temp)
+	{
+		if (temp->error_syn_red == 1)
+			i++;
+		temp = temp->next;
+	}
+	if  (i == 0)
+	{
+		while (temp2)
+		{
+			temp2 = open_file_redir(temp2);
+			temp2 = temp2->next;
+		}
+
 	}
 }
 
@@ -126,7 +190,21 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 	last_cmd = 1;
 	i = 0;
 	retclone = 0;
-	cmd = ft_split(line, '|');
+	cmd = ft_split_no_free(line, '|');
+	i = 0;
+    while (cmd[i])
+    {
+        while (cmd[i][j])
+        {
+            if (cmd[i][j] == 23)
+                cmd[i][j] = '|';
+            j++;
+        }
+        i++;
+        j = 0;
+    }
+    i = 0;
+    j = 0;
 	red_double = double_in(line, a_list);
 	while (red_double && red_double[j])
 	{
@@ -142,10 +220,15 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 	comm_pip = parcing_comm_pip(cmd[i], a_list);
 	while (i-- > 0)
 		comm_pip = new_parcing_comm_pip(cmd[i], comm_pip, a_list);
-	error_synthax_red(comm_pip);
-	not_valid_comm(comm_pip);
-	exec_pipe(comm_pip, a_list, b_list);
-	return (retclone);
+	all_good_red(comm_pip);
+	if (error_synthax_red(comm_pip) == 0)
+	{
+		not_valid_comm(comm_pip);
+		exec_pipe(comm_pip, a_list, b_list);
+	}
+	free_pipe(comm_pip);
+	free_str(cmd);
+	return (0);
 }
 
 int	unclosed_quotes2(char *s)
@@ -178,7 +261,7 @@ int	unclosed_quotes2(char *s)
 
 void  inthandler(int sig)
 {
-	if(sig == 2)
+	if (sig == 2)
 	{
 		printf("\n");
 		rl_on_new_line();
@@ -189,7 +272,6 @@ void  inthandler(int sig)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_comm				comm;
 	t_list				*a_list;
 	t_list				*b_list;
 	char				*line;
@@ -201,14 +283,23 @@ int	main(int argc, char **argv, char **envp)
 		printf("Too much arguments, usage : './minishell'.\n");
 		exit(EXIT_FAILURE);
 	}
-	comm.env = NULL;
 	make_list(&a_list, envp);
 	make_list(&b_list, envp);
 	signal(SIGQUIT, inthandler);
 	signal(SIGINT, inthandler);
 	while (1)
 	{
-		line = readline("$> ");
+		if (g_retval != 200)
+		{
+			rl_replace_line("", 0);
+			line = readline("$> ");
+		}
+		if(g_retval == 200)
+		{
+			rl_replace_line("", 0);
+			line = readline("");
+			g_retval = 1;
+		}
 		if (line == NULL)
 		{
 			printf("exit\n");
@@ -218,11 +309,10 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			if (!only_space(line) && !unclosed_quotes2(line))
-				i = parcing(line, comm, &a_list, &b_list);
+				i = parcing(line, &a_list, &b_list);
 		}
 		if (line)
 			free(line);
 	}
-	free_comm(comm);
 	return (0);
 }
