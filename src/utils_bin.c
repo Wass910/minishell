@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_bin.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:07 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:08 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 19:39:54 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,5 @@ void	already_in(t_list **a_list, char *str, int j)
 		return ;
 	}
 	next_part(temp, j, s, str);
+	free(s);
 }

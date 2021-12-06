@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_unset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:01 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:05:02 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 19:44:25 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,12 @@ int	build_unset(char **cmd, t_list **a_list, t_list **b_list, int type)
 	if (!unset.s)
 		return (1);
 	if (!unset_loop(unset, a_list, b_list, cmd))
+	{
+		free(unset.s);
 		return (0);
+	}
 	if (type == 0)
 		build_unset(cmd, a_list, b_list, 1);
+		free(unset.s);
 	return (0);
 }

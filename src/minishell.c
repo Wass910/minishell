@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 14:18:28 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 19:27:27 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +45,12 @@ void	pipex_last(t_pipe *comm_pip, int i)
 	pid_t	pid1;
 	int		status;
 
-	if (pipe(pipefd) == -1)
-		exit(EXIT_FAILURE);
-	pid1 = fork();
-	if (pid1 == -1)
-		exit(EXIT_FAILURE);
-	if (pid1)
-	{
-		close(pipefd[1]);
+
+		dup2(pipefd[1], 1);
 		dup2(pipefd[0], 0);
 		if (i == 0)
 			dup2(1, 0);
-		waitpid(pid1, &status, 0);
-	}
-	else
-		dup2(pipefd[1], 1);
+
 }
 
 void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
@@ -135,7 +126,12 @@ void	not_valid_comm(t_pipe *comm_pip)
 	while (comm_pip)
 	{
 		if (comm_pip->path == NULL && comm_pip->cmd[0])
-			printf("%s: command not found\n", comm_pip->cmd[0]);
+		{
+			if(verif_the_builtin(comm_pip->cmd) == 1)
+			{
+				printf("%s: command not found\n", comm_pip->cmd[0]);
+			}
+		}
 		comm_pip = comm_pip->next;
 	}
 }
