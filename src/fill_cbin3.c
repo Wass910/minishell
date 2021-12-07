@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:53 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/03 12:52:49 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/07 11:36:54 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,8 @@ void	fill_elsepip4(t_pipe *comm, t_fill *fill, char *cmd)
 		fill->i++;
 		fill->argindex++;
 	}
-	if(cmd[fill->i] && cmd[fill->i] == 32)
-	{
+	if (cmd[fill->i] && cmd[fill->i] == 32)
 		fill->i++;
-	}
 	comm->cmd[fill->arg][fill->argindex] = '\0';
 	fill->argindex = 0;
 	fill->arg++;

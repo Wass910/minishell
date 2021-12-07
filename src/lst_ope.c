@@ -3,22 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   lst_ope.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:48 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 10:51:57 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/07 12:41:34 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+t_pipe	*fill_comm_pip_norm(t_pipe *comm, t_fill *fill, int i)
+{
+	if (i == 1)
+	{
+		comm->cmd = malloc(sizeof(char *) * 50);
+		comm->redir = malloc(sizeof(char *) * 50);
+	}
+	else
+	{
+		comm->cmd[fill->arg] = NULL;
+		comm->redir[fill->red] = NULL;
+	}
+	return (comm);
+}
 
 t_pipe	*fill_comm_pip(t_pipe *comm, char *cmd)
 {
 	t_fill	*fill;
 
 	fill = fill_setup();
-	comm->cmd = malloc(sizeof(char *) * 50);
-	comm->redir = malloc(sizeof(char *) * 50);
+	comm = fill_comm_pip_norm(comm, fill, 1);
 	while (cmd[fill->i])
 	{
 		if (cmd[fill->i] == 24)
@@ -34,13 +48,18 @@ t_pipe	*fill_comm_pip(t_pipe *comm, char *cmd)
 			&& cmd[fill->i + 1] != 32)
 			fill->i++;
 		else
-		{	
 			fill_elsepip4(comm, fill, cmd);
-		}
-		
 	}
-	comm->cmd[fill->arg] = NULL;
-	comm->redir[fill->red] = NULL;
+	comm = fill_comm_pip_norm(comm, fill, 0);
+	free(cmd);
+	free(fill);
+	return (comm);
+}
+
+t_comm	fill_comm_norm(t_comm comm, t_fill *fill)
+{
+	comm = setup_cmd(comm, 0, fill->arg, fill->red);
+	free(fill);
 	return (comm);
 }
 
@@ -67,12 +86,9 @@ t_comm	fill_comm(char *cmd)
 			&& cmd[fill->i + 1] != 32)
 			fill->i++;
 		else
-		{
 			fill_else3(comm, fill, cmd);
-		}
 	}
-	comm = setup_cmd(comm, 0, fill->arg, fill->red);
-	free(fill);
+	comm = fill_comm_norm(comm, fill);
 	return (comm);
 }
 

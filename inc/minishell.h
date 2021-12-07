@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 13:38:14 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/07 14:27:25 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ typedef struct s_comm
 {
 	char			**env;
 	char			**cmd;
-	char			*path;
 	int				nb_pipe;
 	int				redir_output;
 	int				redir_input;
@@ -127,6 +126,13 @@ typedef struct s_doll
 	int		j;
 	int		c;
 }				t_doll;
+
+typedef struct s_exec
+{
+	int		last_cmd;
+	int		error;
+	t_pipe	*temp;
+}				t_exec;
 
 typedef struct s_pars
 {
@@ -381,5 +387,22 @@ void	del_if4(t_del *del, char *s, t_list **a_list);
 void	free_uniqq(t_uniqq *uniqq);
 char	**ft_split_no_free(char *s, char c);
 void	free_pipe(t_pipe *comm);
+t_lred	*dred_setup(t_lred *dred, int i);
+t_comm	comm_setup(t_comm comm);
+int		free_uniqq_norme(t_uniqq *uniqq);
+char	*fill_s(char *s, int j, t_list *temp);
+t_comm	setup_comm(t_comm comm);
+int	verif_pipe(char *str);
+int	only_in_quotes(char *s);
+void	norme_parcing2(t_comm comm, t_list **a_list, t_list **b_list);
+int	norme_parcing(t_comm comm);
+int	go_pipe_norm(char *all_cmd, int i);
+int	error_synthax_red(t_pipe *comm_pip);
+void	not_valid_comm(t_pipe *comm_pip);
+int	end_comm(t_pipe *parse_pip);
+void	all_good_red(t_pipe *comm_pip);
+void	pipex_for_one(char *path, char **cmd);
+void	pipex_last(t_pipe *comm_pip, int i);
+int	unclosed_quotes2(char *s);
 
 #endif

@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils_bin.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:07 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:08 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/07 14:05:04 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-int	only_space(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] && s[i] != 32 && s[i] != 9)
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 void	free_part(t_list *del, char *s)
 {
@@ -77,10 +63,7 @@ void	already_in(t_list **a_list, char *str, int j)
 
 	temp = (*a_list);
 	str = make_test(str);
-	if (j == 1)
-		s = &temp->content[11];
-	else
-		s = temp->content;
+	s = fill_s(s, j, temp);
 	s = make_test(s);
 	if (!is_same(s, str) && j == 1)
 	{
@@ -97,4 +80,5 @@ void	already_in(t_list **a_list, char *str, int j)
 		return ;
 	}
 	next_part(temp, j, s, str);
+	free(s);
 }

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:54 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 11:36:28 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 14:56:16 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,17 +132,20 @@ char *ft_split_command_quote(char **str)
 	int i;
 	int j;
 	int count;
+    char *temp;
 
 	j = 0;
 	i = 0;
 	i = 2;
-    if (str[0] && str[1])
-        cmd = ft_strcat_redf(str[0], str[1]);
     if (str[0] && !str[1])
         return ft_strdup(str[0]);
+    if (str[0] && str[1])
+        cmd = ft_strcat_redf(str[0], str[1]);
 	while(str[i])
 	{
-		cmd = ft_strcat_redf(cmd, str[i]);
+		temp = ft_strcat_redf(cmd, str[i]);
+        free(cmd);
+        cmd = temp;
         i++;
 	}
 	return cmd;

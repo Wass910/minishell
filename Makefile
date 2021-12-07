@@ -31,7 +31,8 @@ pipex.c sort_env.c utils2.c utils.c strcat.c ft_itoa.c parse_quotes.c quotes_uti
 parse_glitch.c free_stab.c open_file.c redirection.c uniq_comm.c lst_cmd.c input_red.c\
 parsing_uniq.c build_echo.c build_pwd.c build_unset.c unset_utils.c is_smtg.c glitch_bin.c\
 glitch_bin2.c parse_bin.c uniq_bin.c utils_bin.c setup_bin.c pipex_bin.c fill_cbin.c fill_cbin2.c\
-fill_cbin3.c delete_bin.c delete_bin2.c
+fill_cbin3.c delete_bin.c delete_bin2.c setup.c parsing_uniq_norm.c minishell_norm.c pipex_norm.c\
+main.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 

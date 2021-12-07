@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:46 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 13:39:55 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/07 11:54:37 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ t_pipe	*fill_new_norm(t_pipe *new, char *all_cmd, t_list **a_list)
 	char	**str;
 	char	*cmd_new;
 
-	cmd_new = malloc(sizeof(char) * 100);
 	cmd_new = split_glitch(all_cmd);
 	str = ft_split(cmd_new, ' ');
 	cmd_new = parse_quotes(str, a_list);
@@ -79,15 +78,13 @@ t_pipe	*parcing_comm_pip(char *all_cmd, t_list **a_list)
 		exit(EXIT_FAILURE);
 	new = fill_new_norm(new, all_cmd, a_list);
 	if (access(new->cmd[0], F_OK) == 0)
-		new->path = new->cmd[0];
+		new->path = ft_strdup(new->cmd[0]);
 	else
 		new->path = path(new->cmd[0], a_list);
 	if (ft_error_parse_red(new->redir) == 0)
 		new->error_syn_red = 1;
 	else
 		new->error_syn_red = 0;
-	//if (new->error_syn_red == 0)
-	//	new = open_file_redir(new);
 	new = replace_tab_pipe(new);
 	new->next = NULL;
 	return (new);
@@ -103,15 +100,13 @@ t_pipe	*new_parcing_comm_pip(char *all_cmd,
 		exit(EXIT_FAILURE);
 	new = fill_new_norm(new, all_cmd, a_list);
 	if (access(new->cmd[0], F_OK) == 0)
-		new->path = new->cmd[0];
+		new->path = ft_strdup(new->cmd[0]);
 	else
 		new->path = path(new->cmd[0], a_list);
 	if (ft_error_parse_red(new->redir) == 0)
 		new->error_syn_red = 1;
 	else
 		new->error_syn_red = 0;
-	//if (new->error_syn_red == 0)
-	//	new = open_file_redir(new);
 	new = replace_tab_pipe(new);
 	new->next = pipe;
 	return (new);

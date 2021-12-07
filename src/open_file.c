@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:51 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:52 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/06 14:28:34 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,28 @@
 
 t_pipe	*fill_redir_attribut(t_pipe *parse_pip, int to_read, int to_write)
 {
-	if (to_read >= 0)
+	if (to_read >= 0 && to_write >= 0)
 	{
 		parse_pip->file_to_in = ft_strcat_red("", parse_pip->redir[to_read]);
 		parse_pip->read_file = open_file(parse_pip->redir[to_read]);
-	}
-	else
-	{
-		parse_pip->file_to_out = malloc(50);
-		parse_pip->file_to_in = NULL;
-	}
-	if (to_write >= 0)
-	{
 		parse_pip->file_to_out = ft_strcat_red("", parse_pip->redir[to_write]);
 		parse_pip->write_file = open_file2(parse_pip->redir[to_write]);
 	}
+	else if (to_write >= 0)
+	{
+		parse_pip->file_to_out = ft_strcat_red("", parse_pip->redir[to_write]);
+		parse_pip->write_file = open_file2(parse_pip->redir[to_write]);
+		parse_pip->file_to_in = NULL;
+	}
+	else if (to_read >= 0)
+	{
+		parse_pip->file_to_in = ft_strcat_red("", parse_pip->redir[to_read]);
+		parse_pip->read_file = open_file(parse_pip->redir[to_read]);
+		parse_pip->file_to_out = NULL;
+	}
 	else
 	{
-		parse_pip->file_to_out = malloc(50);
+		parse_pip->file_to_in = NULL;
 		parse_pip->file_to_out = NULL;
 	}
 	return (parse_pip);

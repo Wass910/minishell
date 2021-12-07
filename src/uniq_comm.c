@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   uniq_comm.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:05 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 10:54:55 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/07 12:18:03 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ int	red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
 		r_redirection(comm, a_list, b_list, str);
 	else
 		reflechir(uniq, str, comm);
+	free(uniq);
 	return (1);
 }
 
@@ -98,16 +99,11 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 	if (uniqq_setup(&uniqq, comm, a_list, b_list) != 0)
 		return (1);
 	if (comm.cmd[0] && access(comm.cmd[0], F_OK) == 0)
-		uniqq->str = comm.cmd[0];
+		uniqq->str = ft_strdup(comm.cmd[0]);
 	else if (comm.cmd[0] && uniqq->path)
 		fill_while(uniqq, comm);
 	else if (comm.cmd[0])
-	{
-		free_str(uniqq->path);
-		free(uniqq);
-		g_retval = 127;
-		return (127);
-	}
+		return (free_uniqq_norme(uniqq));
 	if (access(uniqq->str, F_OK) != 0)
 		return (fill_if(uniqq, comm));
 	if (comm.cmd[0] && comm.redir[0])
