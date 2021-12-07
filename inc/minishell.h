@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 14:27:25 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/07 21:00:24 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,15 @@ typedef struct s_del
 	char	**temp2;
 }				t_del;
 
+typedef struct s_norm
+{
+	char	**cmd;
+	char	**red_double;
+	int		j;
+	int		i;
+	int		nb_cmds;
+	int		last_cmd;
+}				t_norm;
 // PRINT FUNCTION
 void	print_comm(t_comm comm);
 void	print_env(t_list **b_list);
@@ -246,6 +255,7 @@ char	*ft_strcat_red_glu2(char *dest, char *src);
 void	add_line2(t_list **b_list, char **cmd, int j);
 int		ft_atoi(const char *str);
 int		is_same(char *s1, char *s2);
+void	free_temp(char **str);
 char	*getenv2(char *s, t_list **a_list);
 void	already_in(t_list **a_list, char *str, int j);
 int		is_alphanum(char *s);
@@ -404,5 +414,20 @@ void	all_good_red(t_pipe *comm_pip);
 void	pipex_for_one(char *path, char **cmd);
 void	pipex_last(t_pipe *comm_pip, int i);
 int	unclosed_quotes2(char *s);
+void	exec_pipe_norm(t_pipe *temp, int error, t_list **a_list,
+	t_list **b_list);
+t_pipe	*exec_pipe_norm_err(t_pipe *temp);
+void	exec_pipe_norm2(t_pipe *temp, int last_cmd,
+	t_list **a_list, t_list **b_list);
+void	exec_pipe_norm3(t_pipe *temp, int last_cmd,
+	t_list **a_list, t_list **b_list);
+void	exec_pipe_norm4(t_exec exec, t_list **a_list,
+	t_list **b_list);
+void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list);
+void	delete_pair_norm(char *s, t_del *del);
+void	delete_pair_norm4(char *s, t_del *del, t_list **a_list);
+void	delete_pair_norm2(char *s, t_del *del, t_list **a_list);
+void	delete_pair_norm_while(char *s, t_del *del, t_list **a_list);
+t_del	*delete_pair_setup_del(t_del *del);
 
 #endif

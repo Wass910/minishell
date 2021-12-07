@@ -3,183 +3,106 @@
 /*                                                        :::      ::::::::   */
 /*   parse_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:54 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 14:56:16 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/07 21:00:08 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char *delete_pair(char *s, t_list **a_list)
+char	*delete_pair(char *s, t_list **a_list)
 {
-    int i;
-    int j;
-    int k;
-    int c;
-    int type;
-    char *str;
-    char *temp;
-    char *temp2[2];
+	char	*final;
+	t_del	*del;
 
-    j = 0;
-    i = 0;
-    k = 0;
-    c = 0;
-    str = malloc(sizeof(char) * 1000);
-    if (!str)
-        return (NULL);
-    temp = malloc(sizeof(char) * 1000);
-    if (!temp)
-        return (NULL);
-    while (s[i])
-    {
-        k = 0;
-        if (s[i] == 34 || s[i] == 39)
-        {
-            type = s[i];
-            i++;
-            while (s[i] && s[i] != type)
-            {
-                temp[k] = s[i];
-                //printf("s[i] = %c\n", s[k]);
-                k++;
-                i++;
-            }
-            temp[k] = '\0';
-            i++;
-            //printf("temp = %s\n", temp);
-        }
-        else
-            temp[0] = '\0';
-        k = 0;
-        while (temp && temp[k])
-        {
-            if (temp[k] == '$' && temp[k + 1] && char_alphanum(temp[k + 1]) && type == 34)
-            {
-                k++;
-                temp2[0] = after_env(&temp[k]);
-                temp2[1] = getenv2(temp2[0], a_list);
-                free(temp2[0]);
-                if (!temp2[1])
-                {
-                    str[j] = s[i];
-                    i++;
-                    j++;
-                }
-                while (temp2[1] && temp2[1][c])
-                {
-                    str[j] = temp2[1][c];
-                    c++;
-                    j++;
-                }
-                c = 0;
-                if (temp2[1])
-                {
-                    while(temp[k] && char_alphanum(temp[k]))
-                        k++;
-                }
-                free(temp2[1]);
-            }
-            else if (temp[k])
-            {
-                str[j] = temp[k];
-                k++;
-                j++;
-            }
-        }
-        temp[0] = '\0';
-        if (s[i] && s[i] != 34 && s[i] != 39)
-        {
-            if (s[i] == '$' && s[i + 1] && char_alphanum(s[i + 1]))
-            {
-                temp2[0] = after_env(&s[i]);
-                temp2[1] = getenv2(temp2[0], a_list);
-                free(temp2[0]);
-                while (temp2[1][c])
-                {
-                    str[j] = temp2[1][c];
-                    c++;
-                    j++;
-                }
-                c = 0;
-                if (temp2[1])
-                {
-                    i++;
-                    while(s[i] && char_alphanum(s[i]))
-                        i++;
-                }
-                free(temp2[1]);
-            }
-            else
-            {
-                str[j] = s[i];
-                j++;
-                i++;
-            }
-        }
-    }
-    free(temp);
-    free(s);
-    str[j] = '\0';
-    return (str);
+	del = NULL;
+	del = delete_pair_setup_del(del);
+	while (s[del->i])
+	{
+		del->k = 0;
+		delete_pair_norm(s, del);
+		while (del->temp && del->temp[del->k])
+			delete_pair_norm_while(s, del, a_list);
+		del->temp[0] = '\0';
+		if (s[del->i] && s[del->i] != 34 && s[del->i] != 39)
+			delete_pair_norm4(s, del, a_list);
+	}
+	del->str[del->j] = '\0';
+	final = ft_strdup(del->str);
+	free(del->str);
+	free(del->temp);
+	free(del);
+	free(s);
+	return (final);
 }
 
-char *ft_split_command_quote(char **str)
+char	*ft_split_command_quote(char **str)
 {
-	char *cmd;
-	int i;
-	int j;
-	int count;
-    char *temp;
+	char	*cmd;
+	int		i;
+	int		j;
+	int		count;
+	char	*temp;
 
 	j = 0;
 	i = 0;
 	i = 2;
-    if (str[0] && !str[1])
-        return ft_strdup(str[0]);
-    if (str[0] && str[1])
-        cmd = ft_strcat_redf(str[0], str[1]);
-	while(str[i])
+	if (str[0] && !str[1])
+		return (ft_strdup(str[0]));
+	if (str[0] && str[1])
+		cmd = ft_strcat_redf(str[0], str[1]);
+	while (str[i])
 	{
 		temp = ft_strcat_redf(cmd, str[i]);
-        free(cmd);
-        cmd = temp;
-        i++;
+		free(cmd);
+		cmd = temp;
+		i++;
 	}
-	return cmd;
+	return (cmd);
 }
 
-char *parse_quotes(char **s, t_list **a_list)
+int	parse_quote_norm(char **s, int i)
 {
-    int i;
-    int j;
-    char *cmd;
+	if (unclosed_quotes(s[i]))
+	{
+		printf("Unclosed quotes, check your inport before retrying\n");
+		return (1);
+	}
+	return (0);
+}
 
-    i = 0;
-    j = 0;
-    while (s[i])
-    {
-        if (no_quotes(s[i]))
-        {
-            if (check_doll(s[i]))
-                s[i] = fill_doll(s[i], a_list);
-            if (s[i][0] == '\0')
-                s[i] = NULL;
-        }
-        else
-        {
-            if (unclosed_quotes(s[i]))
-            {
-                printf("Unclosed quotes, check your inport before retrying\n");
-                return (NULL);
-            }
-            s[i] = delete_pair(s[i], a_list);
-        }
-        i++;
-    }
-    cmd = ft_split_command_quote(s);
-    free_str(s);
-    return (cmd);
+char	*parse_quote_norm2(char **s, int i, t_list **a_list)
+{
+	if (check_doll(s[i]))
+		s[i] = fill_doll(s[i], a_list);
+	if (s[i][0] == '\0')
+		s[i] = NULL;
+	return (s[i]);
+}
+
+char	*parse_quotes(char **s, t_list **a_list)
+{
+	int		i;
+	int		j;
+	char	*cmd;
+
+	i = 0;
+	j = 0;
+	while (s[i])
+	{
+		if (no_quotes(s[i]))
+			s[i] = ft_strdup_free(parse_quote_norm2(s, i, a_list));
+		else
+		{
+			if (parse_quote_norm(s, i) == 1)
+				return (NULL);
+			s[i] = ft_strdup_free(delete_pair(s[i], a_list));
+		}
+		i++;
+	}
+	cmd = ft_strdup_free(ft_split_command_quote(s));
+	free_str(s);
+	return (cmd);
 }

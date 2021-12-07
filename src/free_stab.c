@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:09 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 12:11:16 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/07 20:30:01 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@ void	free_str(char **str)
 		free(str[line]);
 		line++;
 	}
+	free(str);
+}
+
+void	free_temp(char **str)
+{
+	free(str[0]);
+	free(str[1]);
 	free(str);
 }
 
