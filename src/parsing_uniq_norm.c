@@ -28,6 +28,8 @@ int	norme_parcing(t_comm comm)
 	if (ft_error_parse_red(comm.redir) == 0)
 	{
 		printf("Minishell: syntax error near unexpected token\n");
+		free_str(comm.redir);
+		free_str(comm.cmd);
 		g_retval = -1;
 		return (1);
 	}

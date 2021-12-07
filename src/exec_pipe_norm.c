@@ -34,12 +34,14 @@ void	exec_pipe_norm(t_pipe *temp, int error, t_list **a_list,
 t_pipe	*exec_pipe_norm_err(t_pipe *temp)
 {
 	while (temp && (temp->error_syn_red == 1
-			|| !temp->path))
+			|| (!temp->path && (verif_the_builtin(temp->cmd) == 1))))
 	{
 		temp = temp->next;
 	}	
-	if (!temp)
+	if (!temp || (!temp->next && (verif_the_builtin(temp->cmd) == 0)))
 		pipex_last(temp, 0);
+	if (!temp->next && (verif_the_builtin(temp->cmd) == 0))
+		temp = temp->next;
 	return (temp);
 }
 
