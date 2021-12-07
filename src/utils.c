@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:09 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:10 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/07 10:19:19 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	make_list(t_list **a_list, char **envp)
 void	add_declare(t_list **b_list)
 {
 	t_list	*temp;
+	t_list	*temp2;
 
 	temp = (*b_list);
 	while (temp->next)

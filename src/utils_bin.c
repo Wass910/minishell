@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_bin.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:07 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 19:39:54 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/07 11:07:07 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,21 +52,26 @@ void	next_part(t_list *temp, int j, char *s, char *str)
 		if (!is_same(s, str) || !is_same(str, s))
 			break ;
 		temp = temp->next;
+		if(temp->next)
+			free(s);
 	}
 	if ((!is_same(s, str) || !is_same(str, s)) && j == 1)
 	{
 		del = temp->next;
 		temp->next = temp->next->next;
-		free_part(del, s);
+		free(s);
+		free(str);
 		return ;
 	}
 	if ((!is_same(s, str) || !is_same(str, s)) && is_valid(str))
 	{
 		del = temp->next;
 		temp->next = temp->next->next;
-		free_part(del, s);
+		free(s);
+		free(str);
 		return ;
 	}
+	free(str);
 	free(s);
 }
 
@@ -86,6 +91,7 @@ void	already_in(t_list **a_list, char *str, int j)
 	{
 		temp = (*a_list);
 		(*a_list) = (*a_list)->next;
+		free(str);
 		free(temp);
 		return ;
 	}
@@ -93,6 +99,7 @@ void	already_in(t_list **a_list, char *str, int j)
 	{
 		temp = (*a_list);
 		(*a_list) = (*a_list)->next;
+		free(str);
 		free(temp);
 		return ;
 	}
