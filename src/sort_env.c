@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:02 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:03 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/07 12:03:30 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	add_line(t_list **b_list, char **cmd, int j)
 	if (!is_alphanum(str))
 	{
 		printf("export: '%s': not a valid identifier\n", str);
+		free(str);
 		return ;
 	}
 	flstadd_back(b_list, flstnew(ft_strcat("declare -x", str)));

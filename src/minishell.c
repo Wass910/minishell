@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 19:27:27 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/07 12:06:49 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,6 +298,8 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (line == NULL)
 		{
+			free_list(&a_list);
+			free_list(&b_list);
 			printf("exit\n");
 			return (0);
 		}
@@ -310,5 +312,7 @@ int	main(int argc, char **argv, char **envp)
 		if (line)
 			free(line);
 	}
+	free_list(&a_list);
+	free_list(&b_list);
 	return (0);
 }

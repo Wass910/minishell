@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 13:38:14 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/07 12:06:04 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -381,5 +381,6 @@ void	del_if4(t_del *del, char *s, t_list **a_list);
 void	free_uniqq(t_uniqq *uniqq);
 char	**ft_split_no_free(char *s, char c);
 void	free_pipe(t_pipe *comm);
+void	free_list(t_list **a_list);
 
 #endif
