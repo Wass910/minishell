@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/07 18:49:36 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/08 09:46:10 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (line == NULL)
 		{
+			free_list(&a_list);
+			free_list(&b_list);
 			printf("exit\n");
 			return (0);
 		}
@@ -111,5 +113,7 @@ int	main(int argc, char **argv, char **envp)
 		if (line)
 			free(line);
 	}
+	free(&a_list);
+	free(&b_list);
 	return (0);
 }

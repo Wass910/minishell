@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 21:00:24 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/08 09:44:02 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -429,5 +429,6 @@ void	delete_pair_norm4(char *s, t_del *del, t_list **a_list);
 void	delete_pair_norm2(char *s, t_del *del, t_list **a_list);
 void	delete_pair_norm_while(char *s, t_del *del, t_list **a_list);
 t_del	*delete_pair_setup_del(t_del *del);
+void	free_list(t_list **a_list);
 
 #endif
