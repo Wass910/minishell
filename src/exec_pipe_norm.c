@@ -40,7 +40,7 @@ t_pipe	*exec_pipe_norm_err(t_pipe *temp)
 	}	
 	if (!temp || (!temp->next && (verif_the_builtin(temp->cmd) == 0)))
 		pipex_last(temp, 0);
-	if (!temp->next && (verif_the_builtin(temp->cmd) == 0))
+	if (!temp->next && ((find_builtin(temp->cmd) == UNSET_TYPE) || (find_builtin(temp->cmd) == CD_TYPE )))
 		temp = temp->next;
 	return (temp);
 }

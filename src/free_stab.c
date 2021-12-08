@@ -68,7 +68,8 @@ void	free_pipe(t_pipe *comm)
 
 int	free_uniqq_norme(t_uniqq *uniqq)
 {
-	free_str(uniqq->path);
+	if (uniqq->path)
+		free_str(uniqq->path);
 	free(uniqq);
 	g_retval = 127;
 	return (127);
