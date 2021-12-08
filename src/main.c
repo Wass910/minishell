@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/08 09:46:10 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/08 16:34:48 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,48 +72,14 @@ int	main(int argc, char **argv, char **envp)
 	t_list				*a_list;
 	t_list				*b_list;
 	char				*line;
-	int					i;
 
 	argv = NULL;
-	if (argc != 1)
-	{
-		printf("Too much arguments, usage : './minishell'.\n");
+	if (check_argc(argc))
 		exit(EXIT_FAILURE);
-	}
 	make_list(&a_list, envp);
 	make_list(&b_list, envp);
 	signal(SIGQUIT, inthandler);
 	signal(SIGINT, inthandler);
 	while (1)
-	{
-		if (g_retval != 200)
-		{
-			rl_replace_line("", 0);
-			line = readline("$> ");
-		}
-		if (g_retval == 200)
-		{
-			rl_replace_line("", 0);
-			line = readline("");
-			g_retval = 1;
-		}
-		if (line == NULL)
-		{
-			free_list(&a_list);
-			free_list(&b_list);
-			printf("exit\n");
-			return (0);
-		}
-		if (line[0])
-		{
-			add_history(line);
-			if (!only_space(line) && !unclosed_quotes2(line))
-				i = parcing(line, &a_list, &b_list);
-		}
-		if (line)
-			free(line);
-	}
-	free(&a_list);
-	free(&b_list);
-	return (0);
+		main_bin(line, &a_list, &b_list);
 }

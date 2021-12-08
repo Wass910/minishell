@@ -6,16 +6,16 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:04 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/08 10:40:00 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/08 16:18:40 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char *ft_strcpy(char *src)
+char	*ft_strcpy(char *src)
 {
-	int i;
-	char *dest;
+	int		i;
+	char	*dest;
 
 	i = 0;
 	while (src[i] != '\0')

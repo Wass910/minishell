@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:07 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/08 10:04:38 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/08 16:50:27 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,12 @@ void	next_part(t_list *temp, int j, char *s, char *str)
 	}
 	if ((!is_same(s, str) || !is_same(str, s)) && j == 1)
 	{
-		del = temp->next;
-		temp->next = temp->next->next;
-		free(del);
-		free(str);
-		free(s);
+		replace_n_free(del, s, str, temp);
 		return ;
 	}
 	if ((!is_same(s, str) || !is_same(str, s)) && is_valid(str))
 	{
-		del = temp->next;
-		temp->next = temp->next->next;
-		free(del);
-		free(str);
-		free(s);
+		replace_n_free2(del, s, str, temp);
 		return ;
 	}
 	free(str);
@@ -74,20 +66,12 @@ void	already_in(t_list **a_list, char *str, int j)
 	s = make_test(s);
 	if (!is_same(s, str) && j == 1)
 	{
-		temp = (*a_list);
-		(*a_list) = (*a_list)->next;
-		free(temp);
-		free(s);
-		free(str);
+		replace_n_free3(temp, s, str, a_list);
 		return ;
 	}
 	if (!is_same(s, str) && is_valid(str))
 	{
-		temp = (*a_list);
-		(*a_list) = (*a_list)->next;
-		free(temp);
-		free(s);
-		free(str);
+		replace_n_free3(temp, s, str, a_list);
 		return ;
 	}
 	free(s);

@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:22 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/08 10:47:51 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/08 16:22:40 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,7 @@ char	*ft_strcat_cote(char *dest, char *src)
 	scat->tmp[scat->i] = '"';
 	scat->i++;
 	while (src && src[scat->j] != '\0')
-	{
-		scat->tmp[scat->i] = src[scat->j];
-		scat->i++;
-		scat->j++;
-	}
+		cat_while(scat, src);
 	scat->tmp[scat->i] = '\0';
 	retstr = ft_strdup(scat->tmp);
 	free(scat->tmp);
