@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:02 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:03 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/08 11:18:44 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ char	*to_print(char *s)
 	else
 	{
 		sret = ft_strcat_cote(s, "\0");
+		free(s);
 		return (sret);
 	}
 }
@@ -87,12 +88,14 @@ void	add_line(t_list **b_list, char **cmd, int j)
 	char	*str;
 
 	i = 0;
-	str = to_print(cmd[j]);
+	str = to_print(ft_strdup(cmd[j]));
 	if (!is_alphanum(str))
 	{
 		printf("export: '%s': not a valid identifier\n", str);
+		free(str);
 		return ;
 	}
-	flstadd_back(b_list, flstnew(ft_strcat("declare -x", str)));
+	flstadd_back(b_list, flstnew2(ft_strcat("declare -x", str)));
 	sort_env(b_list);
+	free(str);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup_bin.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:00 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:01 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/08 11:17:47 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ char	*build_sret(char *sret, char *s)
 	temp[2] = '\0';
 	sret = ft_strcat_ns(s, temp);
 	free(temp);
+	free(s);
 	return (sret);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:22 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:23 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/08 10:47:51 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ t_cat	*cat_setup(char *dest, char *src)
 char	*ft_strcat_cote(char *dest, char *src)
 {
 	t_cat	*scat;
+	char	*retstr;
 
 	scat = cat_setup(dest, src);
 	while (dest && dest[scat->k] != '\0')
@@ -125,5 +126,8 @@ char	*ft_strcat_cote(char *dest, char *src)
 		scat->j++;
 	}
 	scat->tmp[scat->i] = '\0';
-	return (scat->tmp);
+	retstr = ft_strdup(scat->tmp);
+	free(scat->tmp);
+	free(scat);
+	return (retstr);
 }

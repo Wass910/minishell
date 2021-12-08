@@ -6,7 +6,7 @@
 /*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/08 09:44:02 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/08 10:46:13 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ int		build_pwd(void);
 int		build_export(char **cmd, t_list **a_list, t_list **b_list);
 int		build_unset(char **cmd, t_list **a_list, t_list **b_list, int type);
 int		build_env(t_list **a_list);
-int		build_exit(char **cmd);
+int		build_exit(char **cmd, t_list **a_list, t_list **b_list);
 
 // EXECUTION
 void	exec_cmd(char *s, t_comm comm);
@@ -430,5 +430,5 @@ void	delete_pair_norm2(char *s, t_del *del, t_list **a_list);
 void	delete_pair_norm_while(char *s, t_del *del, t_list **a_list);
 t_del	*delete_pair_setup_del(t_del *del);
 void	free_list(t_list **a_list);
-
+t_list	*flstnew2(void *content);
 #endif

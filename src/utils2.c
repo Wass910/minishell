@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:12 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 10:39:23 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/08 11:18:49 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,17 @@
 char	*to_print2(char *s)
 {
 	int		i;
-	char	*temp;
 
 	i = 0;
-	temp = malloc(sizeof(char) * 100);
-	if (!temp)
-		return (NULL);
 	while (s[i] != '=' && s[i] != '\0')
 		i++;
 	if (s[i] == '\0')
 	{
+		free(s);
 		return (NULL);
 	}
 	else
-	{
-		free(temp);
 		return (s);
-	}
 }
 
 void	add_line2(t_list **b_list, char **cmd, int j)
@@ -40,17 +34,19 @@ void	add_line2(t_list **b_list, char **cmd, int j)
 	char	*str;
 
 	i = 0;
-	str = to_print2(cmd[j]);
+	str = to_print2(ft_strdup(cmd[j]));
 	if (str)
 	{
 		if (!is_alphanum(str))
 		{
 			printf("export: '%s': not a valid identifier\n", str);
+			free(str);
 			return ;
 		}
 	}
 	if (str)
 		flstadd_back(b_list, flstnew(str));
+	free(str);
 }
 
 char	*getenv2(char *s, t_list **a_list)
@@ -96,7 +92,7 @@ char	*make_test(char *s)
 	i = 0;
 	str = malloc(sizeof(char) * 100);
 	if (!str)
-		return (NULL);
+		exit(EXIT_FAILURE);
 	while (s[i] != '=' && s[i])
 	{
 		str[i] = s[i];

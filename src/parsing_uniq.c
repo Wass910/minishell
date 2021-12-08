@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_uniq.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:55 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 13:45:04 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/08 10:46:40 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	parcing(char *all_cmd, t_list **a_list, t_list **b_list)
 		ft_redir_temp(comm.redir_temp, comm.redir_double_input);
 	free_str(comm.redir_temp);
 	norme_parcing2(comm, a_list, b_list);
-	free_str(comm.cmd);
 	free_str(comm.redir);
+	free_str(comm.cmd);
 	return (1);
 }
