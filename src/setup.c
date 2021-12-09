@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 11:35:57 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 22:28:52 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,12 @@ int	uniqq_setup(t_uniqq **uniqq, t_comm comm, t_list **a_list, t_list **b_list)
 	(*uniqq)->k = 0;
 	(*uniqq)->j = 0;
 	(*uniqq)->ret = 0;
-	if (comm.error_parse_red == 1)
-	{
-		printf("bash: syntax error near unexpected token\n");
-		g_line.retval = 1;
-		return (1);
-	}
+	//if (comm.error_parse_red == 1)
+	//{
+	//	printf("bash: syntax error near unexpected token\n");
+	//	g_line.retval = 1;
+	//	return (1);
+	//}
 	if (!comm.redir[0] && comm.cmd[0] && if_builtin(comm.cmd) == 0)
 	{
 		free(*uniqq);

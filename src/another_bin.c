@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   another_bin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 20:53:39 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 22:56:32 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,11 @@ void	main_bin(char *line, t_list **a_list, t_list **b_list)
 {
 	line = ctrl_c();;
 	if (line)
+	{
+		if (g_line.str)
+			free(g_line.str);
 		g_line.str = ft_strdup(line);
+	}
 	if (line == NULL)
 		ctrld_fill(a_list, b_list);
 	if (line[0])

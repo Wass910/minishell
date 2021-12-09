@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:35 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 17:06:39 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 22:55:54 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	build_exit(char **cmd, t_list **a_list, t_list **b_list)
 
 	free_list(a_list);
 	free_list(b_list);
+	free(g_line.str);
 	if (cmd[1])
 	{
 		i = ft_atoi(cmd[1]);
