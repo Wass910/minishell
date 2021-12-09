@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe_norm.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 18:18:52 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/07 18:50:50 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 10:20:14 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ t_pipe	*exec_pipe_norm_err(t_pipe *temp)
 		temp = temp->next;
 	}	
 	if (!temp || (!temp->next && (verif_the_builtin(temp->cmd) == 0)))
+	{	
 		pipex_last(temp, 0);
+		return (temp);
+	}
 	if (!temp->next && ((find_builtin(temp->cmd) == UNSET_TYPE) || (find_builtin(temp->cmd) == CD_TYPE )))
 		temp = temp->next;
 	return (temp);
