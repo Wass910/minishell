@@ -11,7 +11,7 @@ TESTCOL = \033[1;35m
 
 UNAME = $(shell uname -s)
 
-CFLAGS = -g3 -fsanitize=address 
+CFLAGS = -g3 -fsanitize=address -Wall -Wextra -Werror
 RM = rm -f
 CC1 = clang -lreadline
 CC2 = clang
@@ -33,6 +33,7 @@ parsing_uniq.c build_echo.c build_pwd.c build_unset.c unset_utils.c is_smtg.c gl
 glitch_bin2.c parse_bin.c uniq_bin.c utils_bin.c setup_bin.c pipex_bin.c fill_cbin.c fill_cbin2.c\
 fill_cbin3.c delete_bin.c delete_bin2.c setup.c parsing_uniq_norm.c minishell_norm.c pipex_norm.c\
 main.c exec_pipe_norm.c exec_pipe.c delete_pair_norme.c free_list.c another_bin.c another_bin2.c\
+delete_bin3.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 

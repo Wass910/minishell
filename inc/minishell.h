@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 17:54:28 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 19:56:11 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -446,4 +446,5 @@ void	replace_n_free(t_list *del, char *s, char *str, t_list *temp);
 void	replace_n_free2(t_list *del, char *s, char *str, t_list *temp);
 void	replace_n_free3(t_list *temp, char *s, char *str, t_list **a_list);
 void	inthandler(int sig);
+char	*fill_doll_norm(t_doll *doll);
 #endif

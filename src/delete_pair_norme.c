@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 20:59:15 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/07 21:00:13 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 19:44:18 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ void	delete_pair_norm4(char *s, t_del *del, t_list **a_list)
 void	delete_pair_norm2(char *s, t_del *del, t_list **a_list)
 {
 	del->k++;
-	del->temp2[0] = after_env(&del->temp[del->k]);
+	if (&del->temp[del->k])
+		del->temp2[0] = after_env(&del->temp[del->k]);
 	del->temp2[1] = getenv2(del->temp2[0], a_list);
 	if (!del->temp2[1])
 	{
