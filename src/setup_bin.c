@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:00 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:01 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:23:45 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ char	*build_sret(char *sret, char *s)
 	temp[2] = '\0';
 	sret = ft_strcat_ns(s, temp);
 	free(temp);
+	free(s);
 	return (sret);
 }

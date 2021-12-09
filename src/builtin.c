@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:02 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:05:07 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:22:10 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	builtin(char **cmd, t_list **a_list, t_list **b_list)
 	else if (type == ENV_TYPE)
 		type = build_env(a_list);
 	else if (type == EXIT_TYPE)
-		type = build_exit(cmd);
+		type = build_exit(cmd, a_list, b_list);
 	if (type)
 	{
 		g_retval = type;

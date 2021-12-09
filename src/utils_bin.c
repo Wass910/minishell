@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_bin.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:07 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 14:05:04 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 10:24:14 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,20 @@ void	next_part(t_list *temp, int j, char *s, char *str)
 		if (!is_same(s, str) || !is_same(str, s))
 			break ;
 		temp = temp->next;
+		if (temp->next)
+			free(s);
 	}
 	if ((!is_same(s, str) || !is_same(str, s)) && j == 1)
 	{
-		del = temp->next;
-		temp->next = temp->next->next;
-		free_part(del, s);
+		replace_n_free(del, s, str, temp);
 		return ;
 	}
 	if ((!is_same(s, str) || !is_same(str, s)) && is_valid(str))
 	{
-		del = temp->next;
-		temp->next = temp->next->next;
-		free_part(del, s);
+		replace_n_free2(del, s, str, temp);
 		return ;
 	}
+	free(str);
 	free(s);
 }
 
@@ -67,18 +66,14 @@ void	already_in(t_list **a_list, char *str, int j)
 	s = make_test(s);
 	if (!is_same(s, str) && j == 1)
 	{
-		temp = (*a_list);
-		(*a_list) = (*a_list)->next;
-		free(temp);
+		replace_n_free3(temp, s, str, a_list);
 		return ;
 	}
 	if (!is_same(s, str) && is_valid(str))
 	{
-		temp = (*a_list);
-		(*a_list) = (*a_list)->next;
-		free(temp);
+		replace_n_free3(temp, s, str, a_list);
 		return ;
 	}
-	next_part(temp, j, s, str);
 	free(s);
+	next_part(temp, j, s, str);
 }

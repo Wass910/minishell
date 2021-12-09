@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:35 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 09:59:57 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:22:30 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,17 @@ int	is_same(char *s1, char *s2)
 
 	i = 0;
 	j = 0;
-	if (s1 && s2)
+	while (s1[i] && s2[j])
 	{
-		while (s1[i] && s2[j])
-		{
-			if (s1[i] != s2[j])
-				break ;
-			i++;
-			j++;
-		}
-		if (s1[i] == '=' && s2[j] == '\0')
-			return (0);
-		if (s1[i] == '\0' && s2[j] == '\0')
-			return (0);
+		if (s1[i] != s2[j])
+			break ;
+		i++;
+		j++;
 	}
+	if (s1[i] == '=' && s2[j] == '\0')
+		return (0);
+	if (s1[i] == '\0' && s2[j] == '\0')
+		return (0);
 	return (1);
 }
 
@@ -50,7 +47,7 @@ int	build_env(t_list **a_list)
 	return (0);
 }
 
-int	build_exit(char **cmd)
+int	build_exit(char **cmd, t_list **a_list, t_list **b_list)
 {
 	int	i;
 

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 18:18:52 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 10:20:14 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:29:06 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ t_pipe	*exec_pipe_norm_err(t_pipe *temp)
 		pipex_last(temp, 0);
 		return (temp);
 	}
-	if (!temp->next && ((find_builtin(temp->cmd) == UNSET_TYPE) || (find_builtin(temp->cmd) == CD_TYPE )))
-		temp = temp->next;
 	return (temp);
 }
 

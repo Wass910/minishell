@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 18:47:24 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/07 18:49:08 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 10:30:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 		}
 		printf("  ---------------------- \n");
 		i = 0;
-		if (exec.temp->error_syn_red == 1
-			|| (!exec.temp->path && (find_builtin(exec.temp->cmd) != EXPORT_TYPE)))
+		if (exec.temp->error_syn_red == 1 || (!exec.temp->path
+				&& (find_builtin(exec.temp->cmd) != EXPORT_TYPE)))
 		{
 			exec.error = 1;
 			exec.temp = exec_pipe_norm_err(exec.temp);

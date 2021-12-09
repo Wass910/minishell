@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/08 09:44:02 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/09 10:21:41 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ int		build_pwd(void);
 int		build_export(char **cmd, t_list **a_list, t_list **b_list);
 int		build_unset(char **cmd, t_list **a_list, t_list **b_list, int type);
 int		build_env(t_list **a_list);
-int		build_exit(char **cmd);
+int		build_exit(char **cmd, t_list **a_list, t_list **b_list);
 
 // EXECUTION
 void	exec_cmd(char *s, t_comm comm);
@@ -402,27 +402,27 @@ t_comm	comm_setup(t_comm comm);
 int		free_uniqq_norme(t_uniqq *uniqq);
 char	*fill_s(char *s, int j, t_list *temp);
 t_comm	setup_comm(t_comm comm);
-int	verif_pipe(char *str);
-int	only_in_quotes(char *s);
+int		verif_pipe(char *str);
+int		only_in_quotes(char *s);
 void	norme_parcing2(t_comm comm, t_list **a_list, t_list **b_list);
-int	norme_parcing(t_comm comm);
-int	go_pipe_norm(char *all_cmd, int i);
-int	error_synthax_red(t_pipe *comm_pip);
+int		norme_parcing(t_comm comm);
+int		go_pipe_norm(char *all_cmd, int i);
+int		error_synthax_red(t_pipe *comm_pip);
 void	not_valid_comm(t_pipe *comm_pip);
-int	end_comm(t_pipe *parse_pip);
+int		end_comm(t_pipe *parse_pip);
 void	all_good_red(t_pipe *comm_pip);
 void	pipex_for_one(char *path, char **cmd);
 void	pipex_last(t_pipe *comm_pip, int i);
-int	unclosed_quotes2(char *s);
+int		unclosed_quotes2(char *s);
 void	exec_pipe_norm(t_pipe *temp, int error, t_list **a_list,
-	t_list **b_list);
+			t_list **b_list);
 t_pipe	*exec_pipe_norm_err(t_pipe *temp);
 void	exec_pipe_norm2(t_pipe *temp, int last_cmd,
-	t_list **a_list, t_list **b_list);
+			t_list **a_list, t_list **b_list);
 void	exec_pipe_norm3(t_pipe *temp, int last_cmd,
-	t_list **a_list, t_list **b_list);
+			t_list **a_list, t_list **b_list);
 void	exec_pipe_norm4(t_exec exec, t_list **a_list,
-	t_list **b_list);
+			t_list **b_list);
 void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list);
 void	delete_pair_norm(char *s, t_del *del);
 void	delete_pair_norm4(char *s, t_del *del, t_list **a_list);
@@ -430,5 +430,13 @@ void	delete_pair_norm2(char *s, t_del *del, t_list **a_list);
 void	delete_pair_norm_while(char *s, t_del *del, t_list **a_list);
 t_del	*delete_pair_setup_del(t_del *del);
 void	free_list(t_list **a_list);
-
+t_list	*flstnew2(void *content);
+void	cat_while(t_cat *scat, char *src);
+int		check_argc(int argc);
+void	ctrld_fill(t_list **a_list, t_list **b_list);
+void	free_list(t_list **a_list);
+void	main_bin(char *line, t_list **a_list, t_list **b_list);
+void	replace_n_free(t_list *del, char *s, char *str, t_list *temp);
+void	replace_n_free2(t_list *del, char *s, char *str, t_list *temp);
+void	replace_n_free3(t_list *temp, char *s, char *str, t_list **a_list);
 #endif
