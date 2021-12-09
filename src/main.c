@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/08 09:46:10 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/09 09:57:56 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,5 @@ int	main(int argc, char **argv, char **envp)
 		if (line)
 			free(line);
 	}
-	free(&a_list);
-	free(&b_list);
 	return (0);
 }
