@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:49 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 18:48:01 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 17:08:42 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ t_norm	norm_setup(t_norm norm, char *line, t_list **a_list)
 {
 	norm.last_cmd = 1;
 	norm.cmd = cmd_pipe_glitch(0, 0, line);
-	norm.i = 0;
 	norm.j = 0;
 	norm.red_double = double_in(line, a_list);
 	return (norm);
@@ -63,6 +62,7 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 	t_pipe	*comm_pip;
 	t_norm	norm;
 
+	norm.i = 0;
 	norm = norm_setup(norm, line, a_list);
 	while (norm.red_double && norm.red_double[norm.j])
 		norm.j++;
@@ -74,6 +74,7 @@ int	pipe_glitch(char *line, t_list **a_list, t_list **b_list)
 		norm.i++;
 	norm.nb_cmds = norm.i;
 	norm.i--;
+	comm_pip = NULL;
 	comm_pip = comm_pipe_setup(norm.cmd, norm.i, a_list, comm_pip);
 	all_good_red(comm_pip);
 	pipe_glitch_norme(comm_pip, a_list, b_list);

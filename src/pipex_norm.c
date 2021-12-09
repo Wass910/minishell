@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 13:55:45 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 10:59:36 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 17:11:57 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,9 @@ void	pipex_for_one(char *path, char **cmd)
 	}
 }
 
-void	pipex_last(t_pipe *comm_pip, int i)
+void	pipex_last(int i)
 {
 	int		pipefd[2];
-	pid_t	pid1;
-	int		status;
 
 	dup2(pipefd[1], 1);
 	dup2(pipefd[0], 0);

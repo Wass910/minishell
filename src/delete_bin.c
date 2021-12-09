@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   delete_bin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:04:35 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 11:37:56 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 17:11:27 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ void	del_if3(t_del *del, char *s, t_list **a_list)
 {
 	char	*temp;
 	char	*temp2;
-	int		j;
 
 	temp = after_env(&s[del->i]);
 	temp2 = getenv2(temp, a_list);

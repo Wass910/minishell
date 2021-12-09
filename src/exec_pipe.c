@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 18:47:24 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 11:30:34 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 17:13:09 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ t_exec	exec_setup(t_exec exec, t_pipe *comm_pip)
 {
 	exec.temp = comm_pip;
 	exec.last_cmd = 1;
-	exec.error = 0;
 	return (exec);
 }
 
@@ -24,6 +23,7 @@ void	exec_pipe(t_pipe *comm_pip, t_list **a_list, t_list **b_list)
 {
 	t_exec	exec;
 
+	exec.error = 0;
 	exec = exec_setup(exec, comm_pip);
 	while (exec.temp)
 	{

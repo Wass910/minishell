@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 16:51:33 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 18:02:48 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,31 +46,26 @@ void	inthandler(int sig)
 	}
 }
 
-char	*ctrl_c_verif(char *line)
+
+void	main_bin(char *line, t_list **a_list, t_list **b_list)
 {
-	if (line && g_line.str && ((ft_strncmp(g_line.str, "wc", 2) == 0
+	if (g_line.str && ((ft_strncmp(g_line.str, "wc", 2) == 0
 				&& ft_strlen(g_line.str) == 2)
 			|| (ft_strncmp(g_line.str, "cat", 3) == 0
 				&& ft_strlen(g_line.str) == 3)
 			|| (ft_strncmp(g_line.str, "grep", 4) == 0)
 			&& ft_strlen(g_line.str) != 4))
 	{
-		g_line.tour++;
 		rl_replace_line("", 0);
 		line = readline("");
 		g_line.str[1] = '\0';
+		g_line.tour++;
 	}
 	else
 	{	
 		line = readline("$> ");
 		g_line.tour = 0;
 	}
-	return (line);
-}
-
-void	main_bin(char *line, t_list **a_list, t_list **b_list)
-{
-	line = ctrl_c_verif(line);
 	if (g_line.str)
 		free(g_line.str);
 	if (line)

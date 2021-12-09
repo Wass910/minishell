@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 15:26:11 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 17:54:28 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@
 # define ERROR_RED 1
 
 typedef struct s_line{
-	int		retval;
-	char	*str;
-	int		tour;
+	int				retval;
+	char			*str;
+	int				tour;
 }				t_line;
 
 extern t_line	g_line;
@@ -418,7 +418,7 @@ void	not_valid_comm(t_pipe *comm_pip);
 int		end_comm(t_pipe *parse_pip);
 void	all_good_red(t_pipe *comm_pip);
 void	pipex_for_one(char *path, char **cmd);
-void	pipex_last(t_pipe *comm_pip, int i);
+void	pipex_last(int i);
 int		unclosed_quotes2(char *s);
 void	exec_pipe_norm(t_pipe *temp, int error, t_list **a_list,
 			t_list **b_list);

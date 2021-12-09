@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 16:51:43 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 17:56:13 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	main(int argc, char **argv, char **envp)
 	char				*str;
 
 	g_line.retval = 0;
-	g_line.tour = 0;
+	str = NULL;
 	argv = NULL;
 	if (check_argc(argc))
 		exit(EXIT_FAILURE);

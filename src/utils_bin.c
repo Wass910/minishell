@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:07 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 10:24:14 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 17:11:13 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	next_part(t_list *temp, int j, char *s, char *str)
 {
 	t_list	*del;
 
+	del = NULL;
 	while (temp->next)
 	{
 		s = setup_s(s, temp, j);
@@ -61,6 +62,7 @@ void	already_in(t_list **a_list, char *str, int j)
 	char	*s;
 
 	temp = (*a_list);
+	s = NULL;
 	str = make_test(str);
 	s = fill_s(s, j, temp);
 	s = make_test(s);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:54 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 21:00:08 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 17:09:14 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ char	*ft_split_command_quote(char **str)
 	char	*cmd;
 	int		i;
 	int		j;
-	int		count;
 	char	*temp;
 
 	j = 0;
