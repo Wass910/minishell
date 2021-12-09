@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   uniq_comm.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:05 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 12:18:03 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	reflechir(t_uniq *uniq, char *str, t_comm comm)
 	{
 		if (comm.cmd[0])
 			printf("%s: command not found\n", comm.cmd[0]);
-		g_retval = 1;
+		g_line.retval = 1;
 		return ;
 	}
 	else
@@ -58,7 +58,7 @@ void	reflechir(t_uniq *uniq, char *str, t_comm comm)
 		{
 			waitpid(uniq->k, &uniq->status, 0);
 			uniq->k = WEXITSTATUS(uniq->status);
-			g_retval = uniq->k;
+			g_line.retval = uniq->k;
 		}
 	}
 }
@@ -110,8 +110,8 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 		return (fill_ret(uniqq, comm, a_list, b_list));
 	else
 		uniqq_exec(uniqq, comm);
-	if (g_retval != 200)
-		g_retval = uniqq->k;
+	if (g_line.retval != 200)
+		g_line.retval = uniqq->k;
 	j = uniqq->k;
 	free(uniqq->str);
 	free(uniqq);

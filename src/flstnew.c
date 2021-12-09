@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:04 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 10:49:22 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 17:07:11 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ char	*ft_strcpy(char *src)
 	char	*dest;
 
 	i = 0;
+	dest = NULL;
 	while (src[i] != '\0')
 	{
 		dest[i] = src[i];

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:58 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	pipex_read(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list)
 		else
 			dup2(1, 0);
 		waitpid(pid1, &status, 0);
-		g_retval = WEXITSTATUS(status);
+		g_line.retval = WEXITSTATUS(status);
 	}
 	else
 	{
@@ -58,7 +58,7 @@ void	pipex(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list)
 		if (i == 0)
 			dup2(1, 0);
 		waitpid(pid1, &status, 0);
-		g_retval = WEXITSTATUS(status);
+		g_line.retval = WEXITSTATUS(status);
 	}
 	else
 	{
@@ -87,7 +87,7 @@ void	pipex_write_read(t_pipe *comm_pip,
 		else
 			dup2(1, 0);
 		waitpid(pid1, &status, 0);
-		g_retval = WEXITSTATUS(status);
+		g_line.retval = WEXITSTATUS(status);
 	}
 	else
 		dup_write(comm_pip, a_list, b_list, pipefd);
@@ -112,7 +112,7 @@ void	pipex_write(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list)
 		else
 			dup2(1, 0);
 		waitpid(pid1, &status, 0);
-		g_retval = WEXITSTATUS(status);
+		g_line.retval = WEXITSTATUS(status);
 	}
 	else
 		dup_write(comm_pip, a_list, b_list, pipefd);

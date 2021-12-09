@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   uniq_bin.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:04 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 12:32:41 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,6 @@ void	uniqq_exec(t_uniqq *uniqq, t_comm comm)
 
 	free_str(uniqq->path);
 	l = is_loop(comm.cmd[0]);
-	if ((!comm.cmd[1] && ((l[0] == 'w' && l[1] == 'c' && !l[2])
-				|| (l[0] == 'c' && l[1] == 'a' && l[2] == 't' && !l[3])))
-		|| (comm.cmd[1] && l[0] == 'g' && l[1] == 'r'
-			&& l[2] == 'e' && l[3] == 'p' && !l[4]))
-		g_retval = 200;
 	uniqq->k = fork();
 	if (uniqq->k == 0)
 	{
@@ -63,7 +58,7 @@ int	fill_ret(t_uniqq *uniqq, t_comm comm, t_list **a_list, t_list **b_list)
 	int	j;
 
 	uniqq->k = red_uniq_comm(comm, uniqq->str, a_list, b_list);
-	g_retval = uniqq->k;
+	g_line.retval = uniqq->k;
 	free_str(uniqq->path);
 	uniqq->k = j;
 	free(uniqq->str);
@@ -95,7 +90,7 @@ int	fill_if(t_uniqq *uniqq, t_comm comm)
 		{
 			if (open_file(comm.redir[uniqq->j]) == -1)
 			{
-				g_retval = 1;
+				g_line.retval = 1;
 				free_str(uniqq->path);
 				free(uniqq);
 				return (-1);
@@ -105,7 +100,7 @@ int	fill_if(t_uniqq *uniqq, t_comm comm)
 	}
 	if (comm.cmd[0])
 		printf("%s: command not found\n", comm.cmd[0]);
-	g_retval = 127;
+	g_line.retval = 127;
 	free_str(uniqq->path);
 	free(uniqq);
 	return (127);

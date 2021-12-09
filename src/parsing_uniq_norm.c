@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_uniq_norm.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 13:43:49 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/07 13:48:12 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	go_pipe_norm(char *all_cmd, int i)
 	if (all_cmd[i] == '|')
 	{
 		printf("Minishell: syntax error near unexpected token `|'.\n");
-		g_retval = 1;
+		g_line.retval = 1;
 		return (1);
 	}
 	return (0);
@@ -30,7 +30,7 @@ int	norme_parcing(t_comm comm)
 		printf("Minishell: syntax error near unexpected token\n");
 		free_str(comm.redir);
 		free_str(comm.cmd);
-		g_retval = -1;
+		g_line.retval = -1;
 		return (1);
 	}
 	return (0);

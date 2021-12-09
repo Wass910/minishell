@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   another_bin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/08 16:36:50 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/09 16:51:33 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,29 +27,54 @@ void	ctrld_fill(t_list **a_list, t_list **b_list)
 	exit(0);
 }
 
-int	check_argc(int argc)
+void	inthandler(int sig)
 {
-	if (argc != 1)
+	if (sig == 2)
 	{
-		printf("Too much arguments, usage : './minishell'.\n");
-		return (1);
+		rl_replace_line("", 0);
+		printf("\n");
+		rl_on_new_line();
+		rl_redisplay();
+		if (g_line.str && ((ft_strncmp(g_line.str, "wc", 2) == 0
+					&& ft_strlen(g_line.str) == 2)
+				|| (ft_strncmp(g_line.str, "cat", 3) == 0
+					&& ft_strlen(g_line.str) == 3)
+				|| (ft_strncmp(g_line.str, "grep", 4) == 0)
+				&& ft_strlen(g_line.str) == 4) && g_line.tour > 0)
+			printf("$> ");
+		g_line.retval = 130;
 	}
-	return (0);
+}
+
+char	*ctrl_c_verif(char *line)
+{
+	if (line && g_line.str && ((ft_strncmp(g_line.str, "wc", 2) == 0
+				&& ft_strlen(g_line.str) == 2)
+			|| (ft_strncmp(g_line.str, "cat", 3) == 0
+				&& ft_strlen(g_line.str) == 3)
+			|| (ft_strncmp(g_line.str, "grep", 4) == 0)
+			&& ft_strlen(g_line.str) != 4))
+	{
+		g_line.tour++;
+		rl_replace_line("", 0);
+		line = readline("");
+		g_line.str[1] = '\0';
+	}
+	else
+	{	
+		line = readline("$> ");
+		g_line.tour = 0;
+	}
+	return (line);
 }
 
 void	main_bin(char *line, t_list **a_list, t_list **b_list)
 {
-	if (g_retval != 200)
-	{
-		rl_replace_line("", 0);
-		line = readline("$> ");
-	}
-	if (g_retval == 200)
-	{
-		rl_replace_line("", 0);
-		line = readline("");
-		g_retval = 1;
-	}
+	line = ctrl_c_verif(line);
+	if (g_line.str)
+		free(g_line.str);
+	if (line)
+		g_line.str = ft_strdup(line);
 	if (line == NULL)
 		ctrld_fill(a_list, b_list);
 	if (line[0])

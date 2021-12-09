@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   build_unset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:01 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 11:37:40 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 16:53:00 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,14 @@ t_unset	unset_loop_setup(t_unset unset)
 	return (unset);
 }
 
+void	fill_this(t_unset unset)
+{
+	unset.del = unset.temp->next;
+	unset.temp->next = unset.temp->next->next;
+	free(unset.del->content);
+	free(unset.del);
+}
+
 int	unset_loop(t_unset unset, t_list **a_list, t_list **b_list, char **cmd)
 {
 	while (cmd[unset.i])
@@ -53,10 +61,7 @@ int	unset_loop(t_unset unset, t_list **a_list, t_list **b_list, char **cmd)
 		}
 		unset = unset_loop_setup(unset);
 		if (is_same(unset.s, unset.str) == 0)
-		{
-			unset.del = unset.temp->next;
-			unset.temp->next = unset.temp->next->next;
-		}
+			fill_this(unset);
 		unset.i++;
 		unset.str = cmd[unset.i];
 	}

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 11:35:57 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 10:23:52 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,13 @@ int	uniqq_setup(t_uniqq **uniqq, t_comm comm, t_list **a_list, t_list **b_list)
 	if (comm.error_parse_red == 1)
 	{
 		printf("bash: syntax error near unexpected token\n");
-		g_retval = 1;
+		g_line.retval = 1;
 		return (1);
 	}
 	if (!comm.redir[0] && comm.cmd[0] && if_builtin(comm.cmd) == 0)
 	{
 		free(*uniqq);
-		g_retval = builtin(comm.cmd, a_list, b_list);
+		g_line.retval = builtin(comm.cmd, a_list, b_list);
 		return (1);
 	}
 	(*uniqq)->path = ft_split(getenv2("PATH", a_list), ':');

@@ -6,29 +6,11 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:22 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 10:23:19 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 17:05:08 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-int	ft_count_str(char *s1, char *s2)
-{
-	int	i;
-	int	e;
-
-	i = 0;
-	e = 0;
-	while (s1 != NULL && s1[i] != '\0')
-		i++;
-	while (s2 && s2[e] != '\0')
-	{
-		e++;
-		i++;
-	}
-	i = i + 2;
-	return (i);
-}
 
 char	*ft_strcat(char *dest, char *src)
 {
@@ -100,23 +82,30 @@ t_cat	*cat_setup(char *dest, char *src)
 	return (scat);
 }
 
+int	fill_other(t_cat *scat, int count, char *dest)
+{
+	if (scat->k >= 1 && dest[scat->k - 1] == '=' && count == 0)
+	{
+		scat->tmp[scat->i] = '"';
+		scat->i++;
+		count++;
+	}
+	scat->tmp[scat->i] = dest[scat->k];
+	scat->i++;
+	scat->k++;
+	return (count);
+}
+
 char	*ft_strcat_cote(char *dest, char *src)
 {
 	t_cat	*scat;
 	char	*retstr;
+	int		count;
 
+	count = 0;
 	scat = cat_setup(dest, src);
 	while (dest && dest[scat->k] != '\0')
-	{
-		if (scat->k >= 1 && dest[scat->k - 1] == '=')
-		{
-			scat->tmp[scat->i] = '"';
-			scat->i++;
-		}
-		scat->tmp[scat->i] = dest[scat->k];
-		scat->i++;
-		scat->k++;
-	}
+		count = fill_other(scat, count, dest);
 	scat->tmp[scat->i] = '"';
 	scat->i++;
 	while (src && src[scat->j] != '\0')

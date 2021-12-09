@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:57:17 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 11:15:36 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 16:28:31 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*ft_strdup_free(char *s1)
 	if (!(cpy))
 		return (NULL);
 	i = 0;
-	while (s1[i])
+	while (s1 && s1[i])
 	{
 		cpy[i] = s1[i];
 		i++;

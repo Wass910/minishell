@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:35 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 10:22:30 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 17:06:39 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ int	build_exit(char **cmd, t_list **a_list, t_list **b_list)
 {
 	int	i;
 
+	free_list(a_list);
+	free_list(b_list);
 	if (cmd[1])
 	{
 		i = ft_atoi(cmd[1]);

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:59 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:07:00 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	rw_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
 	{
 		waitpid(k, &status, 0);
 		k = WEXITSTATUS(status);
-		g_retval = k;
+		g_line.retval = k;
 	}
 	return (k);
 }
@@ -61,7 +61,7 @@ int	r_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
 	{
 		waitpid(k, &status, 0);
 		k = WEXITSTATUS(status);
-		g_retval = k;
+		g_line.retval = k;
 	}
 	return (k);
 }
@@ -90,7 +90,7 @@ int	w_redirection(t_comm comm, t_list **a_list, t_list **b_list, char *str)
 	{
 		waitpid(k, &status, 0);
 		k = WEXITSTATUS(status);
-		g_retval = k;
+		g_line.retval = k;
 	}
 	return (k);
 }

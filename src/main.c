@@ -6,13 +6,13 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 10:23:28 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 16:51:43 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	g_retval = 0;
+t_line	g_line;
 
 int	only_space(char *s)
 {
@@ -56,23 +56,24 @@ int	unclosed_quotes2(char *s)
 	return (0);
 }
 
-void	inthandler(int sig)
+int	check_argc(int argc)
 {
-	if (sig == 2)
+	if (argc != 1)
 	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("\0", 0);
-		rl_redisplay();
+		printf("Too much arguments, usage : './minishell'.\n");
+		return (1);
 	}
+	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_list				*a_list;
 	t_list				*b_list;
-	char				*line;
+	char				*str;
 
+	g_line.retval = 0;
+	g_line.tour = 0;
 	argv = NULL;
 	if (check_argc(argc))
 		exit(EXIT_FAILURE);
@@ -81,5 +82,5 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGQUIT, inthandler);
 	signal(SIGINT, inthandler);
 	while (1)
-		main_bin(line, &a_list, &b_list);
+		main_bin(str, &a_list, &b_list);
 }

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:04:57 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:04:58 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	cut_echo(char **cmd, int i, char *str)
 	{
 		if (is_returnvalue(cmd[i]))
 		{
-			str = ft_itoa(g_retval);
+			str = ft_itoa(g_line.retval);
 			write(1, str, ft_strlen(str));
 		}
 		else
@@ -45,7 +45,7 @@ void	cut_echo2(char **cmd, int i, char *str)
 	{
 		if (is_returnvalue(cmd[i]))
 		{
-			str = ft_itoa(g_retval);
+			str = ft_itoa(g_line.retval);
 			write(1, str, ft_strlen(str));
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:09 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 10:23:08 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,6 @@ int	free_uniqq_norme(t_uniqq *uniqq)
 	if (uniqq->path)
 		free_str(uniqq->path);
 	free(uniqq);
-	g_retval = 127;
+	g_line.retval = 127;
 	return (127);
 }

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 10:21:41 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 15:26:11 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,13 @@
 # define OUTFILE 1
 # define ERROR_RED 1
 
-extern int	g_retval;
+typedef struct s_line{
+	int		retval;
+	char	*str;
+	int		tour;
+}				t_line;
+
+extern t_line	g_line;
 
 typedef struct s_pipe
 {
@@ -435,8 +441,9 @@ void	cat_while(t_cat *scat, char *src);
 int		check_argc(int argc);
 void	ctrld_fill(t_list **a_list, t_list **b_list);
 void	free_list(t_list **a_list);
-void	main_bin(char *line, t_list **a_list, t_list **b_list);
+void	main_bin(char *str, t_list **a_list, t_list **b_list);
 void	replace_n_free(t_list *del, char *s, char *str, t_list *temp);
 void	replace_n_free2(t_list *del, char *s, char *str, t_list *temp);
 void	replace_n_free3(t_list *temp, char *s, char *str, t_list **a_list);
+void	inthandler(int sig);
 #endif

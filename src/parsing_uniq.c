@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:55 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 11:06:32 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	go_pipe(char *all_cmd, t_list **a_list, t_list **b_list)
 			pipe_glitch(all_cmd, a_list, b_list);
 		else
 			printf("Minishell: syntax error near unexpected token `|'.\n");
-		g_retval = 1;
+		g_line.retval = 1;
 		return (1);
 	}
 	return (0);
@@ -46,7 +46,6 @@ char	*cmd_parse(char *all_cmd, t_list **a_list)
 	cmd_new = split_glitch(all_cmd);
 	str = ft_split(cmd_new, ' ');
 	cmd_new = parse_quotes(str, a_list);
-	printf("|%s|\n", cmd_new);
 	return (cmd_new);
 }
 

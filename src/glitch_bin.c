@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:39 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/02 14:06:40 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 16:28:01 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	unclosed_quotes(char *s)
 int	char_alphanum2(char c)
 {
 	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
-		|| (c >= '0' && c <= '9'))
+		|| (c >= '0' && c <= '9') || c == '_')
 		return (1);
 	return (0);
 }
@@ -83,7 +83,7 @@ t_doll	*doll_setup(t_doll *doll)
 	doll->i = 0;
 	doll->j = 0;
 	doll->c = 0;
-	doll->str = malloc(sizeof(char) * 1000);
+	doll->str = malloc(sizeof(char) * 500);
 	if (!doll->str)
 		exit(EXIT_FAILURE);
 	return (doll);
