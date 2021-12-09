@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:02 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 10:24:01 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:50:36 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void	add_line(t_list **b_list, char **cmd, int j)
 {
 	int		i;
 	char	*str;
+	t_list	*tmep;
 
 	i = 0;
 	str = to_print(ft_strdup(cmd[j]));

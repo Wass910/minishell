@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:12 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 10:24:31 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:50:40 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	add_line2(t_list **b_list, char **cmd, int j)
 	}
 	if (str)
 		flstadd_back(b_list, flstnew(str));
-	free(str);
 }
 
 char	*getenv2(char *s, t_list **a_list)

@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 18:47:24 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 10:27:01 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:52:00 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	free_list(t_list **a_list)
 	{
 		temp = (*a_list);
 		(*a_list) = (*a_list)->next;
+		free(temp->content);
 		free(temp);
 	}
 	free(*a_list);

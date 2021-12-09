@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:04 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 10:22:56 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 10:49:22 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_list	*flstnew2(void *content)
 	new = malloc(sizeof(t_list));
 	if (!new)
 		return (NULL);
-	new->content = ft_strcpy(content);
+	new->content = ft_strdup(content);
 	free(content);
 	new->next = NULL;
 	return (new);

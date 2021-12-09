@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fill_cbin3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:53 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 11:36:54 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/09 11:28:16 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,16 @@ void	fill_elsepip3(t_pipe *comm, t_fill *fill)
 void	fill_elsepip4(t_pipe *comm, t_fill *fill, char *cmd)
 {
 	comm->cmd[fill->arg] = malloc(sizeof(char) * 400);
-	while (cmd[fill->i] && cmd[fill->i] != 32)
+	if (cmd[fill->i] != 32)
 	{
-		comm->cmd[fill->arg][fill->argindex] = cmd[fill->i];
-		fill->i++;
-		fill->argindex++;
+		while (cmd[fill->i] && cmd[fill->i] != 32)
+		{
+			comm->cmd[fill->arg][fill->argindex] = cmd[fill->i];
+			fill->i++;
+			fill->argindex++;
+		}
 	}
-	if (cmd[fill->i] && cmd[fill->i] == 32)
+	else
 		fill->i++;
 	comm->cmd[fill->arg][fill->argindex] = '\0';
 	fill->argindex = 0;
