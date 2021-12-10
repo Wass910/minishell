@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:09 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 11:33:12 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 11:48:24 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	make_list(t_list **a_list, char **envp)
 		i++;
 	}
 }
+
 char	*ft_strcat_free(char *dest, char *src)
 {
 	unsigned int	i;

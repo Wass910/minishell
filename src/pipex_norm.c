@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 13:55:45 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 17:11:57 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/10 15:22:03 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	pipex_last(int i)
 {
 	int		pipefd[2];
 
-	dup2(pipefd[1], 1);
 	dup2(pipefd[0], 0);
 	if (i == 0)
 		dup2(1, 0);

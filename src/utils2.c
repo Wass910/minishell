@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:12 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 11:42:04 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/10 11:48:02 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	add_line2(t_list **b_list, char **cmd, int j)
 	}
 	if (str && str[0])
 		flstadd_back(b_list, flstnew(str));
-	if(str && !str[0])
+	if (str && !str[0])
 		free(str);
 }
 
