@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/10 09:53:45 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 10:37:46 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ char	*ctrl_c(void)
 		g_line.tour++;
 		rl_replace_line("", 0);
 		return (readline(""));
+
 	}
 	else
 	{
@@ -74,7 +75,7 @@ char	*ctrl_c(void)
 
 void	main_bin(char *line, t_list **a_list, t_list **b_list)
 {
-	line = ctrl_c();;
+	line = ctrl_c();
 	if (line)
 	{
 		if (g_line.str)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   open_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:51 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/06 14:28:34 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/10 10:35:46 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ int	open_file2(char *file)
 		return (-1);
 	if (i == -1)
 	{
+		g_line.retval = 1;
 		printf("%s: %s\n", file, strerror(errno));
 		return (-1);
 	}
@@ -135,6 +136,7 @@ int	open_file(char *filename)
 		return (-1);
 	if (i == -1)
 	{
+		g_line.retval = 1;
 		str = strerror(errno);
 		filename++;
 		printf("%s: %s\n", filename, str);

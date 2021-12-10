@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:02 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/10 10:26:23 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,5 @@ int	builtin(char **cmd, t_list **a_list, t_list **b_list)
 		g_line.retval = type;
 		return (type);
 	}
-	g_line.retval = 0;
 	return (0);
 }
