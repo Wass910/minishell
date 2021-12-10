@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   another_bin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 22:56:32 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/10 09:53:45 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	main_bin(char *line, t_list **a_list, t_list **b_list)
 		add_history(line);
 		if (!only_space(line) && !unclosed_quotes2(line))
 			parcing(line, a_list, b_list);
-		g_line.retval = 0;
+
 	}
 	if (line)
 		free(line);

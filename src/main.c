@@ -6,13 +6,14 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 19:55:50 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 09:50:23 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 t_line	g_line;
+t_line	g_line;int retval = 0;
 
 int	only_space(char *s)
 {
@@ -72,7 +73,6 @@ int	main(int argc, char **argv, char **envp)
 	t_list				*b_list;
 	char				*str;
 
-	g_line.retval = 0;
 	str = NULL;
 	argv = NULL;
 	if (check_argc(argc))
