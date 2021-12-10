@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:12 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 23:18:36 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/10 11:42:04 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,18 @@
 char	*to_print2(char *s)
 {
 	int		i;
+	char	*sret;
 
 	i = 0;
+	if (s[i] == '=')
+	{
+		sret = malloc(sizeof(char) * 1);
+		if (!sret)
+			exit(EXIT_FAILURE);
+		sret[0] = '\0';
+		free(s);
+		return (sret);
+	}
 	while (s[i] != '=' && s[i] != '\0')
 		i++;
 	if (s[i] == '\0')
@@ -44,8 +54,10 @@ void	add_line2(t_list **b_list, char **cmd, int j)
 			return ;
 		}
 	}
-	if (str)
+	if (str && str[0])
 		flstadd_back(b_list, flstnew(str));
+	if(str && !str[0])
+		free(str);
 }
 
 char	*getenv2(char *s, t_list **a_list)

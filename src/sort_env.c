@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:02 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 23:18:30 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/10 11:41:21 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ char	*to_print(char *s)
 	sret = NULL;
 	if (s[i] == '=')
 	{
-		printf("export : << %s >> : invalid identifiant\n", s);
+		printf("export : << %s >> : invalid identifier\n", s);
 		sret = malloc(sizeof(char) * 1);
 		if (!sret)
 			exit(EXIT_FAILURE);
 		sret[0] = '\0';
 		free(s);
-		return(sret);
+		return (sret);
 	}
 	while (s[i] != '=' && s[i])
 		i++;
@@ -105,7 +105,8 @@ void	add_line(t_list **b_list, char **cmd, int j)
 		free(str);
 		return ;
 	}
-	flstadd_back(b_list, flstnew2(ft_strcat("declare -x", str)));
+	if (str && str[0])
+		flstadd_back(b_list, flstnew2(ft_strcat("declare -x", str)));
 	sort_env(b_list);
 	free(str);
 }
