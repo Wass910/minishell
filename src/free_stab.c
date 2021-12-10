@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_stab.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:09 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 14:56:28 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 17:00:30 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	free_str(char **str)
 		free(str[line]);
 		line++;
 	}
+	free(str[line]);
 	free(str);
 }
 
