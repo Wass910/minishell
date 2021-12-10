@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_uniq_norm.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 13:43:49 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/10 15:54:10 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	norme_parcing(t_comm comm)
 		printf("Minishell: syntax error near unexpected token\n");
 		free_str(comm.redir);
 		free_str(comm.cmd);
-		g_line.retval = -1;
+		g_line.retval = 1;
 		return (1);
 	}
 	return (0);

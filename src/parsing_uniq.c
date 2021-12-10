@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:55 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 20:53:49 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:01:07 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	go_pipe(char *all_cmd, t_list **a_list, t_list **b_list)
 			pipe_glitch(all_cmd, a_list, b_list);
 		else
 			printf("Minishell: syntax error near unexpected token `|'.\n");
-		g_line.retval = 1;
 		return (1);
 	}
 	return (0);
@@ -85,7 +84,6 @@ int	parcing(char *all_cmd, t_list **a_list, t_list **b_list)
 	comm = setup_comm(comm);
 	if (comm.redir_temp[0])
 		ft_redir_temp(comm.redir_temp, comm.redir_double_input);
-	free_str(comm.redir_temp);
 	norme_parcing2(comm, a_list, b_list);
 	free_str(comm.cmd);
 	free_str(comm.redir);

@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:43 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/07 11:32:48 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:02:25 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	ft_redir_temp(char **str, int input)
 			i++;
 		if (i == input)
 		{
+			free_str(str);
 			free(line);
 			return ;
 		}
@@ -81,6 +82,7 @@ void	ft_redir_temp(char **str, int input)
 		free(line);
 		ret = get_next_line(0, &line);
 	}
+	free(line);
 	free_str(str);
 	return ;
 }
