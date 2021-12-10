@@ -6,18 +6,11 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/10 17:01:40 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/10 17:05:19 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-void	cat_while(t_cat *scat, char *src)
-{
-	scat->tmp[scat->i] = src[scat->j];
-	scat->i++;
-	scat->j++;
-}
 
 void	ctrld_fill(t_list **a_list, t_list **b_list)
 {
@@ -82,43 +75,45 @@ char	*ctrl_c(void)
 		return (ft_norm_ctrl());
 }
 
-int ft_space_line(char *line)
+int	ft_space_line(char *line)
 {
-    int i;
+	int	i;
 
-    i = 12;
+	i = 12;
 	if (!line[11])
 		return (1);
-    while(line && line[i])
-    {
-        if (line[i] != 32)
-            return (0);
-        i++;
-    }
-    return (1);
+	while (line && line[i])
+	{
+		if (line[i] != 32)
+			return (0);
+		i++;
+	}
+	return (1);
 }
-void    main_bin(char *line, t_list **a_list, t_list **b_list)
+
+void	main_bin(char *line, t_list **a_list, t_list **b_list)
 {
-    line = ctrl_c();
-    if (line)
-    {
-        if (g_line.str)
-            free(g_line.str);
-        g_line.str = ft_strdup(line);
-    }
-    if (line == NULL)
-        ctrld_fill(a_list, b_list);
-    if (line[0])
-    {
-        if ((ft_strncmp(line, "./minishell", 11) == 0) && (ft_space_line(line) == 1))
-            add_history(line);
-        else
-        {
-            add_history(line);
-            if (!only_space(line) && !unclosed_quotes2(line))
-                parcing(line, a_list, b_list);
-        }
-    }
-    if (line)
-        free(line);
+	line = ctrl_c();
+	if (line)
+	{
+		if (g_line.str)
+			free(g_line.str);
+		g_line.str = ft_strdup(line);
+	}
+	if (line == NULL)
+		ctrld_fill(a_list, b_list);
+	if (line[0])
+	{
+		if ((ft_strncmp(line, "./minishell", 11) == 0)
+			&& (ft_space_line(line) == 1))
+			add_history(line);
+		else
+		{
+			add_history(line);
+			if (!only_space(line) && !unclosed_quotes2(line))
+				parcing(line, a_list, b_list);
+		}
+	}
+	if (line)
+		free(line);
 }

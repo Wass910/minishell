@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   another_bin2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user42 <user42@student.42.fr>              +#+  +:+       +#+        */
+/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:07 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 23:12:44 by user42           ###   ########.fr       */
+/*   Updated: 2021/12/10 17:05:29 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+void	cat_while(t_cat *scat, char *src)
+{
+	scat->tmp[scat->i] = src[scat->j];
+	scat->i++;
+	scat->j++;
+}
 
 void	replace_n_free(t_list *del, char *s, char *str, t_list *temp)
 {
