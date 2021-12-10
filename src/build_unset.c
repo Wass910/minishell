@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:01 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 09:59:00 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 11:31:00 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	fill_this(t_unset unset)
 {
 	unset.del = unset.temp->next;
 	unset.temp->next = unset.temp->next->next;
+	free(unset.del->content);
 	free(unset.del);
 }
 

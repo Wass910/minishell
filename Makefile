@@ -11,7 +11,7 @@ TESTCOL = \033[1;35m
 
 UNAME = $(shell uname -s)
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 RM = rm -f
 CC1 = clang -lreadline
 CC2 = clang
