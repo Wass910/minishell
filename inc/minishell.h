@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:30 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 11:30:39 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:25:21 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,6 +257,7 @@ char	*ft_strcat_red_glu(char *dest, char *src);
 char	*ft_strcat_w(char *dest, char *src);
 char	*ft_strcat_ns(char *dest, char *src);
 char	*ft_strcat_red_glu2(char *dest, char *src);
+char	*ft_strcat_free(char *dest, char *src);
 	// others
 void	add_line2(t_list **b_list, char **cmd, int j);
 int		ft_atoi(const char *str);
@@ -273,6 +274,7 @@ char	*ft_itoa(int n);
 char	**ft_split(char *s, char c);
 int		ft_strncmp( char *s1, char *s2, int n);
 int		ft_strlen(char *s);
+void	norm_for_double_input(t_comm comm);
 char	*ft_strdup_free(char *s1);
 int		ft_strchr(char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
@@ -368,6 +370,7 @@ int		uniqq_setup(t_uniqq **uniqq, t_comm comm, t_list **a_list,
 int		fill_ret(t_uniqq *uniqq, t_comm comm, t_list **a_list,
 			t_list **b_list);
 void	uniqq_exec(t_uniqq *uniqq, t_comm comm);
+char	*sret_ret(char *s, char *sret);
 char	*make_test(char *s);
 int		is_valid(char *s);
 t_open	open_setup(t_open open);
@@ -446,4 +449,5 @@ void	replace_n_free2(t_list *del, char *s, char *str, t_list *temp);
 void	replace_n_free3(t_list *temp, char *s, char *str, t_list **a_list);
 void	inthandler(int sig);
 char	*fill_doll_norm(t_doll *doll);
+char	*ft_norm_ctrl(void);
 #endif

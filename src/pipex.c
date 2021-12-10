@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 12:52:19 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/10 15:01:18 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:04:51 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	pipex(t_pipe *comm_pip, int i, t_list **a_list, t_list **b_list)
 	pid_t	pid1;
 	int		status;
 
-	//printf("segfault\n");
 	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);
 	pid1 = fork();

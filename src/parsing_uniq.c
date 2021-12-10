@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:55 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 16:01:07 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:19:48 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,7 @@ int	parcing(char *all_cmd, t_list **a_list, t_list **b_list)
 	if (norme_parcing(comm) == 1)
 		return (-1);
 	comm = setup_comm(comm);
-	if (comm.redir_temp[0])
-		ft_redir_temp(comm.redir_temp, comm.redir_double_input);
+	norm_for_double_input(comm);
 	norme_parcing2(comm, a_list, b_list);
 	free_str(comm.cmd);
 	free_str(comm.redir);

@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 13:55:45 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/10 15:57:41 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:04:34 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	pipex_for_one(char *path, char **cmd)
 {
 	int		pipefd[2];
 	pid_t	pid1;
-	int 	status;
+	int		status;
 
 	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:09 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 11:36:15 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:05:12 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,34 +55,6 @@ void	make_list(t_list **a_list, char **envp)
 		flstadd_back(a_list, flstnew(ft_strdup(envp[i])));
 		i++;
 	}
-}
-char	*ft_strcat_free(char *dest, char *src)
-{
-	unsigned int	i;
-	unsigned int	j;
-	char			*tmp;
-
-	tmp = malloc(sizeof(char) * (ft_count_str(dest, src) + 2));
-	if (!tmp)
-		return (0);
-	i = 0;
-	while (dest && dest[i] != '\0')
-	{
-		tmp[i] = dest[i];
-		i++;
-	}
-	tmp[i] = ' ';
-	i++;
-	j = 0;
-	while (src && src[j] != '\0')
-	{
-		tmp[i] = src[j];
-		i++;
-		j++;
-	}
-	tmp[i] = '\0';
-	free(src);
-	return (tmp);
 }
 
 void	add_declare(t_list **b_list)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sort_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:02 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 11:41:21 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/10 16:24:59 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,7 @@ char	*to_print(char *s)
 	if (s[i] == '=' && s[i + 1] == '\0')
 		return (build_sret(sret, s));
 	else
-	{
-		sret = ft_strcat_cote(s, "\0");
-		free(s);
-		return (sret);
-	}
+		return (sret_ret(s, sret));
 }
 
 void	add_line(t_list **b_list, char **cmd, int j)

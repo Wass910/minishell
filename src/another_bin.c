@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 14:01:09 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/10 11:30:15 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:11:53 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,13 @@ void	inthandler(int sig)
 				|| ((ft_strncmp(g_line.str, "cat", 3) == 0)
 					&& (ft_strlen(g_line.str) == 3))
 				|| ((ft_strncmp(g_line.str, "grep", 4) == 0)
-					&& (ft_strlen(g_line.str) != 4))|| ((ft_strncmp(g_line.str, "/bin/wc", 7) == 0) && (ft_strlen(g_line.str) == 7)) || ((ft_strncmp(g_line.str, "/bin/cat", 8) == 0)
-					&& (ft_strlen(g_line.str) != 8)) || ((ft_strncmp(g_line.str, "/bin/grep", 9) == 0) && (ft_strlen(g_line.str) != 9))) && g_line.tour > 0)
+					&& (ft_strlen(g_line.str) != 4))
+				|| ((ft_strncmp(g_line.str, "/bin/wc", 7) == 0)
+					&& (ft_strlen(g_line.str) == 7))
+				|| ((ft_strncmp(g_line.str, "/bin/cat", 8) == 0)
+					&& (ft_strlen(g_line.str) != 8))
+				|| ((ft_strncmp(g_line.str, "/bin/grep", 9) == 0)
+					&& (ft_strlen(g_line.str) != 9))) && g_line.tour > 0)
 			printf("$> ");
 		g_line.tour++;
 	}
@@ -50,13 +55,21 @@ void	inthandler(int sig)
 
 char	*ctrl_c(void)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	if (g_line.str && (((ft_strncmp(g_line.str, "wc", 2) == 0)
 				&& (ft_strlen(g_line.str) == 2))
 			|| ((ft_strncmp(g_line.str, "cat", 3) == 0)
 				&& (ft_strlen(g_line.str) == 3))
-			|| ((ft_strncmp(g_line.str, "grep", 4) == 0) && (ft_strlen(g_line.str) != 4)) || ((ft_strncmp(g_line.str, "/bin/wc", 7) == 0) && (ft_strlen(g_line.str) == 7)) || ((ft_strncmp(g_line.str, "/bin/cat", 8) == 0)
-			&& (ft_strlen(g_line.str) != 8)) || ((ft_strncmp(g_line.str, "/bin/grep", 9) == 0) && (ft_strlen(g_line.str) != 9))))
+			|| ((ft_strncmp(g_line.str, "grep", 4) == 0)
+				&& (ft_strlen(g_line.str) != 4))
+			|| ((ft_strncmp(g_line.str, "/bin/wc", 7) == 0)
+				&& (ft_strlen(g_line.str) == 7))
+			|| ((ft_strncmp(g_line.str, "/bin/cat", 8) == 0)
+				&& (ft_strlen(g_line.str) != 8))
+			|| ((ft_strncmp(g_line.str, "/bin/grep", 9) == 0)
+				&& (ft_strlen(g_line.str) != 9))))
 	{
 		while (g_line.str[i])
 			i++;
@@ -64,13 +77,9 @@ char	*ctrl_c(void)
 		g_line.tour++;
 		rl_replace_line("", 0);
 		return (readline(""));
-
 	}
 	else
-	{
-		g_line.tour = 0;
-		return (readline("$> "));
-	}
+		return (ft_norm_ctrl());
 }
 
 void	main_bin(char *line, t_list **a_list, t_list **b_list)
@@ -89,7 +98,6 @@ void	main_bin(char *line, t_list **a_list, t_list **b_list)
 		add_history(line);
 		if (!only_space(line) && !unclosed_quotes2(line))
 			parcing(line, a_list, b_list);
-
 	}
 	if (line)
 		free(line);

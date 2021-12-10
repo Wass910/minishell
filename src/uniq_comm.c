@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:05 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 11:38:31 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:23:10 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,16 @@ void	reflechir(t_uniq *uniq, char *str, t_comm comm)
 	}
 }
 
+int	gang_gang(t_comm comm, t_uniq *uniq)
+{
+	if (wejdene(comm, uniq) != 1)
+	{	
+		free(uniq);
+		return (-1);
+	}
+	return (1);
+}
+
 int	red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
 {
 	t_uniq	*uniq;
@@ -73,11 +83,8 @@ int	red_uniq_comm(t_comm comm, char *str, t_list **a_list, t_list **b_list)
 	uniq->to_read = -1;
 	uniq->to_write = -1;
 	uniq->i = 0;
-	if (wejdene(comm, uniq) != 1)
-	{	
-		free(uniq);
+	if (gang_gang(comm, uniq) == -1)
 		return (-1);
-	}
 	if (uniq->to_read >= 0)
 		comm.read_file = open_file(comm.redir[uniq->to_read]);
 	if (uniq->to_write >= 0)

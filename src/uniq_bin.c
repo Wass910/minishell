@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:04 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 10:35:03 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:06:41 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,6 @@ void	uniqq_exec(t_uniqq *uniqq, t_comm comm)
 		waitpid(uniqq->k, &uniqq->status, 0);
 		uniqq->k = WEXITSTATUS(uniqq->status);
 	}
-	// if ((!comm.cmd[1] && ((l[0] == 'w' && l[1] == 'c' && !l[2])
-	// 			|| (l[0] == 'c' && l[1] == 'a' && l[2] == 't' && !l[3])))
-	// 	|| (comm.cmd[1] && l[0] == 'g' && l[1] == 'r'
-	// 		&& l[2] == 'e' && l[3] == 'p' && !l[4]))
-	// 	printf("$> ");
 }
 
 int	fill_ret(t_uniqq *uniqq, t_comm comm, t_list **a_list, t_list **b_list)

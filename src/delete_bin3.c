@@ -6,7 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:05:31 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 19:36:12 by idhiba           ###   ########.fr       */
+/*   Updated: 2021/12/10 16:25:07 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,54 @@ char	*fill_doll_norm(t_doll *doll)
 	s = ft_strdup_free(doll->str);
 	free(doll);
 	return (s);
+}
+
+char	*ft_strcat_free(char *dest, char *src)
+{
+	unsigned int	i;
+	unsigned int	j;
+	char			*tmp;
+
+	tmp = malloc(sizeof(char) * (ft_count_str(dest, src) + 2));
+	if (!tmp)
+		return (0);
+	i = 0;
+	while (dest && dest[i] != '\0')
+	{
+		tmp[i] = dest[i];
+		i++;
+	}
+	tmp[i] = ' ';
+	i++;
+	j = 0;
+	while (src && src[j] != '\0')
+	{
+		tmp[i] = src[j];
+		i++;
+		j++;
+	}
+	tmp[i] = '\0';
+	free(src);
+	return (tmp);
+}
+
+char	*ft_norm_ctrl(void)
+{
+	g_line.tour = 0;
+	return (readline("$> "));
+}
+
+void	norm_for_double_input(t_comm comm)
+{
+	if (comm.redir_temp[0])
+		ft_redir_temp(comm.redir_temp, comm.redir_double_input);
+	else
+		free_str(comm.redir_temp);
+}
+
+char	*sret_ret(char *s, char *sret)
+{
+	sret = ft_strcat_cote(s, "\0");
+	free(s);
+	return (sret);
 }
