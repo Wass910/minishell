@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_stab.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:06:09 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/09 14:24:21 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/10 14:56:28 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,13 @@ void	free_pipe(t_pipe *comm)
 		free(comm->path);
 		free_str(comm->cmd);
 		free_str(comm->redir);
-		if (comm->file_to_in)
-			free(comm->file_to_in);
-		if (comm->file_to_out)
-			free(comm->file_to_out);
+		if (comm->read_file != -1 || comm->write_file != -1)
+		{
+			if (comm->file_to_in)
+				free(comm->file_to_in);
+			if (comm->file_to_out)
+				free(comm->file_to_out);
+		}
 		free(comm);
 		comm = elem;
 	}

@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:09 by glaverdu          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/12/10 11:48:24 by glaverdu         ###   ########.fr       */
-=======
 /*   Updated: 2021/12/10 11:36:15 by idhiba           ###   ########.fr       */
->>>>>>> 458f15d3bb1650eb01dec493190437e573a442ef
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +56,6 @@ void	make_list(t_list **a_list, char **envp)
 		i++;
 	}
 }
-
 char	*ft_strcat_free(char *dest, char *src)
 {
 	unsigned int	i;

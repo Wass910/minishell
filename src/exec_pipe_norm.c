@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe_norm.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/07 18:18:52 by idhiba            #+#    #+#             */
-/*   Updated: 2021/12/09 17:12:14 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/10 15:17:47 by idhiba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ void	exec_pipe_norm(t_pipe *temp, int error, t_list **a_list,
 	last_cmd = 1;
 	if (!temp->next)
 		last_cmd = 0;
+	// printf("error = %d\n", temp->error_syn_red);
+	// printf("cmd = %s\n", temp->cmd[0]);
 	if (error != 0)
-		pipex_for_one(NULL, cmd);
+		pipex_for_one(NULL, cmd); 
 	pipex(temp, last_cmd, a_list, b_list);
 	free_str(cmd);
 	free(str);
@@ -36,10 +38,17 @@ t_pipe	*exec_pipe_norm_err(t_pipe *temp)
 	while (temp && (temp->error_syn_red == 1
 			|| (!temp->path && (verif_the_builtin(temp->cmd) == 1))))
 	{
-		temp = temp->next;
+		if (temp->next)
+			temp = temp->next;
+		else
+		{	
+			temp = temp->next;
+			break;
+		}
 	}	
 	if (!temp || (!temp->next && (verif_the_builtin(temp->cmd) == 0)))
 	{	
+		
 		pipex_last(0);
 		return (temp);
 	}

@@ -6,11 +6,7 @@
 /*   By: idhiba <idhiba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/02 14:07:05 by glaverdu          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2021/12/10 11:53:07 by glaverdu         ###   ########.fr       */
-=======
 /*   Updated: 2021/12/10 11:38:31 by idhiba           ###   ########.fr       */
->>>>>>> 458f15d3bb1650eb01dec493190437e573a442ef
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +113,8 @@ int	uniq_cmd(t_comm comm, t_list **a_list, t_list **b_list)
 		return (fill_ret(uniqq, comm, a_list, b_list));
 	else
 		uniqq_exec(uniqq, comm);
-	g_line.retval = uniqq->k;
+	if (g_line.retval != 200)
+		g_line.retval = uniqq->k;
 	j = uniqq->k;
 	free(uniqq->str);
 	free(uniqq);

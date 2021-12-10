@@ -6,7 +6,7 @@
 /*   By: glaverdu <glaverdu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:57:17 by glaverdu          #+#    #+#             */
-/*   Updated: 2021/12/10 12:13:35 by glaverdu         ###   ########.fr       */
+/*   Updated: 2021/12/09 16:28:31 by glaverdu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ char	*ft_strdup(char *s1)
 	char	*cpy;
 	int		i;
 
-	if (!s1)
-		return(NULL);
 	i = ft_strlen((char *)s1);
 	cpy = malloc(sizeof(char) * (i + 1));
 	if (!(cpy))
